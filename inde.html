@@ -3,120 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoria de Fluxo GL Pro - v4.3</title>
+    <title>Auditoria de Fluxo GL Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
-        body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; }
+        body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         .header-navy { background-color: #1e3a8a; }
-        .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; }
-        .input-audit { width: 100%; padding: 0.5rem; border: 1px solid #94a3b8; border-radius: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.875rem; }
+        .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .input-audit { width: 100%; padding: 0.6rem; border: 1px solid #94a3b8; border-radius: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; text-align: right; }
+        .input-audit:focus { border-color: #2563eb; outline: none; background-color: #fff; }
         .status-danger { background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
         .status-success { background-color: #dcfce7; color: #166534; border: 1px solid #22c55e; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+        .btn-main { background-color: #1e3a8a; color: white; transition: all 0.2s; font-weight: bold; }
+        .btn-main:hover { background-color: #1e40af; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-6xl mx-auto">
-        <header class="header-navy p-6 rounded-t-lg flex justify-between items-center shadow-md">
+        <!-- HEADER -->
+        <header class="header-navy p-6 rounded-t-lg flex justify-between items-center shadow-lg">
             <div>
-                <h1 class="text-white font-bold text-xl tracking-tighter uppercase">GL PRO | Sistema de Auditoria</h1>
-                <p class="text-blue-300 text-[10px] font-mono uppercase tracking-widest">Protocolo de Conciliação de Comprovantes</p>
+                <h1 class="text-white font-bold text-xl tracking-tighter uppercase">GL PRO | AUDITORIA DE FLUXO</h1>
+                <p class="text-blue-300 text-[10px] font-mono uppercase tracking-widest">Protocolo de Conciliação e Rateio Semanal</p>
             </div>
-            <div class="text-right text-white font-mono text-xs">
+            <div class="text-right text-white font-mono text-xs hidden md:block">
                 <p>AUDITOR: TIAGO GRABSKI</p>
-                <p class="text-blue-400">STATUS: CONCILIAÇÃO PENDENTE</p>
+                <p class="text-blue-400">MAIO / 2026</p>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
             
-            <!-- ENTRADA DE DADOS E CÁLCULO SEMANAL -->
-            <div class="lg:col-span-4 space-y-6">
-                <div class="card p-6 shadow-sm">
-                    <h2 class="text-xs font-bold text-slate-500 uppercase border-b pb-2 mb-4 italic">Cálculo de Rateio Semanal</h2>
-                    <div class="space-y-3">
-                        <div><label class="text-[10px] font-bold text-slate-400 uppercase">Faturamento Diário</label><input type="number" id="v-fat" class="input-audit" placeholder="0.00"></div>
-                        <div><label class="text-[10px] font-bold text-slate-400 uppercase">Aluguel Total (6250)</label><input type="number" id="v-alu" value="6250" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold text-slate-400 uppercase">Contabilidade + Fixos</label><input type="number" id="v-fixo" value="300" class="input-audit"></div>
-                        <button onclick="calcular()" class="w-full bg-blue-700 text-white font-bold py-3 rounded text-xs hover:bg-blue-800 transition-all">PROCESSAR RATEIO SEMANAL</button>
-                    </div>
-
-                    <div id="res-box" class="hidden mt-6 pt-4 border-t border-dashed">
-                        <p class="text-[10px] font-bold text-blue-600 uppercase mb-2 text-center underline">Valores a Reter no Sábado</p>
-                        <div class="flex justify-between items-center bg-blue-50 p-3 rounded mb-2">
-                            <span class="text-xs font-bold text-slate-600">TIAGO:</span>
-                            <span id="res-t" class="font-mono font-bold text-blue-900">R$ 0,00</span>
+            <!-- COLUNA ESQUERDA: ENTRADA -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="card p-6">
+                    <h2 class="text-xs font-bold text-slate-500 uppercase border-b pb-2 mb-6">Lançamento de Faturas Reais</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase">Aluguel Total (Prédio)</label>
+                            <input type="number" id="v-aluguel" value="6250" class="input-audit">
                         </div>
-                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded">
-                            <span class="text-xs font-bold text-slate-600">JÔ:</span>
-                            <span id="res-j" class="font-mono font-bold text-slate-800">R$ 0,00</span>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Luz (Celesc)</label>
+                                <input type="number" id="v-luz" placeholder="0.00" class="input-audit">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Água</label>
+                                <input type="number" id="v-agua" placeholder="0.00" class="input-audit">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase">Internet Total</label>
+                            <input type="number" id="v-internet" placeholder="0.00" class="input-audit">
+                        </div>
+                        <div class="pt-4 border-t border-dashed">
+                            <label class="text-[10px] font-bold text-blue-600 uppercase italic">Contabilidade (Mensal)</label>
+                            <input type="number" id="v-contabil" value="300" class="input-audit border-blue-200">
+                        </div>
+                        <button onclick="gerarRelatorio()" class="w-full btn-main py-4 rounded text-sm uppercase tracking-widest shadow-md">
+                            Gerar Relatório de Divisão
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BOX DE RESULTADO SEMANAL -->
+                <div id="res-box" class="hidden card p-6 border-l-4 border-blue-600 bg-blue-50">
+                    <h3 class="text-blue-800 font-bold text-xs uppercase mb-4 text-center">Retenção Semanal (Sábado)</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-blue-100 pb-2">
+                            <span class="text-sm font-semibold">TIAGO:</span>
+                            <span id="res-t-sem" class="text-2xl font-mono font-black text-blue-900">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-500 italic">
+                            <span class="text-xs">JÔ:</span>
+                            <span id="res-j-sem" class="font-mono font-bold">R$ 0,00</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- MÓDULO DE AUDITORIA DE COMPROVANTES -->
-            <div class="lg:col-span-8 space-y-6">
-                <div class="card shadow-sm overflow-hidden">
-                    <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                        <h3 class="font-bold text-xs text-slate-700 uppercase">Módulo de Conciliação Bancária (Auditoria de Passados)</h3>
+            <!-- COLUNA DIREITA: AUDITORIA -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="card overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b">
+                        <h3 class="font-bold text-xs text-slate-700 uppercase">Memorial de Auditoria e Comprovantes</h3>
                     </div>
-                    <table class="w-full text-xs">
+                    <table class="w-full text-[11px] text-left">
                         <thead class="bg-slate-100 text-slate-500 uppercase">
                             <tr>
-                                <th class="p-3 text-left">Descrição da Despesa</th>
-                                <th class="p-3 text-center">Valor</th>
-                                <th class="p-3 text-center">Origem do Dinheiro</th>
-                                <th class="p-3 text-center">Comprovante</th>
+                                <th class="p-3">Origem / Descrição</th>
+                                <th class="p-3 text-center">Rateio Empresa</th>
+                                <th class="p-3 text-center">Status Lastro</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-200">
+                        <tbody class="divide-y divide-slate-100">
                             <tr>
-                                <td class="p-3 font-bold text-slate-700">Fatura Celesc (Energia)</td>
-                                <td class="p-3 text-center">R$ 3.000,00+</td>
-                                <td class="p-3 text-center font-mono text-slate-500 text-[10px]">A VERIFICAR</td>
-                                <td class="p-3 text-center"><span class="status-danger">PAGAMENTO NÃO AUDITADO</span></td>
+                                <td class="p-3 font-bold">Aluguel / Fixos</td>
+                                <td class="p-3 text-center">50% Área Salão</td>
+                                <td class="p-3 text-center"><span class="status-success font-mono">AUDITADO</span></td>
                             </tr>
                             <tr>
-                                <td class="p-3 font-bold text-slate-700">Empréstimo (Mãe)</td>
-                                <td class="p-3 text-center">R$ [?]</td>
-                                <td class="p-3 text-center font-mono text-slate-500 text-[10px]">INDEFINIDO</td>
-                                <td class="p-3 text-center"><span class="status-danger">SEM LASTRO DIGITAL</span></td>
+                                <td class="p-3 font-bold text-blue-900 italic">Energia / Água / Net</td>
+                                <td class="p-3 text-center">70% Maquinário</td>
+                                <td class="p-3 text-center"><span class="status-success font-mono">REGRADO</span></td>
                             </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-slate-700">Insumos/Produtos</td>
-                                <td class="p-3 text-center">Vários</td>
-                                <td class="p-3 text-center font-mono text-slate-500 text-[10px]">CAIXA SALÃO</td>
-                                <td class="p-3 text-center"><span class="status-success">AGUARDANDO NOTA</span></td>
+                            <tr class="bg-amber-50">
+                                <td class="p-3 font-bold text-amber-700 underline">Empréstimo (Mãe)</td>
+                                <td class="p-3 text-center">PENDENTE</td>
+                                <td class="p-3 text-center"><span class="status-danger">SEM COMPROVANTE</span></td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="p-4 bg-red-50 text-[10px] text-red-700 font-bold border-t">
-                        AVISO: Pagamentos sem comprovante de transferência da conta pessoal ou recibo de saque oficial serão desconsiderados para fins de rateio societário.
-                    </div>
                 </div>
 
-                <div class="bg-white p-6 rounded border-2 border-blue-100 italic text-slate-500 text-sm leading-relaxed">
-                    "Para cada saída de caixa alegada, exige-se o comprovante de depósito ou transferência correspondente. Na ausência deste, a despesa será classificada como retirada pessoal unilateral."
+                <div class="bg-white p-6 border-2 border-dashed border-slate-300 rounded text-center">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Instrução de Compliance:</p>
+                    <p class="text-xs text-slate-600 leading-relaxed italic">
+                        "Pagamentos sem rastro digital de conta oficial ou recibo de saque com destino identificado serão classificados como Retirada Pessoal, sem impacto no passivo societário."
+                    </p>
                 </div>
             </div>
         </div>
+
+        <footer class="mt-8 text-center text-[10px] text-slate-400 font-mono uppercase tracking-[0.2em]">
+            GL PRO STRATEGIC MANAGEMENT • PRECISION OVER EMOTION
+        </footer>
     </div>
 
     <script>
-        function calcular() {
-            const alu = parseFloat(document.getElementById('v-alu').value) || 0;
-            const fixo = parseFloat(document.getElementById('v-fixo').value) || 0;
-            
-            // Regra Tiago: 50% Salão + 1/3 Casa
-            let tMensal = (alu * 0.5 / 2) + (alu * 0.5 * 1/3) + (fixo / 2);
-            // Regra Jô: 50% Salão + 2/3 Casa
-            let jMensal = (alu * 0.5 / 2) + (alu * 0.5 * 2/3) + (fixo / 2);
+        function gerarRelatorio() {
+            const alu = parseFloat(document.getElementById('v-aluguel').value) || 0;
+            const luz = parseFloat(document.getElementById('v-luz').value) || 0;
+            const agua = parseFloat(document.getElementById('v-agua').value) || 0;
+            const net = parseFloat(document.getElementById('v-internet').value) || 0;
+            const con = parseFloat(document.getElementById('v-contabil').value) || 0;
 
-            document.getElementById('res-t').innerText = (tMensal / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('res-j').innerText = (jMensal / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            // CÁLCULO TIAGO: 50% Salão + 1/3 Casa (Regra 70/30 para Luz/Água e 50/50 Net)
+            let t = (alu * 0.5 / 2) + (alu * 0.5 * 1/3); // Aluguel
+            t += (luz * 0.7 / 2) + (luz * 0.3 * 1/3); // Luz
+            t += (agua * 0.7 / 2) + (agua * 0.3 * 1/3); // Água
+            t += (net * 0.5 / 2) + (net * 0.5 * 1/3); // Internet
+            t += (con / 2); // Contabilidade
+
+            // CÁLCULO JÔ
+            let j = (alu * 0.5 / 2) + (alu * 0.5 * 2/3);
+            j += (luz * 0.7 / 2) + (luz * 0.3 * 2/3);
+            j += (agua * 0.7 / 2) + (agua * 0.3 * 2/3);
+            j += (net * 0.5 / 2) + (net * 0.5 * 2/3);
+            j += (con / 2);
+
+            // EXIBIR SEMANAL (SÁBADO)
+            document.getElementById('res-t-sem').innerText = (t / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('res-j-sem').innerText = (j / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            
             document.getElementById('res-box').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
