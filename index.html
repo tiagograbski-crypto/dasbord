@@ -3,150 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Auditoria Financeira - GL Pro v4.4</title>
+    <title>GL PRO | AUDITORIA INTEGRAL v7.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Segoe+UI:wght@400;600;700&display=swap');
-        
-        body { background-color: #f4f7f9; color: #334155; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .header-bg { background-color: #1e3a8a; } 
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .label-text { font-size: 0.70rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-        .input-field { width: 100%; padding: 0.6rem; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 6px; text-align: right; font-family: 'Roboto Mono', monospace; font-weight: 700; }
-        .input-field:focus { border-color: #2563eb; outline: none; background-color: #fff; }
-        .btn-audit { background-color: #2563eb; color: white; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
-        .btn-audit:hover { background-color: #1d4ed8; }
-        .alert-box { background-color: #fee2e2; border-left: 4px solid #ef4444; color: #991b1b; }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
+        body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; }
+        .header-navy { background-color: #1e3a8a; border-bottom: 4px solid #1d4ed8; }
+        .tab-active { border-bottom: 4px solid #1e3a8a; color: #1e3a8a; font-weight: 800; background: #fff; }
+        .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .input-audit { width: 100%; padding: 0.5rem; border: 2px solid #94a3b8; border-radius: 4px; font-family: 'Roboto Mono', monospace; text-align: right; font-weight: 700; }
+        .input-audit:focus { border-color: #2563eb; outline: none; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-2 md:p-10">
 
     <div class="max-w-6xl mx-auto">
-        <header class="header-bg p-6 rounded-t-lg shadow-lg flex justify-between items-center">
+        <header class="header-navy p-6 rounded-t-lg flex justify-between items-center shadow-lg">
             <div>
-                <h1 class="text-2xl font-bold text-white tracking-tight uppercase">GL PRO | AUDITORIA OFICIAL</h1>
-                <p class="text-blue-200 text-[10px] font-mono uppercase tracking-widest mt-1">Conciliação de Passivos v4.4 - Base Chapecó</p>
+                <h1 class="text-white font-extrabold text-2xl tracking-tighter uppercase italic">GL PRO <span class="not-italic text-blue-300">Auditoria</span></h1>
+                <p class="text-blue-100 text-[10px] font-mono uppercase tracking-[3px]">Protocolo de Gestão Profissional v7.0</p>
             </div>
-            <div class="text-right hidden md:block">
-                <p class="text-blue-100 text-[10px] uppercase">Data de Processamento</p>
-                <p class="text-white font-mono font-bold">11/05/2026</p>
+            <div class="text-right text-white font-mono text-[10px] hidden md:block leading-tight">
+                <p>AUDITOR: TIAGO DIAS GRABSKI</p>
+                <p class="text-blue-400">STATUS: REESTRUTURAÇÃO FINANCEIRA</p>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
-            
-            <div class="lg:col-span-4 space-y-4">
-                <div class="card p-5">
-                    <h2 class="text-sm font-bold text-blue-900 border-b pb-2 mb-4 uppercase">Lançamento de Faturas</h2>
-                    
-                    <div class="space-y-3">
-                        <div><label class="label-text">Aluguel Prédio Atual</label><input type="number" id="v-aluguel" value="6250" class="input-field"></div>
-                        <div><label class="label-text">Luz (Celesc)</label><input type="number" id="v-luz" placeholder="0.00" class="input-field"></div>
-                        <div><label class="label-text">Água</label><input type="number" id="v-agua" placeholder="0.00" class="input-field"></div>
-                        <div><label class="label-text">Internet</label><input type="number" id="v-internet" placeholder="0.00" class="input-field"></div>
-                        
-                        <div class="pt-3 border-t border-dashed">
-                            <label class="label-text text-red-600">Acordo Sala Comercial (Restam 12x)</label>
-                            <input type="number" id="v-acordo" value="2455.20" class="input-field border-red-200 bg-red-50 text-red-700">
-                            <p class="text-[9px] text-red-500 font-mono mt-1">*Vencimento original dia 25. Valor com multa inclusa.</p>
-                        </div>
-
-                        <div class="pt-3 border-t border-dashed">
-                            <label class="label-text text-blue-600">Contabilidade Mensal</label>
-                            <input type="number" id="v-contabil" value="300" class="input-field">
-                        </div>
-
-                        <button onclick="processarRelatorio()" class="w-full btn-audit py-3 rounded shadow hover:shadow-lg mt-4 text-sm">
-                            PROCESSAR RATEIO
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-8 space-y-6">
-                
-                <div id="display-resultados" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="card p-5 bg-blue-50 border-l-4 border-blue-600">
-                        <p class="label-text text-blue-600">Responsabilidade: TIAGO</p>
-                        <p class="text-3xl font-bold text-slate-800 my-2" id="res-t-mensal">R$ 0,00</p>
-                        <div class="mt-4 pt-3 border-t border-blue-200">
-                            <p class="text-[10px] text-blue-600 uppercase font-bold">Depósito Semanal (Sábados)</p>
-                            <p class="text-lg font-mono font-black text-blue-900" id="res-t-semanal">R$ 0,00</p>
-                        </div>
-                    </div>
-
-                    <div class="card p-5 border-l-4 border-slate-400">
-                        <p class="label-text">Responsabilidade: JÔ</p>
-                        <p class="text-3xl font-bold text-slate-800 my-2" id="res-j-mensal">R$ 0,00</p>
-                        <div class="mt-4 pt-3 border-t border-slate-200">
-                            <p class="text-[10px] text-slate-500 uppercase font-bold">Depósito Semanal (Sábados)</p>
-                            <p class="text-lg font-mono font-black text-slate-700" id="res-j-semanal">R$ 0,00</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="alert-box p-4 rounded text-sm mb-4">
-                    <span class="font-bold">⚠️ AUDITORIA DE MULTA:</span> O boleto CBM Locações (Vcto: 11/05) apresentou divergência. Valor original: R$ 2.200,00. Valor cobrado: R$ 2.455,20. <strong>Prejuízo por atraso: R$ 255,20.</strong>
-                </div>
-
-                <div class="card overflow-hidden">
-                    <div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-xs text-slate-700 uppercase">Memorial de Separação de Entidades</h3></div>
-                    <table class="w-full text-xs">
-                        <thead class="bg-slate-100 text-slate-500 uppercase">
-                            <tr><th class="p-3 text-left">Item / Despesa</th><th class="p-3 text-center">Empresa (50/50)</th><th class="p-3 text-center">Residencial (1/3 Tiago)</th></tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr><td class="p-3 font-semibold">Aluguel Prédio</td><td class="p-3 text-center">50% do Imóvel</td><td class="p-3 text-center font-bold text-blue-600">50% do Imóvel</td></tr>
-                            <tr><td class="p-3 font-semibold">Energia/Luz</td><td class="p-3 text-center">70% (Maquinário)</td><td class="p-3 text-center font-bold text-blue-600">30% (Doméstico)</td></tr>
-                            <tr><td class="p-3 font-semibold">Água</td><td class="p-3 text-center">70% (Lavatórios)</td><td class="p-3 text-center font-bold text-blue-600">30% (Doméstico)</td></tr>
-                            <tr><td class="p-3 font-semibold">Acordo CBM Locações</td><td class="p-3 text-center font-bold text-red-600">100% CNPJ</td><td class="p-3 text-center text-slate-400">ISENTO</td></tr>
-                            <tr><td class="p-3 font-semibold">Empréstimo Colômbia</td><td class="p-3 text-center font-bold">100% CNPJ (Diário)</td><td class="p-3 text-center text-slate-400">ISENTO</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
+        <div class="flex border-x border-b border-gray-300 bg-gray-200 cursor-pointer text-[10px] font-bold uppercase tracking-widest overflow-x-auto">
+            <div onclick="openTab('diario')" id="tab-diario" class="flex-1 min-w-[120px] p-4 text-center tab-active">1. Caixa Diário</div>
+            <div onclick="openTab('mensal')" id="tab-mensal" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300">2. Auditoria Mensal</div>
+            <div onclick="openTab('ativos')" id="tab-ativos" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300 text-blue-700">3. Recuperação de Ativos</div>
+            <div onclick="openTab('regras')" id="tab-regras" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300">4. Governança</div>
         </div>
-    </div>
 
-    <script>
-        function processarRelatorio() {
-            const aluguel = parseFloat(document.getElementById('v-aluguel').value) || 0;
-            const luz = parseFloat(document.getElementById('v-luz').value) || 0;
-            const agua = parseFloat(document.getElementById('v-agua').value) || 0;
-            const internet = parseFloat(document.getElementById('v-internet').value) || 0;
-            const acordo = parseFloat(document.getElementById('v-acordo').value) || 0;
-            const contabil = parseFloat(document.getElementById('v-contabil').value) || 0;
+        <div class="card p-6 rounded-b-lg border-t-0 min-h-[550px]">
 
-            let t = 0;
-            let j = 0;
+            <div id="content-diario" class="tab-content space-y-6">
+                <div class="max-w-md mx-auto">
+                    <h2 class="text-xs font-bold text-blue-900 border-b pb-2 mb-6 uppercase italic">Fechamento de Caixa e Split 50/50</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Faturamento Bruto (R$)</label>
+                            <input type="number" id="fat-input" class="input-audit text-2xl" placeholder="0.00">
+                        </div>
+                        <div class="p-3 bg-red-50 border-l-4 border-red-600 flex justify-between items-center">
+                            <span class="text-[10px] text-red-800 font-bold uppercase">Passivo Colômbia (Diário)</span>
+                            <span class="font-mono font-bold text-red-900 text-sm">- R$ 150,00</span>
+                        </div>
+                        <button onclick="calcularSplit()" class="w-full bg-blue-700 text-white font-bold py-4 rounded shadow-xl hover:bg-blue-800 transition-all text-xs uppercase">Processar Divisão e Retenções</button>
+                    </div>
 
-            // 1. Aluguel (50% Salão, 50% Casa)
-            t += (aluguel * 0.5 / 2) + (aluguel * 0.5 * 1/3);
-            j += (aluguel * 0.5 / 2) + (aluguel * 0.5 * 2/3);
+                    <div id="diario-results" class="hidden mt-8 grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded">
+                            <p class="text-[10px] text-blue-600 font-bold uppercase">PIX Livre Tiago</p>
+                            <p id="pix-t" class="text-2xl font-black text-blue-900">R$ 0,00</p>
+                            <p class="text-[9px] text-blue-400 mt-1 italic">*Já deduzido R$ 75 do empréstimo</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded">
+                            <p class="text-[10px] text-gray-500 font-bold uppercase">PIX Livre Jô</p>
+                            <p id="pix-j" class="text-2xl font-black text-slate-800">R$ 0,00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            // 2. Luz e Água (70% Empresa, 30% Casa)
-            t += (luz * 0.7 / 2) + (luz * 0.3 * 1/3);
-            j += (luz * 0.7 / 2) + (luz * 0.3 * 2/3);
-            t += (agua * 0.7 / 2) + (agua * 0.3 * 1/3);
-            j += (agua * 0.7 / 2) + (agua * 0.3 * 2/3);
+            <div id="content-mensal" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase">Custos Fixos de Operação e Moradia</h2>
+                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Aluguel Imóvel (Total)</label><input type="number" id="v-aluguel" value="6250" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Energia (Celesc)</label><input type="number" id="v-luz" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Água</label><input type="number" id="v-agua" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Internet</label><input type="number" id="v-internet" class="input-audit"></div>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-xs font-bold text-red-700 border-b pb-2 uppercase">Passivos de Terceiros / Acordos</h2>
+                        <div><label class="text-[10px] font-bold text-red-600 uppercase">Acordo CBM Locações (Sala)</label><input type="number" id="v-acordo" value="2455.20" class="input-audit border-red-200 bg-red-50"></div>
+                        <div><label class="text-[10px] font-bold text-blue-600 uppercase">Contabilidade Mensal</label><input type="number" id="v-contabil" value="300" class="input-audit border-blue-100"></div>
+                        <button onclick="calcularTudo()" class="w-full bg-slate-800 text-white font-bold py-4 rounded mt-4 text-xs uppercase shadow-lg">Calcular Rateio do Sábado</button>
+                    </div>
+                </div>
 
-            // 3. Internet (50% Empresa, 50% Casa)
-            t += (internet * 0.5 / 2) + (internet * 0.5 * 1/3);
-            j += (internet * 0.5 / 2) + (internet * 0.5 * 2/3);
+                <div id="results-mensal" class="hidden mt-8 p-6 bg-blue-900 text-white rounded-lg grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-1">Cota Mensal Tiago</p>
+                        <p id="total-t" class="text-3xl font-black">R$ 0,00</p>
+                        <div class="mt-4 p-3 bg-white/10 rounded border border-white/20">
+                            <p class="text-[10px] uppercase font-bold text-blue-200">Retirada de Sábado (Aluguel + Fixos)</p>
+                            <p id="sabado-t" class="text-xl font-mono font-bold">R$ 0,00</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-1">Cota Mensal Jô</p>
+                        <p id="total-j" class="text-3xl font-black">R$ 0,00</p>
+                        <div class="mt-4 p-3 bg-white/10 rounded border border-white/20">
+                            <p class="text-[10px] uppercase font-bold text-blue-200">Retirada de Sábado (Aluguel + Fixos)</p>
+                            <p id="sabado-j" class="text-xl font-mono font-bold">R$ 0,00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            // 4. Custos 100% Empresa (Acordo Sala + Contabilidade)
-            t += (acordo / 2) + (contabil / 2);
-            j += (acordo / 2) + (contabil / 2);
+            <div id="content-ativos" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase">Aportes de Capital (Tiago)</h2>
+                        <div class="p-4 bg-green-50 border-l-4 border-green-600 rounded">
+                            <p class="text-xs font-bold text-green-800 uppercase">Capital Injetado (Venda 2 Carros)</p>
+                            <p class="text-3xl font-black text-slate-800">R$ 24.000,00</p>
+                            <p class="text-[10px] text-green-600 mt-2 italic font-semibold">Valor usado em produtos premium e quitação de dívidas do CNPJ.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded space-y-4">
+                            <h3 class="text-[10px] font-bold text-slate-500 uppercase">Fundo de Restituição (Status)</h3>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 5%"></div>
+                            </div>
+                            <p class="text-[10px] text-slate-400">Restante a recuperar: <span class="font-bold text-slate-700">R$ 24.000,00</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase italic">Manutenção de Patrimônio</h2>
+                        <div class="p-4 border-2 border-dashed border-red-200 rounded text-center">
+                            <p class="text-xs text-red-700 font-bold uppercase mb-2">Item Crítico: Conserto do Carro</p>
+                            <p class="text-xs text-slate-500 italic">"Atualmente parado na garagem por falta de capital circulante retido na empresa."</p>
+                            <button class="mt-4 text-[10px] font-bold bg-red-600 text-white px-4 py-2 rounded uppercase">Votar Retirada Extra p/ Conserto</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            document.getElementById('res-t-mensal').innerText = t.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('res-t-semanal').innerText = (t / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            
-            document.getElementById('res-j-mensal').innerText = j.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('res-j-semanal').innerText = (j / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-
-            document.getElementById('display-resultados').classList.remove('hidden');
-        }
-    </script>
-</body>
-</html>
+            <div id="content-regras" class="tab-content hidden space-y-6">
+                <div class
