@@ -3,179 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoria Bilateral GL Pro - v4.6</title>
+    <title>Gestão de Custos Compartilhados</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; }
-        .font-mono { font-family: 'Roboto Mono', monospace; }
-        .card-audit { background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .input-audit { width: 100%; padding: 0.6rem; border: 1px solid #94a3b8; border-radius: 4px; font-family: 'Roboto Mono', monospace; text-align: right; font-size: 0.9rem; }
-        .input-audit:focus { border-color: #1e3a8a; outline: none; background-color: #f8fafc; }
-        .label-resp { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #fdfdfd; color: #334155; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .input-style { width: 100%; padding: 0.75rem; border: 2px solid #f1f5f9; border-radius: 8px; text-align: right; font-weight: 700; background: #f8fafc; }
+        .input-style:focus { border-color: #cbd5e1; outline: none; background: white; }
+        .pink-card { background-color: #fff1f2; border: 1px solid #fecdd3; }
+        .blue-card { background-color: #eff6ff; border: 1px solid #bfdbfe; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-10">
 
-    <div class="max-w-7xl mx-auto">
-        <!-- HEADER CORPORATIVO -->
-        <header class="bg-[#1e3a8a] p-6 rounded-t-xl flex justify-between items-center shadow-lg">
-            <div>
-                <h1 class="text-white font-extrabold text-xl tracking-tight uppercase italic">GL PRO <span class="not-italic text-blue-300">CONCILIAÇÃO</span></h1>
-                <p class="text-blue-300 text-[10px] font-mono uppercase tracking-widest">Relatório Bilateral de Responsabilidades v4.6</p>
-            </div>
-            <div class="text-right text-white font-mono text-[10px] hidden sm:block">
-                <p>AUDITORIA: TIAGO GRABSKI</p>
-                <p class="text-blue-400 font-bold uppercase">Maio / 2026</p>
-            </div>
+    <div class="max-w-5xl mx-auto">
+        <!-- CABEÇALHO SIMPLES -->
+        <header class="mb-10 text-center border-b pb-6">
+            <h1 class="text-2xl font-bold text-slate-800">Acordo de Divisão de Custos</h1>
+            <p class="text-slate-500 text-sm mt-1">Organização de Moradia e Trabalho em Conjunto</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
             
-            <!-- COLUNA DE ENTRADA (ESQUERDA) -->
-            <div class="lg:col-span-4 space-y-6">
-                <div class="card-audit p-6">
-                    <h2 class="text-[10px] font-bold text-slate-400 uppercase mb-6 tracking-widest border-b pb-2 italic text-center">Inserção de Faturas Reais</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Aluguel Total (Prédio)</label>
-                            <input type="number" id="v-aluguel" value="6250" class="input-audit font-bold text-blue-900">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Luz (Mês)</label>
-                                <input type="number" id="v-luz" placeholder="0.00" class="input-audit">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Água (Mês)</label>
-                                <input type="number" id="v-agua" placeholder="0.00" class="input-audit">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Internet Total</label>
-                            <input type="number" id="v-internet" placeholder="0.00" class="input-audit">
-                        </div>
-                        <div class="pt-4 border-t border-dashed">
-                            <label class="text-[10px] font-bold text-blue-600 uppercase block mb-1 italic">Dívida Retroativa (Auditada)</label>
-                            <input type="number" id="v-retroativo" placeholder="Ex: 3000.00" class="input-audit border-blue-200 bg-blue-50 text-blue-800">
-                        </div>
-                        <button onclick="calcularGeral()" class="w-full bg-[#1e3a8a] text-white font-bold py-4 rounded-lg hover:bg-blue-800 transition-all text-xs tracking-widest uppercase shadow-md">
-                            Processar Auditoria Bilateral
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- COLUNA DE RESULTADOS (DIREITA) -->
-            <div class="lg:col-span-8 space-y-6">
+            <!-- SEÇÃO 1: ENTRADA DE CONTAS DO MÊS -->
+            <div class="card p-6">
+                <h2 class="text-sm font-bold text-slate-700 uppercase mb-4">1. Lançamento das Despesas Atuais</h2>
+                <p class="text-xs text-slate-500 mb-6 italic">Insira os valores das faturas que chegaram este mês para calcular o rateio justo.</p>
                 
-                <div id="res-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- RELATÓRIO TIAGO -->
-                    <div class="card-audit p-6 border-t-4 border-blue-600 bg-white">
-                        <p class="label-resp text-blue-600 mb-4">Relatório Individual: Tiago</p>
-                        <div class="space-y-4">
-                            <div class="flex justify-between border-b border-slate-100 pb-2">
-                                <span class="text-[10px] text-slate-400 uppercase">Cota Empresa (50%)</span>
-                                <span id="t-emp" class="text-xs font-mono font-bold">R$ 0,00</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-100 pb-2">
-                                <span class="text-[10px] text-slate-400 uppercase">Cota Residencial (1/3)</span>
-                                <span id="t-res" class="text-xs font-mono font-bold">R$ 0,00</span>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <p class="text-[9px] text-blue-600 font-bold uppercase mb-1">Total Semanal (Sábado)</p>
-                                <p id="t-sem" class="text-3xl font-black text-blue-900 font-mono tracking-tighter">R$ 0,00</p>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Aluguel do Prédio</label>
+                        <input type="number" id="v-aluguel" value="6250" class="input-style">
+                        <p class="text-[9px] text-slate-400 mt-2">Dividido 50% para o salão e 50% para a casa de cima.</p>
                     </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Luz (Celesc - Mês)</label>
+                        <input type="number" id="v-luz" placeholder="0.00" class="input-style">
+                        <p class="text-[9px] text-slate-400 mt-2">Regra: 70% é uso dos equipamentos e 30% é uso da casa.</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Água (Mês)</label>
+                        <input type="number" id="v-agua" placeholder="0.00" class="input-style">
+                        <p class="text-[9px] text-slate-400 mt-2">Regra: 70% é do lavatório e salão, 30% é da casa.</p>
+                    </div>
+                </div>
 
-                    <!-- RELATÓRIO JÔ -->
-                    <div class="card-audit p-6 border-t-4 border-slate-800 bg-slate-50">
-                        <p class="label-resp text-slate-800 mb-4">Relatório Individual: Jô</p>
-                        <div class="space-y-4">
-                            <div class="flex justify-between border-b border-slate-200 pb-2">
-                                <span class="text-[10px] text-slate-500 uppercase">Cota Empresa (50%)</span>
-                                <span id="j-emp" class="text-xs font-mono font-bold">R$ 0,00</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-200 pb-2">
-                                <span class="text-[10px] text-slate-500 uppercase">Cota Residencial (2/3)*</span>
-                                <span id="j-res" class="text-xs font-mono font-bold">R$ 0,00</span>
-                            </div>
-                            <div class="bg-slate-200 p-4 rounded-lg">
-                                <p class="text-[9px] text-slate-600 font-bold uppercase mb-1">Total Semanal (Sábado)</p>
-                                <p id="j-sem" class="text-3xl font-black text-slate-900 font-mono tracking-tighter">R$ 0,00</p>
-                            </div>
-                            <p class="text-[9px] text-slate-400 italic">*Inclui consumo proporcional de dependente (criança).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-dashed">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Internet Total</label>
+                        <input type="number" id="v-internet" placeholder="0.00" class="input-style">
+                        <p class="text-[9px] text-slate-400 mt-2">Uso misto: 50% Trabalho e 50% Casa/Lazer.</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Contabilidade</label>
+                        <input type="number" id="v-contabil" value="300" class="input-style">
+                        <p class="text-[9px] text-slate-400 mt-2">Custo fixo mensal dividido meio a meio.</p>
+                    </div>
+                </div>
+
+                <button onclick="calcular()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-lg mt-8 hover:bg-slate-900 transition-all uppercase text-xs tracking-widest">
+                    Atualizar Relatórios de Rateio
+                </button>
+            </div>
+
+            <!-- SEÇÃO 2: RESULTADOS INDIVIDUAIS -->
+            <div id="res-box" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- CARD TIAGO (AZUL SUAVE) -->
+                <div class="card p-6 blue-card">
+                    <h3 class="font-bold text-blue-800 text-sm mb-4 uppercase">Parte do Tiago</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-xs border-b border-blue-200 pb-2">
+                            <span>Sua parte no Salão (50%)</span>
+                            <span id="t-emp" class="font-bold">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between text-xs border-b border-blue-200 pb-2">
+                            <span>Sua parte na Casa (1 de 3 pessoas)</span>
+                            <span id="t-res" class="font-bold">R$ 0,00</span>
+                        </div>
+                        <div class="pt-4">
+                            <p class="text-[10px] text-blue-600 font-bold uppercase mb-1 text-center">Para separar todo Sábado</p>
+                            <p id="t-sem" class="text-4xl font-black text-blue-900 text-center tracking-tighter">R$ 0,00</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- TABELA DE MEMORIAL -->
-                <div class="card-audit overflow-hidden">
-                    <div class="bg-slate-50 p-4 border-b flex justify-between">
-                        <h3 class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Base de Cálculo de Rateio</h3>
-                        <span class="text-[9px] text-blue-600 font-bold uppercase">Empresa: 50% | 70% Maquinário</span>
+                <!-- CARD JÔ (ROSA) -->
+                <div class="card p-6 pink-card">
+                    <h3 class="font-bold text-pink-800 text-sm mb-4 uppercase">Parte da Jô</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-xs border-b border-pink-200 pb-2">
+                            <span>Sua parte no Salão (50%)</span>
+                            <span id="j-emp" class="font-bold">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between text-xs border-b border-pink-200 pb-2">
+                            <span>Sua parte na Casa (Mãe + Criança)</span>
+                            <span id="j-res" class="font-bold">R$ 0,00</span>
+                        </div>
+                        <div class="pt-4">
+                            <p class="text-[10px] text-pink-600 font-bold uppercase mb-1 text-center">Para separar todo Sábado</p>
+                            <p id="j-sem" class="text-4xl font-black text-pink-900 text-center tracking-tighter">R$ 0,00</p>
+                        </div>
                     </div>
-                    <table class="w-full text-[11px] text-left">
-                        <thead class="bg-slate-100 text-slate-400 uppercase font-bold">
-                            <tr>
-                                <th class="p-3">Serviço</th>
-                                <th class="p-3 text-center">Tiago (1 Pessoa)</th>
-                                <th class="p-3 text-center text-blue-900">Jô (Mãe + Criança)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr>
-                                <td class="p-3 font-bold text-slate-700">Aluguel Casa</td>
-                                <td class="p-3 text-center">33.3% (1/3)</td>
-                                <td class="p-3 text-center font-bold text-blue-800">66.6% (2/3)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-slate-700">Luz & Água (Casa)</td>
-                                <td class="p-3 text-center">33.3% (1/3)</td>
-                                <td class="p-3 text-center font-bold text-blue-800">66.6% (2/3)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-slate-700">Internet (Casa)</td>
-                                <td class="p-3 text-center">33.3% (1/3)</td>
-                                <td class="p-3 text-center font-bold text-blue-800">66.6% (2/3)</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
+
+            <!-- SEÇÃO 3: ACORDO DE DÍVIDA RETROATIVA (OS R$ 3.000) -->
+            <div class="card p-6 border-2 border-slate-200 bg-slate-50">
+                <h2 class="text-sm font-black text-slate-800 uppercase mb-4 text-center">Acordo de Pagamento: Luz Retroativa (Celesc/Mãe)</h2>
+                <p class="text-xs text-slate-600 mb-6 text-center">Este valor refere-se ao empréstimo de **R$ 3.000,00** para quitação de débitos passados, parcelado em **6x de R$ 500,00**.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-4 rounded-lg border text-center shadow-sm">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Cota Mensal Tiago (Proporcional)</p>
+                        <p class="text-2xl font-black text-slate-700">R$ 225,00</p>
+                        <p class="text-[9px] text-slate-400 mt-2">Reflexo de 50% do salão + 1/3 da casa sobre a parcela de R$ 500.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-pink-100 text-center shadow-sm">
+                        <p class="text-[10px] font-bold text-pink-400 uppercase mb-1">Cota Mensal Jô (Proporcional)</p>
+                        <p class="text-2xl font-black text-pink-700">R$ 275,00</p>
+                        <p class="text-[9px] text-pink-400 mt-2">Reflexo de 50% do salão + 2/3 da casa sobre a parcela de R$ 500.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-white rounded border border-dashed text-[10px] text-slate-500 leading-relaxed">
+                    <strong>Explicação do Cálculo:</strong> Dos R$ 500 da parcela mensal, R$ 350 (70%) é responsabilidade do Salão (R$ 175 cada). Os R$ 150 (30%) restantes são da Casa, onde o Tiago paga R$ 50 (1/3) e a Jô paga R$ 100 (2/3 por ela e pela Antonela). <strong>Total final: Tiago R$ 225 | Jô R$ 275.</strong>
+                </div>
+            </div>
+
         </div>
+
+        <footer class="mt-12 text-center text-[10px] text-slate-400 uppercase tracking-widest">
+            Transparência e Organização Familiar • 2026
+        </footer>
     </div>
 
     <script>
-        function calcularGeral() {
+        function calcular() {
             const alu = parseFloat(document.getElementById('v-aluguel').value) || 0;
             const luz = parseFloat(document.getElementById('v-luz').value) || 0;
             const agua = parseFloat(document.getElementById('v-agua').value) || 0;
             const net = parseFloat(document.getElementById('v-internet').value) || 0;
-            const retro = parseFloat(document.getElementById('v-retroativo').value) || 0;
-            const con = 150; // Metade da contabilidade de R$ 300
+            const con = (parseFloat(document.getElementById('v-contabil').value) || 0) / 2;
 
-            // CÁLCULO TIAGO
-            let t_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con + (retro * 0.7 / 2);
-            let t_res = (alu * 0.5 * 1/3) + (luz * 0.3 * 1/3) + (agua * 0.3 * 1/3) + (net * 0.5 * 1/3) + (retro * 0.3 * 1/3);
+            // CÁLCULOS TIAGO
+            let t_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con;
+            let t_res = (alu * 0.5 * 1/3) + (luz * 0.3 * 1/3) + (agua * 0.3 * 1/3) + (net * 0.5 * 1/3);
 
-            // CÁLCULO JÔ
-            let j_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con + (retro * 0.7 / 2);
-            let j_res = (alu * 0.5 * 2/3) + (luz * 0.3 * 2/3) + (agua * 0.3 * 2/3) + (net * 0.5 * 2/3) + (retro * 0.3 * 2/3);
+            // CÁLCULOS JÔ
+            let j_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con;
+            let j_res = (alu * 0.5 * 2/3) + (luz * 0.3 * 2/3) + (agua * 0.3 * 2/3) + (net * 0.5 * 2/3);
 
-            // RENDER TIAGO
+            // RENDERIZAÇÃO
             document.getElementById('t-emp').innerText = t_emp.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('t-res').innerText = t_res.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('t-sem').innerText = ((t_emp + t_res) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-            // RENDER JÔ
             document.getElementById('j-emp').innerText = j_emp.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('j-res').innerText = j_res.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('j-sem').innerText = ((j_emp + j_res) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-            document.getElementById('res-container').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            document.getElementById('res-box').classList.remove('hidden');
+            window.scrollTo({ top: document.getElementById('res-box').offsetTop - 20, behavior: 'smooth' });
         }
     </script>
 </body>
