@@ -3,169 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Custos Compartilhados</title>
+    <title>Gestão de Custos e Auditoria</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #fdfdfd; color: #334155; }
-        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .input-style { width: 100%; padding: 0.75rem; border: 2px solid #f1f5f9; border-radius: 8px; text-align: right; font-weight: 700; background: #f8fafc; }
-        .input-style:focus { border-color: #cbd5e1; outline: none; background: white; }
-        .pink-card { background-color: #fff1f2; border: 1px solid #fecdd3; }
-        .blue-card { background-color: #eff6ff; border: 1px solid #bfdbfe; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; shadow-sm; }
+        .input-style { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; text-align: right; font-weight: 600; }
+        .pink-text { color: #db2777; }
+        .blue-text { color: #2563eb; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-5xl mx-auto">
-        <!-- CABEÇALHO SIMPLES -->
-        <header class="mb-10 text-center border-b pb-6">
-            <h1 class="text-2xl font-bold text-slate-800">Acordo de Divisão de Custos</h1>
-            <p class="text-slate-500 text-sm mt-1">Organização de Moradia e Trabalho em Conjunto</p>
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8 flex justify-between items-center border-b pb-4">
+            <h1 class="text-xl font-bold text-slate-800 uppercase tracking-tight">Relatório de Transparência Financeira</h1>
+            <button onclick="salvarDados()" class="bg-green-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-green-700">💾 SALVAR DADOS</button>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- SEÇÃO 1: ENTRADA DE CONTAS DO MÊS -->
-            <div class="card p-6">
-                <h2 class="text-sm font-bold text-slate-700 uppercase mb-4">1. Lançamento das Despesas Atuais</h2>
-                <p class="text-xs text-slate-500 mb-6 italic">Insira os valores das faturas que chegaram este mês para calcular o rateio justo.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Aluguel do Prédio</label>
-                        <input type="number" id="v-aluguel" value="6250" class="input-style">
-                        <p class="text-[9px] text-slate-400 mt-2">Dividido 50% para o salão e 50% para a casa de cima.</p>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Luz (Celesc - Mês)</label>
-                        <input type="number" id="v-luz" placeholder="0.00" class="input-style">
-                        <p class="text-[9px] text-slate-400 mt-2">Regra: 70% é uso dos equipamentos e 30% é uso da casa.</p>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Água (Mês)</label>
-                        <input type="number" id="v-agua" placeholder="0.00" class="input-style">
-                        <p class="text-[9px] text-slate-400 mt-2">Regra: 70% é do lavatório e salão, 30% é da casa.</p>
+            <!-- INPUTS -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="card p-5">
+                    <h2 class="text-xs font-bold uppercase mb-4 text-slate-400 tracking-widest">Faturas do Mês</h2>
+                    <div class="space-y-3">
+                        <div><label class="text-[10px] font-bold uppercase">Aluguel Total</label><input type="number" id="v-aluguel" value="6250" class="input-style"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Luz</label><input type="number" id="v-luz" class="input-style"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Água</label><input type="number" id="v-agua" class="input-style"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Internet</label><input type="number" id="v-internet" class="input-style"></div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-dashed">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Internet Total</label>
-                        <input type="number" id="v-internet" placeholder="0.00" class="input-style">
-                        <p class="text-[9px] text-slate-400 mt-2">Uso misto: 50% Trabalho e 50% Casa/Lazer.</p>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Contabilidade</label>
-                        <input type="number" id="v-contabil" value="300" class="input-style">
-                        <p class="text-[9px] text-slate-400 mt-2">Custo fixo mensal dividido meio a meio.</p>
-                    </div>
-                </div>
-
-                <button onclick="calcular()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-lg mt-8 hover:bg-slate-900 transition-all uppercase text-xs tracking-widest">
-                    Atualizar Relatórios de Rateio
-                </button>
-            </div>
-
-            <!-- SEÇÃO 2: RESULTADOS INDIVIDUAIS -->
-            <div id="res-box" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- CARD TIAGO (AZUL SUAVE) -->
-                <div class="card p-6 blue-card">
-                    <h3 class="font-bold text-blue-800 text-sm mb-4 uppercase">Parte do Tiago</h3>
+                <div class="card p-5 border-l-4 border-red-500">
+                    <h2 class="text-xs font-bold uppercase mb-4 text-red-600">Controle de Dívidas</h2>
                     <div class="space-y-4">
-                        <div class="flex justify-between text-xs border-b border-blue-200 pb-2">
-                            <span>Sua parte no Salão (50%)</span>
-                            <span id="t-emp" class="font-bold">R$ 0,00</span>
+                        <div class="p-3 bg-slate-50 rounded">
+                            <label class="text-[10px] font-bold block mb-1">Dívida Mãe (R$ 3.000)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="p-mae" value="0" class="w-1/2 p-1 border rounded text-center font-bold">
+                                <span class="text-[10px]">de 6 pagas</span>
+                            </div>
                         </div>
-                        <div class="flex justify-between text-xs border-b border-blue-200 pb-2">
-                            <span>Sua parte na Casa (1 de 3 pessoas)</span>
-                            <span id="t-res" class="font-bold">R$ 0,00</span>
+                        <div class="p-3 bg-slate-50 rounded">
+                            <label class="text-[10px] font-bold block mb-1">Dívida Colômbia (R$ 150/dia)</label>
+                            <input type="number" id="v-colombia" value="150" class="input-style mb-2">
+                            <p class="text-[9px] text-slate-400 italic">Rateio 50/50 empresa.</p>
                         </div>
-                        <div class="pt-4">
-                            <p class="text-[10px] text-blue-600 font-bold uppercase mb-1 text-center">Para separar todo Sábado</p>
-                            <p id="t-sem" class="text-4xl font-black text-blue-900 text-center tracking-tighter">R$ 0,00</p>
+                    </div>
+                </div>
+                
+                <button onclick="processar()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-lg shadow-lg hover:bg-slate-900 transition-all">PROCESSAR RELATÓRIO</button>
+            </div>
+
+            <!-- GRÁFICOS E RESULTADOS -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div id="resultado" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- CARD TIAGO -->
+                    <div class="card p-6 bg-blue-50 border-blue-200 border">
+                        <h3 class="blue-text font-bold text-xs uppercase mb-4">Relatório Tiago</h3>
+                        <div class="h-40 mb-4"><canvas id="chartTiago"></canvas></div>
+                        <div class="text-center">
+                            <p class="text-[10px] text-blue-600 font-bold uppercase">Depósito Sábado</p>
+                            <p id="t-total" class="text-3xl font-black text-blue-900">R$ 0,00</p>
+                        </div>
+                    </div>
+
+                    <!-- CARD JÔ -->
+                    <div class="card p-6 bg-pink-50 border-pink-200 border">
+                        <h3 class="pink-text font-bold text-xs uppercase mb-4">Relatório Jô & Antonella</h3>
+                        <div class="h-40 mb-4"><canvas id="chartJo"></canvas></div>
+                        <div class="text-center">
+                            <p class="text-[10px] text-pink-600 font-bold uppercase">Depósito Sábado</p>
+                            <p id="j-total" class="text-3xl font-black text-pink-900">R$ 0,00</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- CARD JÔ (ROSA) -->
-                <div class="card p-6 pink-card">
-                    <h3 class="font-bold text-pink-800 text-sm mb-4 uppercase">Parte da Jô</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-xs border-b border-pink-200 pb-2">
-                            <span>Sua parte no Salão (50%)</span>
-                            <span id="j-emp" class="font-bold">R$ 0,00</span>
+                <!-- RESUMO DE DÍVIDAS -->
+                <div class="card p-6">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-4 tracking-widest">Status de Quitação</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border p-4 rounded text-center">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase">Dívida Mãe</p>
+                            <p id="status-mae" class="text-lg font-bold text-slate-800 mt-1">Faltam 6 parcelas</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div id="bar-mae" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
                         </div>
-                        <div class="flex justify-between text-xs border-b border-pink-200 pb-2">
-                            <span>Sua parte na Casa (Mãe + Criança)</span>
-                            <span id="j-res" class="font-bold">R$ 0,00</span>
-                        </div>
-                        <div class="pt-4">
-                            <p class="text-[10px] text-pink-600 font-bold uppercase mb-1 text-center">Para separar todo Sábado</p>
-                            <p id="j-sem" class="text-4xl font-black text-pink-900 text-center tracking-tighter">R$ 0,00</p>
+                        <div class="border p-4 rounded text-center">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase">Cota Colômbia</p>
+                            <p class="text-lg font-bold text-slate-800 mt-1">R$ 75,00 cada</p>
+                            <p class="text-[9px] text-slate-400 italic">Dedução diária do faturamento</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- SEÇÃO 3: ACORDO DE DÍVIDA RETROATIVA (OS R$ 3.000) -->
-            <div class="card p-6 border-2 border-slate-200 bg-slate-50">
-                <h2 class="text-sm font-black text-slate-800 uppercase mb-4 text-center">Acordo de Pagamento: Luz Retroativa (Celesc/Mãe)</h2>
-                <p class="text-xs text-slate-600 mb-6 text-center">Este valor refere-se ao empréstimo de **R$ 3.000,00** para quitação de débitos passados, parcelado em **6x de R$ 500,00**.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-4 rounded-lg border text-center shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Cota Mensal Tiago (Proporcional)</p>
-                        <p class="text-2xl font-black text-slate-700">R$ 225,00</p>
-                        <p class="text-[9px] text-slate-400 mt-2">Reflexo de 50% do salão + 1/3 da casa sobre a parcela de R$ 500.</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-lg border border-pink-100 text-center shadow-sm">
-                        <p class="text-[10px] font-bold text-pink-400 uppercase mb-1">Cota Mensal Jô (Proporcional)</p>
-                        <p class="text-2xl font-black text-pink-700">R$ 275,00</p>
-                        <p class="text-[9px] text-pink-400 mt-2">Reflexo de 50% do salão + 2/3 da casa sobre a parcela de R$ 500.</p>
-                    </div>
-                </div>
-                
-                <div class="mt-6 p-4 bg-white rounded border border-dashed text-[10px] text-slate-500 leading-relaxed">
-                    <strong>Explicação do Cálculo:</strong> Dos R$ 500 da parcela mensal, R$ 350 (70%) é responsabilidade do Salão (R$ 175 cada). Os R$ 150 (30%) restantes são da Casa, onde o Tiago paga R$ 50 (1/3) e a Jô paga R$ 100 (2/3 por ela e pela Antonela). <strong>Total final: Tiago R$ 225 | Jô R$ 275.</strong>
-                </div>
-            </div>
-
         </div>
-
-        <footer class="mt-12 text-center text-[10px] text-slate-400 uppercase tracking-widest">
-            Transparência e Organização Familiar • 2026
-        </footer>
     </div>
 
     <script>
-        function calcular() {
+        let chartT = null;
+        let chartJ = null;
+
+        // CARREGAR DADOS AO ABRIR
+        window.onload = function() {
+            if(localStorage.getItem('dadosAudit')) {
+                const d = JSON.parse(localStorage.getItem('dadosAudit'));
+                document.getElementById('v-aluguel').value = d.aluguel;
+                document.getElementById('p-mae').value = d.parcelasMae;
+                document.getElementById('v-colombia').value = d.colombia;
+            }
+        };
+
+        function salvarDados() {
+            const data = {
+                aluguel: document.getElementById('v-aluguel').value,
+                parcelasMae: document.getElementById('p-mae').value,
+                colombia: document.getElementById('v-colombia').value
+            };
+            localStorage.setItem('dadosAudit', JSON.stringify(data));
+            alert('Dados salvos no seu navegador!');
+        }
+
+        function processar() {
             const alu = parseFloat(document.getElementById('v-aluguel').value) || 0;
             const luz = parseFloat(document.getElementById('v-luz').value) || 0;
             const agua = parseFloat(document.getElementById('v-agua').value) || 0;
             const net = parseFloat(document.getElementById('v-internet').value) || 0;
-            const con = (parseFloat(document.getElementById('v-contabil').value) || 0) / 2;
+            const colombia = parseFloat(document.getElementById('v-colombia').value) || 0;
+            const pMae = parseInt(document.getElementById('p-mae').value) || 0;
 
-            // CÁLCULOS TIAGO
-            let t_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con;
-            let t_res = (alu * 0.5 * 1/3) + (luz * 0.3 * 1/3) + (agua * 0.3 * 1/3) + (net * 0.5 * 1/3);
+            // REGRAS DE NEGÓCIO
+            // Tiago: (50% Salão / 2) + (50% Casa / 3)
+            let t_fixo = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + (colombia / 2) + 150;
+            let t_casa = (alu * 0.5 / 3) + (luz * 0.3 / 3) + (agua * 0.3 / 3) + (net * 0.5 / 3);
 
-            // CÁLCULOS JÔ
-            let j_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con;
-            let j_res = (alu * 0.5 * 2/3) + (luz * 0.3 * 2/3) + (agua * 0.3 * 2/3) + (net * 0.5 * 2/3);
+            // Jô: (50% Salão / 2) + (50% Casa * 2 / 3)
+            let j_fixo = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + (colombia / 2) + 150;
+            let j_casa = (alu * 0.5 * 2 / 3) + (luz * 0.3 * 2 / 3) + (agua * 0.3 * 2 / 3) + (net * 0.5 * 2 / 3);
 
-            // RENDERIZAÇÃO
-            document.getElementById('t-emp').innerText = t_emp.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('t-res').innerText = t_res.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('t-sem').innerText = ((t_emp + t_res) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            // RENDER TEXTO
+            document.getElementById('t-total').innerText = ((t_fixo + t_casa) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('j-total').innerText = ((j_fixo + j_casa) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-            document.getElementById('j-emp').innerText = j_emp.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('j-res').innerText = j_res.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('j-sem').innerText = ((j_emp + j_res) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            // STATUS DÍVIDA MÃE
+            const faltam = 6 - pMae;
+            document.getElementById('status-mae').innerText = `Faltam ${faltam} parcelas`;
+            document.getElementById('bar-mae').style.width = (pMae / 6 * 100) + '%';
 
-            document.getElementById('res-box').classList.remove('hidden');
-            window.scrollTo({ top: document.getElementById('res-box').offsetTop - 20, behavior: 'smooth' });
+            document.getElementById('resultado').classList.remove('hidden');
+
+            // GRÁFICOS
+            updateCharts(t_fixo, t_casa, j_fixo, j_casa);
+        }
+
+        function updateCharts(tf, tc, jf, jc) {
+            const ctxT = document.getElementById('chartTiago').getContext('2d');
+            const ctxJ = document.getElementById('chartJo').getContext('2d');
+
+            if(chartT) chartT.destroy();
+            if(chartJ) chartJ.destroy();
+
+            chartT = new Chart(ctxT, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sua Parte Empresa', 'Sua Parte Casa'],
+                    datasets: [{
+                        data: [tf, tc],
+                        backgroundColor: ['#1e3a8a', '#93c5fd']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            chartJ = new Chart(ctxJ, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Parte Empresa Jô', 'Parte Jô + Antonella'],
+                    datasets: [{
+                        data: [jf, jc],
+                        backgroundColor: ['#9d174d', '#fbcfe8']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
         }
     </script>
 </body>
