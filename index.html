@@ -23,7 +23,7 @@
         <header class="bg-[#1e3a8a] p-8 rounded-t-2xl shadow-xl flex flex-col md:flex-row justify-between items-center text-white">
             <div class="text-center md:text-left">
                 <h1 class="text-2xl font-black tracking-tighter uppercase">Relatório de Transparência Financeira</h1>
-                <p class="text-blue-200 text-[10px] font-mono mt-1 tracking-widest">Protocolo de Governança v7.4 • Auditoria com Extrato</p>
+                <p class="text-blue-200 text-[10px] font-mono mt-1 tracking-widest">Protocolo de Governança v7.5 • Visão Mês/Semana</p>
             </div>
             <div class="flex gap-4 mt-4 md:mt-0">
                 <button onclick="salvarGeral()" class="bg-green-600 px-6 py-2 rounded-full text-xs font-bold hover:bg-green-700 transition-all uppercase shadow-lg">💾 Salvar Estado</button>
@@ -104,9 +104,16 @@
                                 </div>
                             </div>
 
-                            <div class="bg-blue-100 p-4 rounded-lg text-center mt-auto">
-                                <p class="text-[10px] text-blue-600 font-bold uppercase">Retenção de Caixa (Todo Sábado)</p>
-                                <p id="final-t" class="text-4xl font-black text-blue-900">R$ 0,00</p>
+                            <!-- RESUMO FINANCEIRO (MÊS E SEMANA) -->
+                            <div class="bg-blue-100 p-4 rounded-lg mt-auto space-y-3 shadow-inner">
+                                <div class="flex justify-between items-center border-b border-blue-200 pb-2">
+                                    <span class="text-[10px] text-blue-800 font-bold uppercase">Custo Total (Mês)</span>
+                                    <span id="total-mensal-t" class="text-xl font-bold text-blue-900">R$ 0,00</span>
+                                </div>
+                                <div class="text-center pt-1">
+                                    <p class="text-[10px] text-blue-600 font-bold uppercase">Retenção de Caixa (Sábados)</p>
+                                    <p id="final-t" class="text-4xl font-black text-blue-900">R$ 0,00</p>
+                                </div>
                             </div>
                         </div>
 
@@ -134,9 +141,16 @@
                                 </div>
                             </div>
 
-                            <div class="bg-pink-100 p-4 rounded-lg text-center mt-auto">
-                                <p class="text-[10px] text-pink-600 font-bold uppercase">Retenção de Caixa (Todo Sábado)</p>
-                                <p id="final-j" class="text-4xl font-black text-pink-900">R$ 0,00</p>
+                            <!-- RESUMO FINANCEIRO (MÊS E SEMANA) -->
+                            <div class="bg-pink-100 p-4 rounded-lg mt-auto space-y-3 shadow-inner">
+                                <div class="flex justify-between items-center border-b border-pink-200 pb-2">
+                                    <span class="text-[10px] text-pink-800 font-bold uppercase">Custo Total (Mês)</span>
+                                    <span id="total-mensal-j" class="text-xl font-bold text-pink-900">R$ 0,00</span>
+                                </div>
+                                <div class="text-center pt-1">
+                                    <p class="text-[10px] text-pink-600 font-bold uppercase">Retenção de Caixa (Sábados)</p>
+                                    <p id="final-j" class="text-4xl font-black text-pink-900">R$ 0,00</p>
+                                </div>
                             </div>
                         </div>
 
@@ -146,7 +160,6 @@
 
             <!-- ABA 3: PASSIVOS -->
             <section id="tab-passivos" class="hidden space-y-6">
-                <!-- (Módulo de Passivos mantido idêntico ao v7.3 para focar na auditoria da Aba 2) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="card-white p-8">
                         <h2 class="text-xs font-bold text-slate-500 uppercase mb-6 border-b pb-2">Dívida Mãe (Luz Retroativa)</h2>
@@ -215,7 +228,7 @@
             let emp_agua = (agua * 0.7) / 2;
             let emp_net = (net * 0.5) / 2;
             let t_emp_total = emp_alu + emp_luz + emp_agua + emp_net + con;
-            let j_emp_total = t_emp_total; // Sócios iguais
+            let j_emp_total = t_emp_total;
 
             // LÓGICA RESIDENCIAL (1/3 Tiago, 2/3 Jô)
             let res_alu_t = (alu * 0.5) / 3;
@@ -230,7 +243,7 @@
             let res_net_j = ((net * 0.5) / 3) * 2;
             let j_res_total = res_alu_j + res_luz_j + res_agua_j + res_net_j;
 
-            // RENDERIZAÇÃO EXTRATOS (A MÁGICA DA TRANSPARÊNCIA)
+            // EXTRATOS
             const buildItem = (nome, val) => `<div class="extrato-item"><span>${nome}</span><span>${formata(val)}</span></div>`;
             
             document.getElementById('extrato-t-emp').innerHTML = buildItem('Aluguel', emp_alu) + buildItem('Luz', emp_luz) + buildItem('Água', emp_agua) + buildItem('Internet', emp_net) + buildItem('Contabilidade', con);
@@ -239,26 +252,34 @@
             document.getElementById('extrato-t-res').innerHTML = buildItem('Aluguel', res_alu_t) + buildItem('Luz', res_luz_t) + buildItem('Água', res_agua_t) + buildItem('Internet', res_net_t);
             document.getElementById('extrato-j-res').innerHTML = buildItem('Aluguel', res_alu_j) + buildItem('Luz', res_luz_j) + buildItem('Água', res_agua_j) + buildItem('Internet', res_net_j);
 
-            // TOTAIS
+            // TOTAIS EMPRESA/CASA
             document.getElementById('t-emp').innerText = formata(t_emp_total);
             document.getElementById('t-res').innerText = formata(t_res_total);
-            document.getElementById('final-t').innerText = formata((t_emp_total + t_res_total)/4);
-
+            
             document.getElementById('j-emp').innerText = formata(j_emp_total);
             document.getElementById('j-res').innerText = formata(j_res_total);
-            document.getElementById('final-j').innerText = formata((j_emp_total + j_res_total)/4);
+
+            // TOTAIS TOTAIS (MÊS E SEMANA)
+            let total_mensal_t = t_emp_total + t_res_total;
+            let total_mensal_j = j_emp_total + j_res_total;
+
+            document.getElementById('total-mensal-t').innerText = formata(total_mensal_t);
+            document.getElementById('final-t').innerText = formata(total_mensal_t / 4);
+
+            document.getElementById('total-mensal-j').innerText = formata(total_mensal_j);
+            document.getElementById('final-j').innerText = formata(total_mensal_j / 4);
         }
 
         function salvarGeral() {
             const data = { alu: document.getElementById('v-alu').value, luz: document.getElementById('v-luz').value, agua: document.getElementById('v-agua').value, net: document.getElementById('v-internet').value, mae: document.getElementById('p-mae').value };
-            localStorage.setItem('audit_save_v7_4', JSON.stringify(data));
+            localStorage.setItem('audit_save_v7_5', JSON.stringify(data));
             const p = parseInt(data.mae) || 0;
             document.getElementById('prog-bar').style.width = (p/6*100) + '%';
             document.getElementById('prog-txt').innerText = Math.round(p/6*100) + '%';
         }
 
         window.onload = () => {
-            const s = JSON.parse(localStorage.getItem('audit_save_v7_4'));
+            const s = JSON.parse(localStorage.getItem('audit_save_v7_5'));
             if(s) { document.getElementById('v-alu').value = s.alu; document.getElementById('v-luz').value = s.luz; document.getElementById('v-agua').value = s.agua; document.getElementById('v-internet').value = s.net; document.getElementById('p-mae').value = s.mae; salvarGeral(); }
             processarMensal();
         }
