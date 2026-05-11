@@ -3,194 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Custos e Auditoria</title>
+    <title>Relatório de Transparência Financeira</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
-        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; shadow-sm; }
-        .input-style { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; text-align: right; font-weight: 600; }
-        .pink-text { color: #db2777; }
-        .blue-text { color: #2563eb; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono:wght@500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; color: #1e293b; }
+        .tab-active { border-bottom: 3px solid #1e3a8a; color: #1e3a8a; font-weight: 800; }
+        .card-white { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .input-audit { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Roboto Mono', monospace; text-align: right; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-6xl mx-auto">
-        <header class="mb-8 flex justify-between items-center border-b pb-4">
-            <h1 class="text-xl font-bold text-slate-800 uppercase tracking-tight">Relatório de Transparência Financeira</h1>
-            <button onclick="salvarDados()" class="bg-green-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-green-700">💾 SALVAR DADOS</button>
+        <header class="bg-[#1e3a8a] p-8 rounded-t-2xl shadow-xl flex flex-col md:flex-row justify-between items-center text-white">
+            <div class="text-center md:text-left">
+                <h1 class="text-2xl font-black tracking-tighter uppercase">Relatório de Transparência Financeira</h1>
+                <p class="text-blue-200 text-[10px] font-mono mt-1 tracking-widest">Protocolo de Auditoria e Governança v7.0</p>
+            </div>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <button onclick="salvarGeral()" class="bg-green-600 px-6 py-2 rounded-full text-xs font-bold hover:bg-green-700 transition-all uppercase shadow-lg">💾 Salvar Estado</button>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <nav class="bg-white border-x border-b flex justify-around text-xs font-bold uppercase tracking-widest text-slate-400 p-2 shadow-sm">
+            <button onclick="switchTab('diario')" id="btn-diario" class="p-4 tab-active">Fechamento Diário</button>
+            <button onclick="switchTab('mensal')" id="btn-mensal" class="p-4">Rateio Mensal</button>
+            <button onclick="switchTab('passivos')" id="btn-passivos" class="p-4">Controle de Dívidas</button>
+        </nav>
+
+        <main class="mt-8">
             
-            <!-- INPUTS -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="card p-5">
-                    <h2 class="text-xs font-bold uppercase mb-4 text-slate-400 tracking-widest">Faturas do Mês</h2>
-                    <div class="space-y-3">
-                        <div><label class="text-[10px] font-bold uppercase">Aluguel Total</label><input type="number" id="v-aluguel" value="6250" class="input-style"></div>
-                        <div><label class="text-[10px] font-bold uppercase">Luz</label><input type="number" id="v-luz" class="input-style"></div>
-                        <div><label class="text-[10px] font-bold uppercase">Água</label><input type="number" id="v-agua" class="input-style"></div>
-                        <div><label class="text-[10px] font-bold uppercase">Internet</label><input type="number" id="v-internet" class="input-style"></div>
+            <section id="tab-diario" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card-white p-8">
+                        <h2 class="text-xs font-bold text-slate-500 uppercase mb-6 border-b pb-2">Entrada de Caixa (Hoje)</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Faturamento Bruto</label>
+                                <input type="number" id="f-bruto" placeholder="0.00" class="input-audit text-xl">
+                            </div>
+                            <div class="p-4 bg-red-50 border border-red-100 rounded-lg">
+                                <p class="text-[10px] text-red-600 font-bold uppercase">Dedução Automática Colômbia</p>
+                                <p class="text-lg font-mono font-bold text-red-900">- R$ 150,00</p>
+                            </div>
+                            <button onclick="processarDiario()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition-all uppercase text-xs">Processar Split 50/50</button>
+                        </div>
+                    </div>
+                    <div id="res-diario" class="hidden space-y-4">
+                        <div class="card-white p-6 border-l-4 border-blue-600 bg-blue-50">
+                            <p class="text-[10px] font-bold text-blue-600 uppercase">PIX Livre Tiago</p>
+                            <p id="pix-t" class="text-3xl font-black text-slate-800">R$ 0,00</p>
+                        </div>
+                        <div class="card-white p-6 border-l-4 border-pink-500 bg-pink-50">
+                            <p class="text-[10px] font-bold text-pink-600 uppercase">PIX Livre Jô</p>
+                            <p id="pix-j" class="text-3xl font-black text-slate-800">R$ 0,00</p>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="card p-5 border-l-4 border-red-500">
-                    <h2 class="text-xs font-bold uppercase mb-4 text-red-600">Controle de Dívidas</h2>
-                    <div class="space-y-4">
-                        <div class="p-3 bg-slate-50 rounded">
-                            <label class="text-[10px] font-bold block mb-1">Dívida Mãe (R$ 3.000)</label>
-                            <div class="flex items-center gap-2">
-                                <input type="number" id="p-mae" value="0" class="w-1/2 p-1 border rounded text-center font-bold">
-                                <span class="text-[10px]">de 6 pagas</span>
+            <section id="tab-mensal" class="hidden space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 card-white p-6 space-y-4">
+                        <h2 class="text-xs font-bold text-slate-500 uppercase mb-4 border-b pb-2">Faturas Reais</h2>
+                        <div><label class="text-[10px] font-bold uppercase">Aluguel (6250)</label><input type="number" id="v-alu" value="6250" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Luz</label><input type="number" id="v-luz" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Água</label><input type="number" id="v-agua" class="input-audit"></div>
+                        <div><label class="text-[10px] font-bold uppercase">Internet</label><input type="number" id="v-internet" class="input-audit"></div>
+                        <button onclick="processarMensal()" class="w-full bg-[#1e3a8a] text-white font-bold py-4 rounded-xl shadow-lg uppercase text-xs">Gerar Gráficos e Rateio</button>
+                    </div>
+
+                    <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card-white p-6 text-center">
+                            <h3 class="text-blue-800 font-bold text-[10px] uppercase mb-4">Proporção Tiago</h3>
+                            <div class="h-40 mb-4"><canvas id="chartT"></canvas></div>
+                            <p class="text-[10px] text-slate-400 uppercase">Sábado (Tiago)</p>
+                            <p id="final-t" class="text-3xl font-black text-blue-900">R$ 0,00</p>
+                        </div>
+                        <div class="card-white p-6 text-center bg-pink-50/30">
+                            <h3 class="text-pink-800 font-bold text-[10px] uppercase mb-4 tracking-widest">Proporção Jô & Antonella</h3>
+                            <div class="h-40 mb-4"><canvas id="chartJ"></canvas></div>
+                            <p class="text-[10px] text-slate-400 uppercase">Sábado (Jô)</p>
+                            <p id="final-j" class="text-3xl font-black text-pink-900">R$ 0,00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-passivos" class="hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card-white p-8">
+                        <h2 class="text-xs font-bold text-slate-500 uppercase mb-6 border-b pb-2">Dívida Mãe (Luz Retroativa)</h2>
+                        <div class="space-y-4">
+                            <p class="text-xs text-slate-500 italic">Acordo: R$ 3.000,00 em 6x de R$ 500,00.</p>
+                            <div>
+                                <label class="text-[10px] font-bold uppercase">Parcelas Pagas</label>
+                                <input type="number" id="p-mae" value="0" min="0" max="6" class="input-audit">
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg">
+                                <div class="flex justify-between text-[10px] font-bold mb-2 uppercase">
+                                    <span>Progresso da Quitação</span>
+                                    <span id="prog-txt">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                                    <div id="prog-bar" class="bg-green-500 h-full transition-all duration-1000" style="width: 0%"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-3 bg-slate-50 rounded">
-                            <label class="text-[10px] font-bold block mb-1">Dívida Colômbia (R$ 150/dia)</label>
-                            <input type="number" id="v-colombia" value="150" class="input-style mb-2">
-                            <p class="text-[9px] text-slate-400 italic">Rateio 50/50 empresa.</p>
-                        </div>
                     </div>
-                </div>
-                
-                <button onclick="processar()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-lg shadow-lg hover:bg-slate-900 transition-all">PROCESSAR RELATÓRIO</button>
-            </div>
-
-            <!-- GRÁFICOS E RESULTADOS -->
-            <div class="lg:col-span-2 space-y-6">
-                
-                <div id="resultado" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- CARD TIAGO -->
-                    <div class="card p-6 bg-blue-50 border-blue-200 border">
-                        <h3 class="blue-text font-bold text-xs uppercase mb-4">Relatório Tiago</h3>
-                        <div class="h-40 mb-4"><canvas id="chartTiago"></canvas></div>
-                        <div class="text-center">
-                            <p class="text-[10px] text-blue-600 font-bold uppercase">Depósito Sábado</p>
-                            <p id="t-total" class="text-3xl font-black text-blue-900">R$ 0,00</p>
-                        </div>
-                    </div>
-
-                    <!-- CARD JÔ -->
-                    <div class="card p-6 bg-pink-50 border-pink-200 border">
-                        <h3 class="pink-text font-bold text-xs uppercase mb-4">Relatório Jô & Antonella</h3>
-                        <div class="h-40 mb-4"><canvas id="chartJo"></canvas></div>
-                        <div class="text-center">
-                            <p class="text-[10px] text-pink-600 font-bold uppercase">Depósito Sábado</p>
-                            <p id="j-total" class="text-3xl font-black text-pink-900">R$ 0,00</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RESUMO DE DÍVIDAS -->
-                <div class="card p-6">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-4 tracking-widest">Status de Quitação</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="border p-4 rounded text-center">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Dívida Mãe</p>
-                            <p id="status-mae" class="text-lg font-bold text-slate-800 mt-1">Faltam 6 parcelas</p>
-                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                                <div id="bar-mae" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="card-white p-8 border-l-4 border-red-500">
+                        <h2 class="text-xs font-bold text-red-600 uppercase mb-6 border-b pb-2">Rateio da Parcela (R$ 500)</h2>
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-slate-700">Tiago:</span>
+                                <span class="text-2xl font-black text-slate-800">R$ 225,00</span>
                             </div>
-                        </div>
-                        <div class="border p-4 rounded text-center">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Cota Colômbia</p>
-                            <p class="text-lg font-bold text-slate-800 mt-1">R$ 75,00 cada</p>
-                            <p class="text-[9px] text-slate-400 italic">Dedução diária do faturamento</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-pink-600">Jô & Criança:</span>
+                                <span class="text-2xl font-black text-pink-600">R$ 275,00</span>
+                            </div>
+                            <p class="text-[9px] text-slate-400 italic leading-relaxed border-t pt-4">Cálculo baseado na regra de consumo 70/30 (Empresa/Casa). Onde a casa é dividida 1/3 para Tiago e 2/3 para Jô.</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+
+        </main>
     </div>
 
     <script>
-        let chartT = null;
-        let chartJ = null;
+        let chartT = null, chartJ = null;
 
-        // CARREGAR DADOS AO ABRIR
-        window.onload = function() {
-            if(localStorage.getItem('dadosAudit')) {
-                const d = JSON.parse(localStorage.getItem('dadosAudit'));
-                document.getElementById('v-aluguel').value = d.aluguel;
-                document.getElementById('p-mae').value = d.parcelasMae;
-                document.getElementById('v-colombia').value = d.colombia;
-            }
-        };
-
-        function salvarDados() {
-            const data = {
-                aluguel: document.getElementById('v-aluguel').value,
-                parcelasMae: document.getElementById('p-mae').value,
-                colombia: document.getElementById('v-colombia').value
-            };
-            localStorage.setItem('dadosAudit', JSON.stringify(data));
-            alert('Dados salvos no seu navegador!');
+        function switchTab(tab) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('btn-' + tab).classList.add('tab-active');
         }
 
-        function processar() {
-            const alu = parseFloat(document.getElementById('v-aluguel').value) || 0;
+        function processarDiario() {
+            const bruto = parseFloat(document.getElementById('f-bruto').value) || 0;
+            const liq = (bruto / 2) - 75;
+            document.getElementById('pix-t').innerText = liq.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('pix-j').innerText = liq.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('res-diario').classList.remove('hidden');
+        }
+
+        function processarMensal() {
+            const alu = parseFloat(document.getElementById('v-alu').value) || 0;
             const luz = parseFloat(document.getElementById('v-luz').value) || 0;
             const agua = parseFloat(document.getElementById('v-agua').value) || 0;
             const net = parseFloat(document.getElementById('v-internet').value) || 0;
-            const colombia = parseFloat(document.getElementById('v-colombia').value) || 0;
-            const pMae = parseInt(document.getElementById('p-mae').value) || 0;
+            const con = 150; 
 
-            // REGRAS DE NEGÓCIO
-            // Tiago: (50% Salão / 2) + (50% Casa / 3)
-            let t_fixo = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + (colombia / 2) + 150;
-            let t_casa = (alu * 0.5 / 3) + (luz * 0.3 / 3) + (agua * 0.3 / 3) + (net * 0.5 / 3);
+            let t_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con + 75;
+            let t_res = (alu * 0.5 * 1/3) + (luz * 0.3 * 1/3) + (agua * 0.3 * 1/3) + (net * 0.5 * 1/3);
 
-            // Jô: (50% Salão / 2) + (50% Casa * 2 / 3)
-            let j_fixo = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + (colombia / 2) + 150;
-            let j_casa = (alu * 0.5 * 2 / 3) + (luz * 0.3 * 2 / 3) + (agua * 0.3 * 2 / 3) + (net * 0.5 * 2 / 3);
+            let j_emp = (alu * 0.5 / 2) + (luz * 0.7 / 2) + (agua * 0.7 / 2) + (net * 0.5 / 2) + con + 75;
+            let j_res = (alu * 0.5 * 2/3) + (luz * 0.3 * 2/3) + (agua * 0.3 * 2/3) + (net * 0.5 * 2/3);
 
-            // RENDER TEXTO
-            document.getElementById('t-total').innerText = ((t_fixo + t_casa) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            document.getElementById('j-total').innerText = ((j_fixo + j_casa) / 4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('final-t').innerText = ((t_emp + t_res)/4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('final-j').innerText = ((j_emp + j_res)/4).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-            // STATUS DÍVIDA MÃE
-            const faltam = 6 - pMae;
-            document.getElementById('status-mae').innerText = `Faltam ${faltam} parcelas`;
-            document.getElementById('bar-mae').style.width = (pMae / 6 * 100) + '%';
-
-            document.getElementById('resultado').classList.remove('hidden');
-
-            // GRÁFICOS
-            updateCharts(t_fixo, t_casa, j_fixo, j_casa);
+            renderCharts(t_emp, t_res, j_emp, j_res);
         }
 
-        function updateCharts(tf, tc, jf, jc) {
-            const ctxT = document.getElementById('chartTiago').getContext('2d');
-            const ctxJ = document.getElementById('chartJo').getContext('2d');
+        function renderCharts(te, tr, je, jr) {
+            const ctxT = document.getElementById('chartT').getContext('2d');
+            const ctxJ = document.getElementById('chartJ').getContext('2d');
+            if(chartT) chartT.destroy(); if(chartJ) chartJ.destroy();
 
-            if(chartT) chartT.destroy();
-            if(chartJ) chartJ.destroy();
+            chartT = new Chart(ctxT, { type: 'doughnut', data: { labels: ['Empresa', 'Sua Cota Casa'], datasets: [{ data: [te, tr], backgroundColor: ['#1e3a8a', '#93c5fd'], borderWidth: 0 }] }, options: { plugins: { legend: { display: false } }, maintainAspectRatio: false } });
+            chartJ = new Chart(ctxJ, { type: 'doughnut', data: { labels: ['Empresa', 'Cota Jô+Anto'], datasets: [{ data: [je, jr], backgroundColor: ['#9d174d', '#fbcfe8'], borderWidth: 0 }] }, options: { plugins: { legend: { display: false } }, maintainAspectRatio: false } });
+        }
 
-            chartT = new Chart(ctxT, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Sua Parte Empresa', 'Sua Parte Casa'],
-                    datasets: [{
-                        data: [tf, tc],
-                        backgroundColor: ['#1e3a8a', '#93c5fd']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+        function salvarGeral() {
+            const data = { alu: document.getElementById('v-alu').value, mae: document.getElementById('p-mae').value };
+            localStorage.setItem('audit_save', JSON.stringify(data));
+            const p = parseInt(data.mae);
+            document.getElementById('prog-bar').style.width = (p/6*100) + '%';
+            document.getElementById('prog-txt').innerText = Math.round(p/6*100) + '%';
+            alert('Dados de auditoria salvos.');
+        }
 
-            chartJ = new Chart(ctxJ, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Parte Empresa Jô', 'Parte Jô + Antonella'],
-                    datasets: [{
-                        data: [jf, jc],
-                        backgroundColor: ['#9d174d', '#fbcfe8']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+        window.onload = () => {
+            const s = JSON.parse(localStorage.getItem('audit_save'));
+            if(s) { document.getElementById('v-alu').value = s.alu; document.getElementById('p-mae').value = s.mae; salvarGeral(); }
         }
     </script>
 </body>
