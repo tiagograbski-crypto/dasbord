@@ -764,10 +764,18 @@
         };
 
         window.salvarNoFirebase = async () => {
-            if (!userLogado) return;
+            if (!userLogado) {
+                alert("Aguarde a autenticação segura antes de sincronizar.");
+                return;
+            }
+            
             const btn = document.getElementById('btn-salvar');
             const textOrig = "💾 Sincronizar";
-            btn.innerText = "⏳ ...";
+            
+            // Trava o botão e avisa que está aguardando o servidor
+            btn.innerText = "⏳ Gravando...";
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
 
             const pix = Number(document.getElementById('f-pix').value) || 0;
             const cartao = Number(document.getElementById('f-cartao').value) || 0;
@@ -817,17 +825,33 @@
             const vCbm = document.getElementById('venc-cbm').value;
             if(vCbm) dadosDB["VENCIMENTO ACORDO"] = Timestamp.fromDate(new Date(vCbm + 'T12:00:00'));
 
-            try {
-                await setDoc(docRef, dadosDB);
-                btn.innerText = "✅ SALVO";
-                btn.classList.replace('bg-blue-600', 'bg-emerald-600');
-                setTimeout(() => { btn.innerText = textOrig; btn.classList.replace('bg-emerald-600', 'bg-blue-600'); }, 2000);
-            } catch (err) {
-                console.error("DB Erro:", err);
-                btn.innerText = "❌ ERRO";
-                btn.classList.replace('bg-blue-600', 'bg-red-600');
-                setTimeout(() => { btn.innerText = textOrig; btn.classList.replace('bg-red-600', 'bg-blue-600'); }, 3000);
-            }
+            // REGRA DE OURO: Feedback atrelado EXCLUSIVAMENTE ao retorno oficial da promessa (Promise) do Firebase
+            setDoc(docRef, dadosDB)
+                .then(() => {
+                    // Servidor confirmou a gravação
+                    btn.innerText = "✅ GRAVADO COM SUCESSO";
+                    btn.classList.remove('bg-blue-600', 'opacity-70', 'cursor-not-allowed');
+                    btn.classList.add('bg-emerald-600');
+                    setTimeout(() => { 
+                        btn.innerText = textOrig; 
+                        btn.classList.remove('bg-emerald-600'); 
+                        btn.classList.add('bg-blue-600');
+                        btn.disabled = false;
+                    }, 3000);
+                })
+                .catch((err) => {
+                    // Servidor rejeitou ou a conexão caiu no meio do caminho
+                    console.error("DB Erro ao gravar:", err);
+                    btn.innerText = "❌ ERRO AO GRAVAR";
+                    btn.classList.remove('bg-blue-600', 'opacity-70', 'cursor-not-allowed');
+                    btn.classList.add('bg-red-600');
+                    setTimeout(() => { 
+                        btn.innerText = textOrig; 
+                        btn.classList.remove('bg-red-600'); 
+                        btn.classList.add('bg-blue-600');
+                        btn.disabled = false;
+                    }, 4000);
+                });
         };
 
         window.fecharCaixaDia = async () => {
