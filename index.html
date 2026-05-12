@@ -3,134 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GL PRO | AUDITORIA INTEGRAL v7.0</title>
+    <title>GL Pro Governance - Dashboard Contábil</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
-        body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; }
-        .header-navy { background-color: #1e3a8a; border-bottom: 4px solid #1d4ed8; }
-        .tab-active { border-bottom: 4px solid #1e3a8a; color: #1e3a8a; font-weight: 800; background: #fff; }
-        .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .input-audit { width: 100%; padding: 0.5rem; border: 2px solid #94a3b8; border-radius: 4px; font-family: 'Roboto Mono', monospace; text-align: right; font-weight: 700; }
-        .input-audit:focus { border-color: #2563eb; outline: none; }
+        body {
+            background-color: #f1f5f9;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .card-contabil {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 1.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-contabil:hover {
+            transform: translateY(-2px);
+        }
+        /* Estilos para as abas */
+        .tab-ativa {
+            border-bottom: 2px solid #3b82f6; /* Azul */
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .tab-inativa {
+            color: #64748b; /* Slate 500 */
+            border-bottom: 2px solid transparent;
+        }
+        .tab-inativa:hover {
+            color: #334155;
+            border-bottom: 2px solid #cbd5e1;
+        }
     </style>
 </head>
-<body class="p-2 md:p-10">
+<body class="text-slate-800 antialiased">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="header-navy p-6 rounded-t-lg flex justify-between items-center shadow-lg">
+    <!-- Header Principal -->
+    <header class="bg-slate-900 text-white p-5 shadow-lg border-b-4 border-blue-600">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
-                <h1 class="text-white font-extrabold text-2xl tracking-tighter uppercase italic">GL PRO <span class="not-italic text-blue-300">Auditoria</span></h1>
-                <p class="text-blue-100 text-[10px] font-mono uppercase tracking-[3px]">Protocolo de Gestão Profissional v7.0</p>
+                <h1 class="text-2xl font-bold tracking-tight">GL Pro <span class="font-light">Governance</span></h1>
+                <p class="text-slate-400 text-sm mt-1">Módulo Financeiro e Contábil</p>
             </div>
-            <div class="text-right text-white font-mono text-[10px] hidden md:block leading-tight">
-                <p>AUDITOR: TIAGO DIAS GRABSKI</p>
-                <p class="text-blue-400">STATUS: REESTRUTURAÇÃO FINANCEIRA</p>
+            <div class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-3">
+                <div class="flex flex-col text-right">
+                    <span class="text-xs text-slate-400 uppercase tracking-wider">Status do Banco</span>
+                    <span id="status-conexao" class="text-yellow-400 font-semibold text-sm">Iniciando conexão...</span>
+                </div>
+                <span class="relative flex h-3 w-3">
+                  <span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                  <span id="status-dot" class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+                </span>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="flex border-x border-b border-gray-300 bg-gray-200 cursor-pointer text-[10px] font-bold uppercase tracking-widest overflow-x-auto">
-            <div onclick="openTab('diario')" id="tab-diario" class="flex-1 min-w-[120px] p-4 text-center tab-active">1. Caixa Diário</div>
-            <div onclick="openTab('mensal')" id="tab-mensal" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300">2. Auditoria Mensal</div>
-            <div onclick="openTab('ativos')" id="tab-ativos" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300 text-blue-700">3. Recuperação de Ativos</div>
-            <div onclick="openTab('regras')" id="tab-regras" class="flex-1 min-w-[120px] p-4 text-center border-l border-gray-300">4. Governança</div>
+    <!-- Sistema de Navegação (Abas) -->
+    <div class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button onclick="mudarAba('dashboard')" id="btn-dashboard" class="tab-ativa whitespace-nowrap py-4 px-1 text-sm font-medium flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Visão Geral
+                </button>
+                <button onclick="mudarAba('caixa')" id="btn-caixa" class="tab-inativa whitespace-nowrap py-4 px-1 text-sm font-medium flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Caixa Diário
+                </button>
+                <button onclick="mudarAba('rateio')" id="btn-rateio" class="tab-inativa whitespace-nowrap py-4 px-1 text-sm font-medium flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    Rateio & Sócios
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Área de Conteúdo das Abas -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 mt-4">
+        
+        <!-- ABA 1: VISÃO GERAL (DASHBOARD) -->
+        <div id="aba-dashboard" class="block">
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card-contabil border-l-4 border-l-blue-500">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Faturamento Bruto</h3>
+                    <p id="display-faturamento" class="text-3xl font-extrabold text-slate-800 mt-3">R$ 0,00</p>
+                </div>
+                <div class="card-contabil border-l-4 border-l-orange-500">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Despesas Totais</h3>
+                    <p id="display-despesas" class="text-3xl font-extrabold text-slate-800 mt-3">R$ 0,00</p>
+                </div>
+                <div class="card-contabil border-l-4 border-l-emerald-500 bg-emerald-50/30">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Saldo Líquido</h3>
+                    <p id="display-saldo" class="text-3xl font-extrabold text-emerald-600 mt-3">R$ 0,00</p>
+                </div>
+                <div class="card-contabil border-l-4 border-l-purple-500">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Fundo Reserva (20%)</h3>
+                    <p id="display-reserva" class="text-3xl font-extrabold text-purple-600 mt-3">R$ 0,00</p>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="card-contabil">
+                    <h3 class="text-lg font-bold text-slate-700 mb-6 border-b border-slate-100 pb-2">Receitas x Despesas</h3>
+                    <div class="relative h-72 w-full"><canvas id="chartGeral"></canvas></div>
+                </div>
+                <div class="card-contabil">
+                    <h3 class="text-lg font-bold text-slate-700 mb-6 border-b border-slate-100 pb-2">Distribuição de Saídas</h3>
+                    <div class="relative h-72 w-full"><canvas id="chartDespesas"></canvas></div>
+                </div>
+            </div>
         </div>
 
-        <div class="card p-6 rounded-b-lg border-t-0 min-h-[550px]">
-
-            <div id="content-diario" class="tab-content space-y-6">
-                <div class="max-w-md mx-auto">
-                    <h2 class="text-xs font-bold text-blue-900 border-b pb-2 mb-6 uppercase italic">Fechamento de Caixa e Split 50/50</h2>
-                    <div class="space-y-4">
+        <!-- ABA 2: CAIXA DIÁRIO (MÓDULO RESTAURADO) -->
+        <div id="aba-caixa" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Formulário de Lançamento -->
+                <div class="card-contabil lg:col-span-1">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2">Novo Lançamento</h3>
+                    <form id="form-caixa" class="space-y-4" onsubmit="event.preventDefault(); alert('Em breve conectaremos o botão Salvar ao Firebase!');">
                         <div>
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Faturamento Bruto (R$)</label>
-                            <input type="number" id="fat-input" class="input-audit text-2xl" placeholder="0.00">
+                            <label class="block text-sm font-medium text-slate-700">Data</label>
+                            <input type="date" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
                         </div>
-                        <div class="p-3 bg-red-50 border-l-4 border-red-600 flex justify-between items-center">
-                            <span class="text-[10px] text-red-800 font-bold uppercase">Passivo Colômbia (Diário)</span>
-                            <span class="font-mono font-bold text-red-900 text-sm">- R$ 150,00</span>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Tipo</label>
+                            <select class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                                <option value="entrada">Entrada (Receita)</option>
+                                <option value="saida">Saída (Despesa)</option>
+                            </select>
                         </div>
-                        <button onclick="calcularSplit()" class="w-full bg-blue-700 text-white font-bold py-4 rounded shadow-xl hover:bg-blue-800 transition-all text-xs uppercase">Processar Divisão e Retenções</button>
-                    </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Valor (R$)</label>
+                            <input type="number" step="0.01" placeholder="0,00" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Descrição</label>
+                            <input type="text" placeholder="Ex: Pagamento Fornecedor" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition">
+                            Registrar no Caixa
+                        </button>
+                    </form>
+                </div>
 
-                    <div id="diario-results" class="hidden mt-8 grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-blue-50 border border-blue-200 rounded">
-                            <p class="text-[10px] text-blue-600 font-bold uppercase">PIX Livre Tiago</p>
-                            <p id="pix-t" class="text-2xl font-black text-blue-900">R$ 0,00</p>
-                            <p class="text-[9px] text-blue-400 mt-1 italic">*Já deduzido R$ 75 do empréstimo</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border border-slate-200 rounded">
-                            <p class="text-[10px] text-gray-500 font-bold uppercase">PIX Livre Jô</p>
-                            <p id="pix-j" class="text-2xl font-black text-slate-800">R$ 0,00</p>
-                        </div>
+                <!-- Tabela de Histórico Diário -->
+                <div class="card-contabil lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                        <h3 class="text-lg font-bold text-slate-700">Extrato do Dia</h3>
+                        <span class="bg-slate-100 text-slate-600 py-1 px-3 rounded-full text-sm font-semibold">Saldo Hoje: R$ 0,00</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Data</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Descrição</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Valor</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-200 text-sm">
+                                <!-- Estrutura de exemplo para o visual. Será preenchida via JS depois -->
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-slate-500 italic" colspan="4">
+                                        Nenhum lançamento registrado hoje.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="content-mensal" class="tab-content hidden space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-4">
-                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase">Custos Fixos de Operação e Moradia</h2>
-                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Aluguel Imóvel (Total)</label><input type="number" id="v-aluguel" value="6250" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Energia (Celesc)</label><input type="number" id="v-luz" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Água</label><input type="number" id="v-agua" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold text-gray-400 uppercase">Internet</label><input type="number" id="v-internet" class="input-audit"></div>
-                    </div>
-                    <div class="space-y-4">
-                        <h2 class="text-xs font-bold text-red-700 border-b pb-2 uppercase">Passivos de Terceiros / Acordos</h2>
-                        <div><label class="text-[10px] font-bold text-red-600 uppercase">Acordo CBM Locações (Sala)</label><input type="number" id="v-acordo" value="2455.20" class="input-audit border-red-200 bg-red-50"></div>
-                        <div><label class="text-[10px] font-bold text-blue-600 uppercase">Contabilidade Mensal</label><input type="number" id="v-contabil" value="300" class="input-audit border-blue-100"></div>
-                        <button onclick="calcularTudo()" class="w-full bg-slate-800 text-white font-bold py-4 rounded mt-4 text-xs uppercase shadow-lg">Calcular Rateio do Sábado</button>
-                    </div>
-                </div>
-
-                <div id="results-mensal" class="hidden mt-8 p-6 bg-blue-900 text-white rounded-lg grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <p class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-1">Cota Mensal Tiago</p>
-                        <p id="total-t" class="text-3xl font-black">R$ 0,00</p>
-                        <div class="mt-4 p-3 bg-white/10 rounded border border-white/20">
-                            <p class="text-[10px] uppercase font-bold text-blue-200">Retirada de Sábado (Aluguel + Fixos)</p>
-                            <p id="sabado-t" class="text-xl font-mono font-bold">R$ 0,00</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-1">Cota Mensal Jô</p>
-                        <p id="total-j" class="text-3xl font-black">R$ 0,00</p>
-                        <div class="mt-4 p-3 bg-white/10 rounded border border-white/20">
-                            <p class="text-[10px] uppercase font-bold text-blue-200">Retirada de Sábado (Aluguel + Fixos)</p>
-                            <p id="sabado-j" class="text-xl font-mono font-bold">R$ 0,00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="content-ativos" class="tab-content hidden space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-4">
-                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase">Aportes de Capital (Tiago)</h2>
-                        <div class="p-4 bg-green-50 border-l-4 border-green-600 rounded">
-                            <p class="text-xs font-bold text-green-800 uppercase">Capital Injetado (Venda 2 Carros)</p>
-                            <p class="text-3xl font-black text-slate-800">R$ 24.000,00</p>
-                            <p class="text-[10px] text-green-600 mt-2 italic font-semibold">Valor usado em produtos premium e quitação de dívidas do CNPJ.</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border rounded space-y-4">
-                            <h3 class="text-[10px] font-bold text-slate-500 uppercase">Fundo de Restituição (Status)</h3>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 5%"></div>
+        <!-- ABA 3: CALCULADORA DE RATEIO E SÓCIOS (RESTAURADA) -->
+        <div id="aba-rateio" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Calculadora de Metas da Semana -->
+                <div class="card-contabil border-t-4 border-t-blue-600">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2">Configuração da Semana</h3>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Faturamento (Semana)</label>
+                                <input type="number" id="calc-faturamento" step="0.01" class="mt-1 block w-full rounded-md border-slate-300 p-2 border shadow-sm" value="5000">
                             </div>
-                            <p class="text-[10px] text-slate-400">Restante a recuperar: <span class="font-bold text-slate-700">R$ 24.000,00</span></p>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Despesas Totais (Semana)</label>
+                                <input type="number" id="calc-despesas" step="0.01" class="mt-1 block w-full rounded-md border-slate-300 p-2 border shadow-sm" value="1500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">% Fundo Reserva</label>
+                                <input type="number" id="calc-reserva" class="mt-1 block w-full rounded-md border-slate-300 p-2 border shadow-sm" value="20">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Dias Trabalhados</label>
+                                <input type="number" id="calc-dias" class="mt-1 block w-full rounded-md border-slate-300 p-2 border shadow-sm" value="5">
+                            </div>
                         </div>
+                        <button type="button" onclick="calcularRateio()" class="w-full bg-slate-800 text-white font-bold py-3 px-4 rounded hover:bg-slate-700 transition uppercase tracking-wider text-sm mt-4">
+                            Calcular Retenção Diária
+                        </button>
+                    </form>
+
+                    <div class="mt-6 p-5 bg-blue-50 rounded-lg border border-blue-100">
+                        <p class="text-sm text-slate-600 font-medium">Você precisa segurar por dia (Caixa + Despesas):</p>
+                        <p id="res-segurar-dia" class="text-3xl font-extrabold text-blue-700 mt-1">R$ 0,00</p>
+                        
+                        <div class="border-t border-blue-200 my-3"></div>
+                        
+                        <p class="text-sm text-slate-600 font-medium">Lucro Líquido para Divisão na Semana:</p>
+                        <p id="res-lucro-semana" class="text-2xl font-bold text-emerald-600 mt-1">R$ 0,00</p>
                     </div>
+                </div>
+
+                <!-- Distribuição e Vidas Passadas -->
+                <div class="card-contabil border-t-4 border-t-purple-600">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2">Rateio por Sócio & Vidas Passadas</h3>
+                    <p class="text-xs text-slate-500 mb-4">Insira abaixo se houver algum desconto de dívida antiga (vidas passadas) para cada sócio nesta semana.</p>
+                    
                     <div class="space-y-4">
-                        <h2 class="text-xs font-bold text-blue-900 border-b pb-2 uppercase italic">Manutenção de Patrimônio</h2>
-                        <div class="p-4 border-2 border-dashed border-red-200 rounded text-center">
-                            <p class="text-xs text-red-700 font-bold uppercase mb-2">Item Crítico: Conserto do Carro</p>
-                            <p class="text-xs text-slate-500 italic">"Atualmente parado na garagem por falta de capital circulante retido na empresa."</p>
-                            <button class="mt-4 text-[10px] font-bold bg-red-600 text-white px-4 py-2 rounded uppercase">Votar Retirada Extra p/ Conserto</button>
+                        <!-- Thiago -->
+                        <div class="p-4 border border-slate-200 rounded-lg bg-slate-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800 text-lg">Thiago</h4>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <label class="text-xs text-slate-500 font-semibold uppercase">Desconto Vidas Passadas (R$):</label>
+                                    <input type="number" id="divida-thiago" step="0.01" class="w-24 p-1 text-sm border rounded shadow-inner" value="0" oninput="calcularRateio()">
+                                </div>
+                            </div>
+                            <div class="text-left sm:text-right bg-white p-2 rounded border border-slate-200 min-w-[120px]">
+                                <span class="text-xs text-slate-400 block uppercase font-bold tracking-wider">Valor a Receber</span>
+                                <strong id="recebe-thiago" class="text-xl text-emerald-600">R$ 0,00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Jô -->
+                        <div class="p-4 border border-slate-200 rounded-lg bg-slate-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800 text-lg">Jô</h4>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <label class="text-xs text-slate-500 font-semibold uppercase">Desconto Vidas Passadas (R$):</label>
+                                    <input type="number" id="divida-jo" step="0.01" class="w-24 p-1 text-sm border rounded shadow-inner" value="0" oninput="calcularRateio()">
+                                </div>
+                            </div>
+                            <div class="text-left sm:text-right bg-white p-2 rounded border border-slate-200 min-w-[120px]">
+                                <span class="text-xs text-slate-400 block uppercase font-bold tracking-wider">Valor a Receber</span>
+                                <strong id="recebe-jo" class="text-xl text-emerald-600">R$ 0,00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Antonela -->
+                        <div class="p-4 border border-slate-200 rounded-lg bg-slate-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800 text-lg">Antonela</h4>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <label class="text-xs text-slate-500 font-semibold uppercase">Desconto Vidas Passadas (R$):</label>
+                                    <input type="number" id="divida-antonela" step="0.01" class="w-24 p-1 text-sm border rounded shadow-inner" value="0" oninput="calcularRateio()">
+                                </div>
+                            </div>
+                            <div class="text-left sm:text-right bg-white p-2 rounded border border-slate-200 min-w-[120px]">
+                                <span class="text-xs text-slate-400 block uppercase font-bold tracking-wider">Valor a Receber</span>
+                                <strong id="recebe-antonela" class="text-xl text-emerald-600">R$ 0,00</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="content-regras" class="tab-content hidden space-y-6">
-                <div class
+    </main>
+
+    <footer class="max-w-7xl mx-auto p-6 mt-8 text-center border-t border-slate-200">
+        <p class="text-slate-400 text-sm">GL Pro Governance © 2026. Todos os direitos reservados. Atualização em tempo real via Firebase.</p>
+    </footer>
+
+    <!-- Lógica de Interface (Abas) -->
+    <script>
+        function mudarAba(abaId) {
+            // Esconde todas as abas
+            document.getElementById('aba-dashboard').classList.add('hidden');
+            document.getElementById('aba-caixa').classList.add('hidden');
+            document.getElementById('aba-rateio').classList.add('hidden');
+            
+            // Reseta estilos dos botões
+            const classeInativa = 'tab-inativa whitespace-nowrap py-4 px-1 text-sm font-medium flex items-center gap-2';
+            document.getElementById('btn-dashboard').className = classeInativa;
+            document.getElementById('btn-caixa').className = classeInativa;
+            document.getElementById('btn-rateio').className = classeInativa;
+            
+            // Mostra a aba clicada e aplica estilo ativo
+            document.getElementById('aba-' + abaId).classList.remove('hidden');
+            document.getElementById('btn-' + abaId).className = 'tab-ativa whitespace-nowrap py-4 px-1 text-sm font-medium flex items-center gap-2';
+            
+            // Se abrir a aba de rateio, já calcula com os valores padrões
+            if(abaId === 'rateio') calcularRateio();
+        }
+
+        // Lógica da Calculadora GL Pro (Rateio, Segurar por Dia e Vidas Passadas)
+        function calcularRateio() {
+            // 1. Pega os valores da configuração
+            const faturamento = Number(document.getElementById('calc-faturamento').value) || 0;
+            const despesas = Number(document.getElementById('calc-despesas').value) || 0;
+            const pctReserva = Number(document.getElementById('calc-reserva').value) || 0;
+            const dias = Number(document.getElementById('calc-dias').value) || 1;
+
+            // 2. Calcula Fundos e Despesas
+            const valorReserva = faturamento * (pctReserva / 100);
+            const totalRetencaoSemana = despesas + valorReserva; // O que a empresa TEM que segurar
+            
+            // 3. O quanto precisa guardar por dia
+            const segurarPorDia = totalRetencaoSemana / dias;
+
+            // 4. Lucro Líquido para dividir
+            const lucroLiquido = faturamento - totalRetencaoSemana;
+            let parteDeCadaUm = lucroLiquido / 3; // Divide para Thiago, Jô e Antonela
+
+            // Evita número negativo se o faturamento for menor que a despesa
+            if (parteDeCadaUm < 0) parteDeCadaUm = 0; 
+
+            // 5. Pega os valores das Vidas Passadas (dívidas)
+            const divThiago = Number(document.getElementById('divida-thiago').value) || 0;
+            const divJo = Number(document.getElementById('divida-jo').value) || 0;
+            const divAntonela = Number(document.getElementById('divida-antonela').value) || 0;
+
+            // 6. Atualiza a Tela com formatação BRL
+            const formatar = (val) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            document.getElementById('res-segurar-dia').textContent = formatar(segurarPorDia);
+            document.getElementById('res-lucro-semana').textContent = formatar(lucroLiquido);
+
+            // Calcula o final de cada um descontando a dívida respectiva
+            document.getElementById('recebe-thiago').textContent = formatar(parteDeCadaUm - divThiago);
+            document.getElementById('recebe-jo').textContent = formatar(parteDeCadaUm - divJo);
+            document.getElementById('recebe-antonela').textContent = formatar(parteDeCadaUm - divAntonela);
+        }
+    </script>
+
+    <!-- LÓGICA DO FIREBASE E GRÁFICOS (Módulo Principal) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxnT-eCXN82lEPK5Holo5c6E5etPYkOZA",
+            authDomain: "gl-pro-governance.firebaseapp.com",
+            projectId: "gl-pro-governance",
+            storageBucket: "gl-pro-governance.firebasestorage.app",
+            messagingSenderId: "486444042386",
+            appId: "1:486444042386:web:d4eacf8a9962d786747e4b",
+            measurementId: "G-2X8FNWCXWE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let chartGeralObj = null;
+        let chartDespesasObj = null;
+
+        const formatarBRL = (valor) => Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        const renderizarGraficos = (faturamento, aluguel, proLabore, extras) => {
+            const despesasTotais = aluguel + proLabore + extras;
+            const ctx1 = document.getElementById('chartGeral').getContext('2d');
+            if (chartGeralObj) chartGeralObj.destroy();
+            
+            chartGeralObj = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Balanço Financeiro'],
+                    datasets: [
+                        { label: 'Faturamento', data: [faturamento], backgroundColor: 'rgba(59, 130, 246, 0.85)', borderRadius: 6 },
+                        { label: 'Despesas', data: [despesasTotais], backgroundColor: 'rgba(249, 115, 22, 0.85)', borderRadius: 6 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctx2 = document.getElementById('chartDespesas').getContext('2d');
+            if (chartDespesasObj) chartDespesasObj.destroy();
+
+            const temDespesa = despesasTotais > 0;
+            chartDespesasObj = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: temDespesa ? ['Aluguel/Estrutura', 'Pró-Labore', 'Gastos Extras'] : ['Sem Despesas'],
+                    datasets: [{
+                        data: temDespesa ? [aluguel, proLabore, extras] : [1],
+                        backgroundColor: temDespesa ? ['rgba(139, 92, 246, 0.85)', 'rgba(236, 72, 153, 0.85)', 'rgba(234, 179, 8, 0.85)'] : ['rgba(226, 232, 240, 0.5)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+            });
+        };
+
+        const processarFluxoCaixa = (dados) => {
+            const faturamento = Number(dados.faturamentos) || 0;
+            const aluguel = Number(dados.aluguel) || 0;
+            const proLabore = Number(dados.pro_labore) || 0;
+            const extras = Number(dados.gastos_extras_empresa) || 0;
+
+            const despesasTotais = aluguel + proLabore + extras;
+            const saldoLiquido = faturamento - despesasTotais;
+            const metaReserva = faturamento * 0.20;
+
+            document.getElementById('display-faturamento').textContent = formatarBRL(faturamento);
+            document.getElementById('display-despesas').textContent = formatarBRL(despesasTotais);
+            document.getElementById('display-reserva').textContent = formatarBRL(metaReserva);
+            
+            const elementoSaldo = document.getElementById('display-saldo');
+            elementoSaldo.textContent = formatarBRL(saldoLiquido);
+
+            if (saldoLiquido < 0) {
+                elementoSaldo.classList.replace('text-emerald-600', 'text-red-600');
+                elementoSaldo.parentElement.classList.replace('border-l-emerald-500', 'border-l-red-500');
+                elementoSaldo.parentElement.classList.replace('bg-emerald-50/30', 'bg-red-50/30');
+            } else {
+                elementoSaldo.classList.replace('text-red-600', 'text-emerald-600');
+                elementoSaldo.parentElement.classList.replace('border-l-red-500', 'border-l-emerald-500');
+                elementoSaldo.parentElement.classList.replace('bg-red-50/30', 'bg-emerald-50/30');
+            }
+
+            renderizarGraficos(faturamento, aluguel, proLabore, extras);
+        };
+
+        const iniciarSistema = () => {
+            const statusTexto = document.getElementById('status-conexao');
+            const statusPing = document.getElementById('status-ping');
+            const statusDot = document.getElementById('status-dot');
+
+            const documentoRef = doc(db, "financeiro", "geral");
+
+            onSnapshot(documentoRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    statusTexto.textContent = "Online Sincronizado";
+                    statusTexto.className = "text-emerald-400 font-semibold text-sm uppercase tracking-wider";
+                    statusPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
+                    statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
+                    processarFluxoCaixa(snapshot.data());
+                } else {
+                    statusTexto.textContent = "Aguardando Registros";
+                    statusTexto.className = "text-slate-400 text-sm";
+                    processarFluxoCaixa({});
+                }
+            }, (erro) => {
+                console.error("Falha ao sincronizar Firebase:", erro);
+                statusTexto.textContent = "Erro de Conexão";
+                statusTexto.className = "text-red-400 text-sm font-bold";
+                statusPing.className = "hidden";
+                statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-red-500";
+            });
+        };
+
+        window.addEventListener('DOMContentLoaded', iniciarSistema);
+    </script>
+</body>
+</html>
