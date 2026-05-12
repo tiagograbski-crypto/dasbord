@@ -29,7 +29,7 @@
         </div>
         <div class="text-center md:text-left z-10">
             <h1 class="text-3xl font-black tracking-tighter uppercase">GL Pro Governance</h1>
-            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Compliance de Dados v13.0 (Acerto de Atrasos Mistos)</p>
+            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Compliance de Dados v14.0 (Auditoria Semanal)</p>
         </div>
         <div class="flex items-center gap-6 mt-6 md:mt-0 z-10 flex-col sm:flex-row">
             <div id="status-conexao" class="text-xs font-bold text-yellow-400 uppercase tracking-widest flex items-center gap-2">
@@ -57,12 +57,39 @@
         <!-- ========================================== -->
         <!-- ABA 1: CAIXA DIÁRIO                        -->
         <!-- ========================================== -->
-        <section id="tab-diario" class="space-y-8 animate-in fade-in">
+        <section id="tab-diario" class="space-y-6 animate-in fade-in">
+            
+            <!-- ALERTA DE NOTIFICAÇÃO DE ATRASOS (NOVO) -->
+            <div class="bg-red-50 border-l-8 border-red-500 p-5 rounded-r-xl shadow-sm">
+                <h3 class="text-red-800 font-black uppercase text-sm flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Painel de Notificação (Sábados Pendentes)
+                </h3>
+                <p class="text-xs text-red-600 mt-1 mb-3">Se houverem fechamentos de Sábado em atraso, este é o valor exato de <strong class="uppercase">1 Semana Completa</strong> que deve ser quitado:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 font-mono text-xs text-center">
+                    <div class="bg-white p-2 rounded border border-red-200">
+                        <span class="block text-[9px] font-bold uppercase text-slate-500">Custo Total (1 Semana)</span>
+                        <span id="notif-total" class="font-black text-red-700 text-sm">R$ 0,00</span>
+                    </div>
+                    <div class="bg-white p-2 rounded border border-red-200">
+                        <span class="block text-[9px] font-bold uppercase text-slate-500">Resp. Empresa (50%)</span>
+                        <span id="notif-emp" class="font-bold text-red-700">R$ 0,00</span>
+                    </div>
+                    <div class="bg-white p-2 rounded border border-blue-200">
+                        <span class="block text-[9px] font-bold uppercase text-blue-600">Casa Tiago (Dívida)</span>
+                        <span id="notif-casa-t" class="font-bold text-blue-700">R$ 0,00</span>
+                    </div>
+                    <div class="bg-white p-2 rounded border border-pink-200">
+                        <span class="block text-[9px] font-bold uppercase text-pink-600">Casa Jô (Dívida)</span>
+                        <span id="notif-casa-j" class="font-bold text-pink-700">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
                 <div class="lg:col-span-5 card p-8 h-fit border-t-8 border-t-slate-800">
                     <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest flex justify-between items-center">
-                        Lançamentos do Dia / Acertos
+                        Lançamentos do Dia
                     </h2>
                     <div class="space-y-6">
 
@@ -85,56 +112,34 @@
                             </div>
                         </div>
                         
-                        <!-- NOVO: PAGAMENTO DE ALUGUEL ATRASADO (AUTOMÁTICO POR SEMANA) -->
-                        <div class="bg-red-50 p-4 rounded-xl border border-red-200 shadow-sm">
-                            <label class="text-xs font-black text-red-700 uppercase flex items-center gap-2 mb-1">
-                                ⚠️ Quitação de Aluguel Atrasado
-                            </label>
-                            <p class="text-[9px] text-red-500 uppercase mb-3">O valor total do aluguel é dividido em 4 semanas. Informe quantas parcelas semanais estão sendo pagas hoje e o sistema fará o rateio exato.</p>
-                            
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="flex-1 bg-red-100 p-2 rounded border border-red-200">
-                                    <label class="text-[9px] font-bold text-red-800 uppercase block mb-1">Valor de 1 Semana (Auto)</label>
-                                    <div id="valor-1-semana-auto" class="font-mono text-lg font-black text-red-900">R$ 0,00</div>
-                                </div>
-                                <div>
-                                    <label class="text-[9px] font-bold text-red-800 uppercase block mb-1">Semanas a Pagar</label>
-                                    <input type="number" id="qtd-semanas-atraso" value="0" min="0" max="4" class="input-audit border-red-300 bg-white text-lg p-2 text-red-900 font-black w-24 text-center" oninput="processarDiarioAuto()">
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 gap-2 text-center bg-red-100 p-2 rounded-lg border border-red-200">
-                                <div>
-                                    <span class="block text-[8px] font-black uppercase text-red-600">Empresa (50%)</span>
-                                    <span id="lbl-atraso-emp" class="font-mono text-xs font-bold text-red-800">R$ 0,00</span>
-                                </div>
-                                <div class="border-l border-red-200">
-                                    <span class="block text-[8px] font-black uppercase text-red-600">Casa Tiago (1/3)</span>
-                                    <span id="lbl-atraso-casa-t" class="font-mono text-xs font-bold text-red-800">R$ 0,00</span>
-                                </div>
-                                <div class="border-l border-red-200">
-                                    <span class="block text-[8px] font-black uppercase text-red-600">Casa Jô (2/3)</span>
-                                    <span id="lbl-atraso-casa-j" class="font-mono text-xs font-bold text-red-800">R$ 0,00</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- SAÍDAS DA EMPRESA (COM CONTAS EM ATRASO) -->
+                        <!-- SAÍDAS E QUITAÇÃO DE ATRASOS -->
                         <div class="space-y-4 pt-4 border-t border-slate-100">
                             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Custos da Empresa (SAÍDAS)</h3>
-
-                            <div class="grid grid-cols-3 gap-3 mt-2">
+                            
+                            <div class="grid grid-cols-2 gap-3 mt-2">
                                 <div><label class="text-[9px] font-bold text-blue-600 uppercase">Gasto Ads (Hoje)</label><input type="number" id="f-ads" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
                                 <div><label class="text-[9px] font-bold text-slate-500 uppercase">Extras Empresa</label><input type="number" id="f-extras" placeholder="0.00" class="input-audit border-slate-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
-                                <div><label class="text-[9px] font-bold text-red-500 uppercase">Outros Atrasos</label><input type="number" id="f-atraso-outros" placeholder="0.00" class="input-audit border-red-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
                             </div>
+
                             <div class="bg-red-50 p-3 border border-red-100 rounded-xl flex justify-between items-center mt-2">
                                 <span class="text-[10px] text-red-600 font-black uppercase">Taxa Colômbia (Fixo)</span>
                                 <span class="font-mono font-black text-red-900 text-sm">- R$ 150,00</span>
                             </div>
+
+                            <!-- QUITAÇÃO DE ATRASO (SÓ INFORMA A QUANTIDADE DE SEMANAS) -->
+                            <div class="bg-red-100 p-4 border border-red-200 rounded-xl flex justify-between items-center shadow-inner mt-4">
+                                <div>
+                                    <h3 class="text-[10px] font-black text-red-800 uppercase tracking-widest">Quitação de Sábados</h3>
+                                    <p class="text-[9px] text-red-600 uppercase mt-1">Quantas semanas pagaremos hoje?</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="qtd-semanas-atraso" value="0" min="0" max="5" class="input-audit border-red-300 text-xl font-black text-red-900 w-20 p-2 text-center" oninput="processarDiarioAuto()">
+                                    <span class="text-xs font-bold text-red-500 uppercase">Sem.</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- RETIRADAS PESSOAIS E ATRASOS DE CASA -->
+                        <!-- RETIRADAS PESSOAIS -->
                         <div class="space-y-4 pt-4 border-t border-slate-100 bg-pink-50/50 p-4 rounded-xl border border-pink-100">
                             <h3 class="text-xs font-bold text-pink-700 uppercase tracking-widest">Vales e Retiradas (Pessoais)</h3>
                             <p class="text-[9px] text-slate-500 uppercase">Descontam direto do PIX final do respectivo sócio.</p>
@@ -183,8 +188,8 @@
                             </div>
 
                             <div id="linha-ext-atraso" class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800">
-                                <span>3. Quitação de Atrasos (Aluguel, etc)</span>
-                                <span id="ext-atraso" class="font-bold text-red-500">- R$ 0,00</span>
+                                <span>3. Quitação de Sábados Atrasados (Empresa)</span>
+                                <span id="ext-atraso-emp" class="font-bold text-red-500">- R$ 0,00</span>
                             </div>
 
                             <div class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800">
@@ -202,7 +207,7 @@
                                 <div class="bg-slate-800 p-4 rounded-xl border-t-4 border-blue-500 relative">
                                     <h4 class="text-blue-400 font-black text-xs uppercase tracking-widest text-center mb-3">Sócio: Tiago (50%)</h4>
                                     <div class="flex justify-between text-slate-300 mb-1"><span>Cota do Lucro:</span><span id="ext-base-t">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Atraso Casa:</span><span id="ext-atraso-casa-t">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Pagto. Atraso Casa:</span><span id="ext-atraso-casa-t">- R$ 0,00</span></div>
                                     <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Saques Físicos:</span><span id="ext-saque-t">- R$ 0,00</span></div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-xs font-bold text-white uppercase">PIX FINAL:</span>
@@ -218,7 +223,7 @@
                                 <div class="bg-slate-800 p-4 rounded-xl border-t-4 border-pink-500 relative">
                                     <h4 class="text-pink-400 font-black text-xs uppercase tracking-widest text-center mb-3">Sócia: Jô (50%)</h4>
                                     <div class="flex justify-between text-slate-300 mb-1"><span>Cota do Lucro:</span><span id="ext-base-j">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Atraso Casa:</span><span id="ext-atraso-casa-j">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Pagto. Atraso Casa:</span><span id="ext-atraso-casa-j">- R$ 0,00</span></div>
                                     <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Gastos Jô/Anto:</span><span id="ext-saque-j">- R$ 0,00</span></div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-xs font-bold text-white uppercase">PIX FINAL:</span>
@@ -245,14 +250,18 @@
                 <div class="lg:col-span-3 card p-8 h-fit border-t-8 border-t-slate-800">
                     <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest">Base de Custos</h2>
                     <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-bold uppercase text-slate-500">Aluguel Fixo (Total)</label>
-                            <input type="number" id="v-alu" value="6250" class="input-audit text-lg font-bold text-slate-800 bg-slate-50" oninput="processarGeral()">
+                        
+                        <!-- NOVO SELETOR DE SEMANAS -->
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                            <label class="text-[10px] font-black uppercase text-blue-800 block mb-1">Ciclo Atual (Semanas no Mês)</label>
+                            <select id="qtd-semanas-mes" class="input-audit bg-white text-blue-900 border-blue-300 text-sm" onchange="processarGeral()">
+                                <option value="4" selected>4 Semanas (Padrão)</option>
+                                <option value="5">5 Semanas (Mês Longo)</option>
+                            </select>
                         </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-400 uppercase">Vencimento Aluguel</label>
-                            <input type="date" id="venc-alu" class="input-audit text-xs p-2 text-slate-600" onchange="processarGeral()">
-                        </div>
+
+                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Aluguel Fixo (Total)</label><input type="number" id="v-alu" value="6250" class="input-audit text-lg font-bold text-slate-800 bg-slate-50" oninput="processarGeral()"></div>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase">Vencimento Aluguel</label><input type="date" id="venc-alu" class="input-audit text-xs p-2 text-slate-600" onchange="processarGeral()"></div>
                         <div><label class="text-[10px] font-bold uppercase text-slate-500 mt-2">Luz Celesc (Total)</label><input type="number" id="v-luz" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
                         <div><label class="text-[10px] font-bold uppercase text-slate-500">Água (Total)</label><input type="number" id="v-agua" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
                         <div><label class="text-[10px] font-bold uppercase text-slate-500">Internet (Total)</label><input type="number" id="v-internet" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
@@ -260,30 +269,6 @@
                         
                         <button onclick="processarGeral()" class="w-full bg-slate-200 text-slate-600 font-black py-4 rounded-xl uppercase text-[10px] mt-6 hover:bg-slate-300 transition-all">Forçar Recálculo</button>
 
-                        <!-- NOVO: RATEIO SEMANAL DO ALUGUEL -->
-                        <div class="mt-6 bg-slate-800 p-4 rounded-xl text-white shadow-inner border-l-4 border-blue-500">
-                            <h3 class="text-[10px] font-black uppercase text-slate-300 tracking-widest border-b border-slate-700 pb-2 mb-3">📅 Rateio Exato (Só Aluguel)</h3>
-                            
-                            <div class="space-y-4 font-mono text-[10px]">
-                                <!-- TIAGO -->
-                                <div class="bg-slate-900 p-2 rounded border border-slate-700">
-                                    <div class="flex justify-between font-black text-blue-400 mb-1"><span class="uppercase">Sócio: Tiago</span><span id="det-alu-t-mensal">R$ 0,00/mês</span></div>
-                                    <div class="flex justify-between text-slate-400"><span>Empresa (50%):</span> <span id="det-alu-t-emp">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-slate-400"><span>Casa (1/3):</span> <span id="det-alu-t-casa">R$ 0,00</span></div>
-                                    <div class="flex justify-between border-t border-slate-700 pt-1 mt-1 text-green-400 font-bold"><span>Meta Semanal:</span> <span id="sem-alu-t">R$ 0,00</span></div>
-                                </div>
-
-                                <!-- JÔ -->
-                                <div class="bg-slate-900 p-2 rounded border border-slate-700">
-                                    <div class="flex justify-between font-black text-pink-400 mb-1"><span class="uppercase">Sócia: Jô+Anto</span><span id="det-alu-j-mensal">R$ 0,00/mês</span></div>
-                                    <div class="flex justify-between text-slate-400"><span>Empresa (50%):</span> <span id="det-alu-j-emp">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-slate-400"><span>Casa (2/3):</span> <span id="det-alu-j-casa">R$ 0,00</span></div>
-                                    <div class="flex justify-between border-t border-slate-700 pt-1 mt-1 text-green-400 font-bold"><span>Meta Semanal:</span> <span id="sem-alu-j">R$ 0,00</span></div>
-                                </div>
-                                
-                                <div class="flex justify-between text-slate-300 font-bold border-t border-slate-600 pt-2"><span>Total Semanal (Pagar):</span> <span id="sem-alu-total">R$ 0,00</span></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -312,7 +297,7 @@
                             </div>
                         </div>
                         <div class="bg-blue-600 p-6 text-center text-white">
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Reter do Caixa Todo Sábado</p>
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Meta Semanal (1 Sábado)</p>
                             <p id="final-t" class="text-3xl font-black mt-2">R$ 0,00</p>
                         </div>
                     </div>
@@ -341,7 +326,7 @@
                             </div>
                         </div>
                         <div class="bg-pink-600 p-6 text-center text-white">
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Reter do Caixa Todo Sábado</p>
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Meta Semanal (1 Sábado)</p>
                             <p id="final-j" class="text-3xl font-black mt-2">R$ 0,00</p>
                         </div>
                     </div>
@@ -427,8 +412,12 @@
         let GLOBAL_PROV_T_DIA = 0;
         let GLOBAL_PROV_J_DIA = 0;
         let GLOBAL_PROV_TOTAL_DIA = 0;
-        let GLOBAL_SALDO_CAIXA = 0;
         
+        let GLOBAL_SEM_EMP = 0;
+        let GLOBAL_SEM_CASA_T = 0;
+        let GLOBAL_SEM_CASA_J = 0;
+
+        let GLOBAL_SALDO_CAIXA = 0;
         let GLOBAL_PIX_T_FINAL = 0;
         let GLOBAL_PIX_J_FINAL = 0;
 
@@ -452,6 +441,9 @@
         }
 
         function processarGeral() {
+            // VARIAVEL DE CONTROLE: SEMANAS NO MÊS
+            const semanasMes = parseInt(document.getElementById('qtd-semanas-mes').value) || 4;
+
             const alu = parseFloat(document.getElementById('v-alu').value) || 0;
             const luz = parseFloat(document.getElementById('v-luz').value) || 0;
             const agua = parseFloat(document.getElementById('v-agua').value) || 0;
@@ -471,77 +463,74 @@
             let div_mae_anto = p_mae < 6 ? 50 : 0;
             let div_alu_antigo_socio = aluAntigo / 2; 
             
-            // NOVO: ATUALIZA RATEIO SEMANAL EXCLUSIVO DO ALUGUEL
-            let mensal_alu_t = emp_alu_1 + res_alu_1;
-            let mensal_alu_j_anto = emp_alu_1 + (res_alu_1 * 2);
-
-            document.getElementById('det-alu-t-mensal').innerText = formata(mensal_alu_t) + '/mês';
-            document.getElementById('det-alu-t-emp').innerText = formata(emp_alu_1);
-            document.getElementById('det-alu-t-casa').innerText = formata(res_alu_1);
-            document.getElementById('sem-alu-t').innerText = formata(mensal_alu_t / 4);
-
-            document.getElementById('det-alu-j-mensal').innerText = formata(mensal_alu_j_anto) + '/mês';
-            document.getElementById('det-alu-j-emp').innerText = formata(emp_alu_1);
-            document.getElementById('det-alu-j-casa').innerText = formata(res_alu_1 * 2);
-            document.getElementById('sem-alu-j').innerText = formata(mensal_alu_j_anto / 4);
-
-            document.getElementById('sem-alu-total').innerText = formata(alu / 4);
-
-            if(document.getElementById('valor-1-semana-auto')) {
-                document.getElementById('valor-1-semana-auto').innerText = formata(alu / 4);
-            }
-
             document.getElementById('prev-antigo-t').innerText = formata(div_alu_antigo_socio);
             document.getElementById('prev-antigo-j').innerText = formata(div_alu_antigo_socio);
 
             // ==========================================
-            // MONTAGEM BLOCOS: TIAGO
+            // MONTAGEM BLOCOS E TOTAIS MENSAIS
             // ==========================================
+            // TIAGO
             let sub_emp_t = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
             document.getElementById('ext-empresa-t').innerHTML = 
                 buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
-            document.getElementById('sub-emp-t').innerText = formata(sub_emp_t);
-
+            
             let sub_casa_t = res_alu_1 + res_luz_1 + res_agua_1 + res_net_1;
             document.getElementById('ext-casa-t').innerHTML = 
                 buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (10%)', res_luz_1) + buildItem('Água Casa (10%)', res_agua_1) + buildItem('Net Casa (16.6%)', res_net_1);
-            document.getElementById('sub-casa-t').innerText = formata(sub_casa_t);
-
+            
             let sub_passivo_t = div_mae_t + div_alu_antigo_socio;
             document.getElementById('ext-passivo-t').innerHTML = 
                 buildItem('Acordo Luz Mãe', div_mae_t) + buildItem('Acordo CBM Antigo', div_alu_antigo_socio);
-            document.getElementById('sub-passivo-t').innerText = formata(sub_passivo_t);
 
-            // ==========================================
-            // MONTAGEM BLOCOS: JÔ + ANTO
-            // ==========================================
+            let total_mensal_t = sub_emp_t + sub_casa_t + sub_passivo_t;
+
+            // JÔ + ANTO
             let sub_emp_j = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
             document.getElementById('ext-empresa-j').innerHTML = 
                 buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
-            document.getElementById('sub-emp-j').innerText = formata(sub_emp_j);
-
+            
             let sub_casa_j_anto = (res_alu_1*2) + (res_luz_1*2) + (res_agua_1*2) + (res_net_1*2);
             document.getElementById('ext-casa-j').innerHTML = 
                 buildItem('Aluguel Casa (2/3)', res_alu_1*2) + buildItem('Luz Casa (20%)', res_luz_1*2) + buildItem('Água Casa (20%)', res_agua_1*2) + buildItem('Net Casa (33.3%)', res_net_1*2);
-            document.getElementById('sub-casa-j').innerText = formata(sub_casa_j_anto);
-
+            
             let sub_passivo_j_anto = div_mae_jo + div_mae_anto + div_alu_antigo_socio;
             document.getElementById('ext-passivo-j').innerHTML = 
                 buildItem('Acordo Luz Mãe (Jô+Anto)', div_mae_jo + div_mae_anto) + buildItem('Acordo CBM Antigo (Jô)', div_alu_antigo_socio);
-            document.getElementById('sub-passivo-j').innerText = formata(sub_passivo_j_anto);
 
-            // ==========================================
-            // TOTAIS E PROVISÕES DIÁRIAS (Divisor 26)
-            // ==========================================
-            let total_mensal_t = sub_emp_t + sub_casa_t + sub_passivo_t;
             let total_mensal_j_anto = sub_emp_j + sub_casa_j_anto + sub_passivo_j_anto;
 
+            // DOM Updates Mensal
+            document.getElementById('sub-emp-t').innerText = formata(sub_emp_t);
+            document.getElementById('sub-casa-t').innerText = formata(sub_casa_t);
+            document.getElementById('sub-passivo-t').innerText = formata(sub_passivo_t);
             document.getElementById('sub-tiago').innerText = formata(total_mensal_t);
+
+            document.getElementById('sub-emp-j').innerText = formata(sub_emp_j);
+            document.getElementById('sub-casa-j').innerText = formata(sub_casa_j_anto);
+            document.getElementById('sub-passivo-j').innerText = formata(sub_passivo_j_anto);
             document.getElementById('sub-jo-anto').innerText = formata(total_mensal_j_anto);
 
-            document.getElementById('final-t').innerText = formata(total_mensal_t / 4);
-            document.getElementById('final-j').innerText = formata(total_mensal_j_anto / 4);
+            // ==========================================
+            // META SEMANAL E PROVISÃO (Baseado no select)
+            // ==========================================
+            let sabado_t = total_mensal_t / semanasMes;
+            let sabado_j_anto = total_mensal_j_anto / semanasMes;
             
+            document.getElementById('final-t').innerText = formata(sabado_t);
+            document.getElementById('final-j').innerText = formata(sabado_j_anto);
+            
+            // Variáveis Globais de Rateio de 1 Semana Exata
+            GLOBAL_SEM_EMP = (sub_emp_t + sub_emp_j) / semanasMes;
+            GLOBAL_SEM_CASA_T = (sub_casa_t + sub_passivo_t) / semanasMes;
+            GLOBAL_SEM_CASA_J = (sub_casa_j_anto + sub_passivo_j_anto) / semanasMes;
+
+            // Atualiza Painel Vermelho de Notificação (Aba 1)
+            document.getElementById('notif-total').innerText = formata(sabado_t + sabado_j_anto);
+            document.getElementById('notif-emp').innerText = formata(GLOBAL_SEM_EMP);
+            document.getElementById('notif-casa-t').innerText = formata(GLOBAL_SEM_CASA_T);
+            document.getElementById('notif-casa-j').innerText = formata(GLOBAL_SEM_CASA_J);
+
+            // Provisões Diárias (Divide por 26 dias úteis do mês)
             GLOBAL_PROV_T_DIA = total_mensal_t / 26;
             GLOBAL_PROV_J_DIA = total_mensal_j_anto / 26;
             GLOBAL_PROV_TOTAL_DIA = GLOBAL_PROV_T_DIA + GLOBAL_PROV_J_DIA;
@@ -554,40 +543,23 @@
         }
 
         function processarDiarioAuto() {
-            // Soma as três origens de entrada
             const pix = parseFloat(document.getElementById('f-pix').value) || 0;
             const cartao = parseFloat(document.getElementById('f-cartao').value) || 0;
             const especie = parseFloat(document.getElementById('f-especie').value) || 0;
             const bruto = pix + cartao + especie;
 
-            // CÁLCULO DE ALUGUEL ATRASADO (AUTOMÁTICO POR SEMANA)
-            const aluMensal = parseFloat(document.getElementById('v-alu').value) || 0;
-            const aluguelSemanal = aluMensal / 4;
+            // CÁLCULO DE QUITAÇÃO DE ATRASO (SÁBADOS)
             const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
-            const aluguelAtrasadoTotal = aluguelSemanal * qtdSemanas;
-            
-            // As proporções baseadas em: 50% Empresa, 1/3 (16.66%) Casa Tiago, 2/3 (33.33%) Casa Jô
-            const proporcaoEmpresa = 0.5;
-            const proporcaoCasaTiago = 0.5 * (1/3);
-            const proporcaoCasaJo = 0.5 * (2/3);
+            const atrasoEmpresa = GLOBAL_SEM_EMP * qtdSemanas;
+            const atrasoCasaTiago = GLOBAL_SEM_CASA_T * qtdSemanas;
+            const atrasoCasaJo = GLOBAL_SEM_CASA_J * qtdSemanas;
 
-            const atrasoEmpresa = aluguelAtrasadoTotal * proporcaoEmpresa;
-            const atrasoCasaTiago = aluguelAtrasadoTotal * proporcaoCasaTiago;
-            const atrasoCasaJo = aluguelAtrasadoTotal * proporcaoCasaJo;
-
-            // Atualiza labels visuais do rateio de aluguel
-            document.getElementById('lbl-atraso-emp').innerText = formata(atrasoEmpresa);
-            document.getElementById('lbl-atraso-casa-t').innerText = formata(atrasoCasaTiago);
-            document.getElementById('lbl-atraso-casa-j').innerText = formata(atrasoCasaJo);
-
-            // Custos da Empresa
+            // Custos da Empresa Hoje
             const ads = parseFloat(document.getElementById('f-ads').value) || 0;
             const extras = parseFloat(document.getElementById('f-extras').value) || 0;
-            const outrosAtrasos = parseFloat(document.getElementById('f-atraso-outros').value) || 0; 
             const custosEmpresa = ads + extras + 150; // 150 da Colômbia
-            const atrasosEmpresaTotais = atrasoEmpresa + outrosAtrasos;
             
-            // Retiradas Pessoais (Não entram no balanço da empresa, só no rateio final)
+            // Retiradas Pessoais (Vales)
             const saqueTiago = parseFloat(document.getElementById('f-saque-t').value) || 0;
             const saqueAnto = parseFloat(document.getElementById('f-anto').value) || 0;
             
@@ -606,13 +578,13 @@
             divVazio.classList.add('hidden');
             divExtrato.classList.remove('hidden');
 
-            // LÓGICA DO CAIXA: O que sobrou para a Empresa dividir depois de pagar o normal e o atrasado
-            GLOBAL_SALDO_CAIXA = bruto - custosEmpresa - atrasosEmpresaTotais - GLOBAL_PROV_TOTAL_DIA;
+            // LÓGICA DO CAIXA LÍQUIDO DA EMPRESA
+            GLOBAL_SALDO_CAIXA = bruto - custosEmpresa - atrasoEmpresa - GLOBAL_PROV_TOTAL_DIA;
 
             // Atualiza os Textos do Extrato
             document.getElementById('ext-bruto').innerText = formata(bruto);
             document.getElementById('ext-custos').innerText = `- ${formata(custosEmpresa)}`;
-            document.getElementById('ext-atraso').innerText = `- ${formata(atrasosEmpresaTotais)}`;
+            document.getElementById('ext-atraso-emp').innerText = `- ${formata(atrasoEmpresa)}`;
             document.getElementById('ext-provisao').innerText = `- ${formata(GLOBAL_PROV_TOTAL_DIA)}`;
             document.getElementById('ext-liquido').innerText = formata(GLOBAL_SALDO_CAIXA);
             
@@ -622,7 +594,7 @@
                 document.getElementById('ext-liquido').classList.replace('text-red-500', 'text-blue-400');
             }
 
-            // O RATEIO CIRÚRGICO (50/50 da Empresa, menos o uso da pessoa física)
+            // RATEIO CIRÚRGICO (50% da Empresa - Atrasos Pessoais - Vales)
             const cotaSocio = GLOBAL_SALDO_CAIXA / 2;
             
             // Lógica Tiago
@@ -669,7 +641,6 @@
         const auth = getAuth(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'gl-pro-governance';
         
-        // Regra Rigorosa: Documento do Estado Atual e Coleção do Histórico
         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'ESTADO_ATUAL', 'geral');
         const historicoRef = collection(db, 'artifacts', appId, 'public', 'data', 'historico_caixa');
 
@@ -685,7 +656,6 @@
             } catch (error) { console.error("Auth Erro:", error); }
         };
 
-        // SALVAMENTO COM NOMES DE CHAVES EXATAS (COMPLIANCE DB)
         window.salvarNoFirebase = async () => {
             if (!userLogado) return;
             const btn = document.getElementById('btn-salvar');
@@ -699,14 +669,13 @@
             const fundoTiago = GLOBAL_PIX_T_FINAL > 0 ? (GLOBAL_PIX_T_FINAL * 0.3) : 0;
             const fundoJo = GLOBAL_PIX_J_FINAL > 0 ? (GLOBAL_PIX_J_FINAL * 0.3) : 0;
             
-            const aluMensal = Number(document.getElementById('v-alu').value) || 0;
             const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
-            const aluguelAtrasadoTotal = (aluMensal / 4) * qtdSemanas;
-            
-            const atrasoCasaTiago = (aluguelAtrasadoTotal * 0.5) / 3;
-            const atrasoCasaJo = (aluguelAtrasadoTotal * 0.5) * (2 / 3);
+            const atrasoEmpresa = GLOBAL_SEM_EMP * qtdSemanas;
+            const atrasoCasaTiago = GLOBAL_SEM_CASA_T * qtdSemanas;
+            const atrasoCasaJo = GLOBAL_SEM_CASA_J * qtdSemanas;
 
             const dadosDB = {
+                "SEMANAS NO MES": parseInt(document.getElementById('qtd-semanas-mes').value) || 4,
                 "ACORDO CBM PAGAS": Number(document.getElementById('cbm-pagas').value) || 0,
                 "ACORDO CBM TOTAL": Number(document.getElementById('cbm-total').value) || 0,
                 "ALUGUEL": Number(document.getElementById('v-alu').value) || 0,
@@ -723,11 +692,9 @@
                 "GASTOS ANTONELLA": Number(document.getElementById('f-anto').value) || 0, 
                 "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0,
                 "SEMANAS ATRASO PAGAS HOJE": qtdSemanas,
-                "ALUGUEL ATRASADO PAGO HOJE": aluguelAtrasadoTotal,
-                "ATRASO CASA TIAGO": atrasoCasaTiago,
-                "ATRASO CASA JO": atrasoCasaJo,
-                "ALUGUEL ATRASADO PAGO HOJE": aluguelAtrasadoTotal,
-                "OUTROS ATRASOS": Number(document.getElementById('f-atraso-outros').value) || 0,
+                "ATRASO EMPRESA PAGO": atrasoEmpresa,
+                "ATRASO CASA TIAGO PAGO": atrasoCasaTiago,
+                "ATRASO CASA JO PAGO": atrasoCasaJo,
                 "GASTOS EXTRAS EMPRESA": Number(document.getElementById('f-extras').value) || 0,
                 "LUZ": Number(document.getElementById('v-luz').value) || 0,
                 "NET": Number(document.getElementById('v-internet').value) || 0,
@@ -757,7 +724,6 @@
             }
         };
 
-        // FECHAMENTO DIÁRIO (INCLUI ATRASOS NO RELATÓRIO)
         window.fecharCaixaDia = async () => {
             if (!userLogado) return;
             
@@ -766,11 +732,10 @@
             const especie = Number(document.getElementById('f-especie').value) || 0;
             const bruto = pix + cartao + especie;
             
-            const aluMensal = Number(document.getElementById('v-alu').value) || 0;
             const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
-            const aluguelAtrasadoTotal = (aluMensal / 4) * qtdSemanas;
-            
-            const outrosAtrasos = Number(document.getElementById('f-atraso-outros').value) || 0;
+            const atrasoEmpresa = GLOBAL_SEM_EMP * qtdSemanas;
+            const atrasoCasaTiago = GLOBAL_SEM_CASA_T * qtdSemanas;
+            const atrasoCasaJo = GLOBAL_SEM_CASA_J * qtdSemanas;
             
             const btn = document.getElementById('btn-fechar-caixa');
             const originalText = btn.innerHTML;
@@ -789,13 +754,13 @@
                 data_fechamento: Timestamp.now(),
                 total_bruto: bruto,
                 lucro_liquido_empresa: GLOBAL_SALDO_CAIXA,
-                quitacao_atrasos: aluguelAtrasadoTotal + outrosAtrasos,
+                quitacao_atraso_empresa: atrasoEmpresa,
                 pix_final_tiago: GLOBAL_PIX_T_FINAL,
                 pix_final_jo: GLOBAL_PIX_J_FINAL,
                 saques_antonella: Number(document.getElementById('f-anto').value) || 0,
                 saques_tiago: Number(document.getElementById('f-saque-t').value) || 0,
-                atraso_casa_tiago: (aluguelAtrasadoTotal * 0.5) / 3,
-                atraso_casa_jo: (aluguelAtrasadoTotal * 0.5) * (2 / 3)
+                atraso_casa_tiago: atrasoCasaTiago,
+                atraso_casa_jo: atrasoCasaJo
             };
 
             try {
@@ -812,9 +777,8 @@
                 document.getElementById('f-ads').value = '';
                 document.getElementById('f-anto').value = '';
                 document.getElementById('f-saque-t').value = '';
-                document.getElementById('qtd-semanas-atraso').value = '';
+                document.getElementById('qtd-semanas-atraso').value = '0';
                 document.getElementById('f-extras').value = '';
-                document.getElementById('f-atraso-outros').value = '';
                 
                 await window.salvarNoFirebase(); 
 
@@ -828,7 +792,6 @@
             }
         };
 
-        // LEITURA EM TEMPO REAL
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 userLogado = user;
@@ -839,8 +802,8 @@
                         
                         const setVal = (id, val) => { if(document.activeElement.id !== id) document.getElementById(id).value = val; };
 
+                        setVal('qtd-semanas-mes', s["SEMANAS NO MES"] || 4);
                         setVal('saldo-fisico-jo', s["SALDO FISICO JO"] || '');
-
                         setVal('f-pix', s["FATURAMENTO PIX"] || '');
                         setVal('f-cartao', s["FATURAMENTO CARTAO"] || '');
                         setVal('f-especie', s["FATURAMENTO ESPECIE"] || '');
@@ -848,8 +811,7 @@
                         setVal('f-anto', s["GASTOS ANTONELLA"] || '');
                         setVal('f-saque-t', s["SAQUES TIAGO"] || '');
                         setVal('f-extras', s["GASTOS EXTRAS EMPRESA"] || '');
-                        setVal('qtd-semanas-atraso', s["SEMANAS ATRASO PAGAS HOJE"] || '');
-                        setVal('f-atraso-outros', s["OUTROS ATRASOS"] || '');
+                        setVal('qtd-semanas-atraso', s["SEMANAS ATRASO PAGAS HOJE"] || '0');
                         
                         setVal('v-alu', s["ALUGUEL"] || 6250);
                         setVal('v-luz', s["LUZ"] || '');
