@@ -85,20 +85,23 @@
                             </div>
                         </div>
                         
-                        <!-- NOVO: PAGAMENTO DE ALUGUEL ATRASADO (AUTO-DIVISÃO) -->
+                        <!-- NOVO: PAGAMENTO DE ALUGUEL ATRASADO (AUTOMÁTICO POR SEMANA) -->
                         <div class="bg-red-50 p-4 rounded-xl border border-red-200 shadow-sm">
                             <label class="text-xs font-black text-red-700 uppercase flex items-center gap-2 mb-1">
-                                ⚠️ Pagamento de Aluguel Atrasado (Hoje)
+                                ⚠️ Quitação de Aluguel Atrasado
                             </label>
-                            <p class="text-[9px] text-red-500 uppercase mb-3">Digite o valor TOTAL do aluguel sendo pago com o caixa de hoje. O sistema fará o rateio automático.</p>
+                            <p class="text-[9px] text-red-500 uppercase mb-3">O valor total do aluguel é dividido em 4 semanas. Informe quantas parcelas semanais estão sendo pagas hoje e o sistema fará o rateio exato.</p>
                             
-                            <!-- HELPER DE REFERÊNCIA -->
-                            <div class="bg-red-100 p-2 rounded mb-3 text-[9px] font-mono text-red-800 border border-red-200">
-                                <strong>💡 Referência (1 Parcela Semanal):</strong> <span id="ref-semana-total" class="font-black">R$ 0,00</span><br>
-                                (Tiago: <span id="ref-semana-t" class="font-bold text-blue-700">R$ 0,00</span> | Jô+Anto: <span id="ref-semana-j" class="font-bold text-pink-700">R$ 0,00</span>)
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="flex-1 bg-red-100 p-2 rounded border border-red-200">
+                                    <label class="text-[9px] font-bold text-red-800 uppercase block mb-1">Valor de 1 Semana (Auto)</label>
+                                    <div id="valor-1-semana-auto" class="font-mono text-lg font-black text-red-900">R$ 0,00</div>
+                                </div>
+                                <div>
+                                    <label class="text-[9px] font-bold text-red-800 uppercase block mb-1">Semanas a Pagar</label>
+                                    <input type="number" id="qtd-semanas-atraso" value="0" min="0" max="4" class="input-audit border-red-300 bg-white text-lg p-2 text-red-900 font-black w-24 text-center" oninput="processarDiarioAuto()">
+                                </div>
                             </div>
-
-                            <input type="number" id="f-aluguel-atrasado-master" placeholder="Ex: 1562.50" class="input-audit border-red-300 bg-white text-lg p-3 text-red-900 font-black w-full mb-3" oninput="processarDiarioAuto()">
                             
                             <div class="grid grid-cols-3 gap-2 text-center bg-red-100 p-2 rounded-lg border border-red-200">
                                 <div>
@@ -484,10 +487,8 @@
 
             document.getElementById('sem-alu-total').innerText = formata(alu / 4);
 
-            if(document.getElementById('ref-semana-total')) {
-                document.getElementById('ref-semana-total').innerText = formata(alu / 4);
-                document.getElementById('ref-semana-t').innerText = formata(mensal_alu_t / 4);
-                document.getElementById('ref-semana-j').innerText = formata(mensal_alu_j_anto / 4);
+            if(document.getElementById('valor-1-semana-auto')) {
+                document.getElementById('valor-1-semana-auto').innerText = formata(alu / 4);
             }
 
             document.getElementById('prev-antigo-t').innerText = formata(div_alu_antigo_socio);
@@ -559,8 +560,11 @@
             const especie = parseFloat(document.getElementById('f-especie').value) || 0;
             const bruto = pix + cartao + especie;
 
-            // CÁLCULO DE ALUGUEL ATRASADO (AUTO-DIVISÃO)
-            const aluguelAtrasadoTotal = parseFloat(document.getElementById('f-aluguel-atrasado-master').value) || 0;
+            // CÁLCULO DE ALUGUEL ATRASADO (AUTOMÁTICO POR SEMANA)
+            const aluMensal = parseFloat(document.getElementById('v-alu').value) || 0;
+            const aluguelSemanal = aluMensal / 4;
+            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
+            const aluguelAtrasadoTotal = aluguelSemanal * qtdSemanas;
             
             // As proporções baseadas em: 50% Empresa, 1/3 (16.66%) Casa Tiago, 2/3 (33.33%) Casa Jô
             const proporcaoEmpresa = 0.5;
@@ -695,7 +699,10 @@
             const fundoTiago = GLOBAL_PIX_T_FINAL > 0 ? (GLOBAL_PIX_T_FINAL * 0.3) : 0;
             const fundoJo = GLOBAL_PIX_J_FINAL > 0 ? (GLOBAL_PIX_J_FINAL * 0.3) : 0;
             
-            const aluguelAtrasadoTotal = Number(document.getElementById('f-aluguel-atrasado-master').value) || 0;
+            const aluMensal = Number(document.getElementById('v-alu').value) || 0;
+            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
+            const aluguelAtrasadoTotal = (aluMensal / 4) * qtdSemanas;
+            
             const atrasoCasaTiago = (aluguelAtrasadoTotal * 0.5) / 3;
             const atrasoCasaJo = (aluguelAtrasadoTotal * 0.5) * (2 / 3);
 
@@ -715,6 +722,8 @@
                 "GASTO ADS": Number(document.getElementById('f-ads').value) || 0,
                 "GASTOS ANTONELLA": Number(document.getElementById('f-anto').value) || 0, 
                 "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0,
+                "SEMANAS ATRASO PAGAS HOJE": qtdSemanas,
+                "ALUGUEL ATRASADO PAGO HOJE": aluguelAtrasadoTotal,
                 "ATRASO CASA TIAGO": atrasoCasaTiago,
                 "ATRASO CASA JO": atrasoCasaJo,
                 "ALUGUEL ATRASADO PAGO HOJE": aluguelAtrasadoTotal,
@@ -757,7 +766,10 @@
             const especie = Number(document.getElementById('f-especie').value) || 0;
             const bruto = pix + cartao + especie;
             
-            const aluguelAtrasadoTotal = Number(document.getElementById('f-aluguel-atrasado-master').value) || 0;
+            const aluMensal = Number(document.getElementById('v-alu').value) || 0;
+            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
+            const aluguelAtrasadoTotal = (aluMensal / 4) * qtdSemanas;
+            
             const outrosAtrasos = Number(document.getElementById('f-atraso-outros').value) || 0;
             
             const btn = document.getElementById('btn-fechar-caixa');
@@ -800,7 +812,7 @@
                 document.getElementById('f-ads').value = '';
                 document.getElementById('f-anto').value = '';
                 document.getElementById('f-saque-t').value = '';
-                document.getElementById('f-aluguel-atrasado-master').value = '';
+                document.getElementById('qtd-semanas-atraso').value = '';
                 document.getElementById('f-extras').value = '';
                 document.getElementById('f-atraso-outros').value = '';
                 
@@ -836,7 +848,7 @@
                         setVal('f-anto', s["GASTOS ANTONELLA"] || '');
                         setVal('f-saque-t', s["SAQUES TIAGO"] || '');
                         setVal('f-extras', s["GASTOS EXTRAS EMPRESA"] || '');
-                        setVal('f-aluguel-atrasado-master', s["ALUGUEL ATRASADO PAGO HOJE"] || '');
+                        setVal('qtd-semanas-atraso', s["SEMANAS ATRASO PAGAS HOJE"] || '');
                         setVal('f-atraso-outros', s["OUTROS ATRASOS"] || '');
                         
                         setVal('v-alu', s["ALUGUEL"] || 6250);
