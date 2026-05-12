@@ -250,6 +250,17 @@
                         <div><label class="text-[10px] font-bold uppercase text-slate-500">Contabilidade (Fixo)</label><input type="number" id="v-contabil" value="0" class="input-audit" oninput="processarGeral()"></div>
                         
                         <button onclick="processarGeral()" class="w-full bg-slate-200 text-slate-600 font-black py-4 rounded-xl uppercase text-[10px] mt-6 hover:bg-slate-300 transition-all">Forçar Recálculo</button>
+
+                        <!-- NOVO: RATEIO SEMANAL DO ALUGUEL -->
+                        <div class="mt-6 bg-slate-800 p-4 rounded-xl text-white shadow-inner border-l-4 border-blue-500">
+                            <h3 class="text-[10px] font-black uppercase text-slate-300 tracking-widest border-b border-slate-700 pb-2 mb-3">📅 Rateio Semanal (Só Aluguel)</h3>
+                            <div class="space-y-2 font-mono text-xs">
+                                <div class="flex justify-between"><span class="text-slate-400">Meta/Semana Total:</span> <span id="sem-alu-total" class="font-bold text-white">R$ 0,00</span></div>
+                                <div class="flex justify-between"><span class="text-blue-400">Tiago/Semana:</span> <span id="sem-alu-t" class="font-bold text-white">R$ 0,00</span></div>
+                                <div class="flex justify-between"><span class="text-pink-400">Jô+Anto/Semana:</span> <span id="sem-alu-j" class="font-bold text-white">R$ 0,00</span></div>
+                            </div>
+                            <p class="text-[8px] text-slate-500 mt-3 uppercase tracking-widest leading-tight">Cálculo em 4 semanas. Separação exata: 50% Empresa, 1/3 Casa Tiago, 2/3 Casa Jô.</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -437,6 +448,13 @@
             let div_mae_anto = p_mae < 6 ? 50 : 0;
             let div_alu_antigo_socio = aluAntigo / 2; 
             
+            // NOVO: ATUALIZA RATEIO SEMANAL EXCLUSIVO DO ALUGUEL
+            let mensal_alu_t = emp_alu_1 + res_alu_1;
+            let mensal_alu_j_anto = emp_alu_1 + (res_alu_1 * 2);
+            document.getElementById('sem-alu-total').innerText = formata(alu / 4);
+            document.getElementById('sem-alu-t').innerText = formata(mensal_alu_t / 4);
+            document.getElementById('sem-alu-j').innerText = formata(mensal_alu_j_anto / 4);
+
             document.getElementById('prev-antigo-t').innerText = formata(div_alu_antigo_socio);
             document.getElementById('prev-antigo-j').innerText = formata(div_alu_antigo_socio);
 
