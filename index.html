@@ -93,13 +93,31 @@
                     </h2>
                     <div class="space-y-6">
 
-                        <!-- RASTREADOR FÍSICO -->
-                        <div class="bg-indigo-50 p-4 border border-indigo-100 rounded-xl flex justify-between items-center shadow-sm">
-                            <div>
-                                <h3 class="text-[10px] font-black text-indigo-800 uppercase tracking-widest">Caixa Físico em Mãos</h3>
-                                <p class="text-[9px] text-indigo-500 uppercase mt-1">Acumulado guardado com a Jô</p>
+                        <!-- RASTREADORES FÍSICOS E PENDENTES -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- CAIXA FÍSICO -->
+                            <div class="bg-indigo-50 p-4 border border-indigo-100 rounded-xl shadow-sm">
+                                <h3 class="text-[10px] font-black text-indigo-800 uppercase tracking-widest mb-3 border-b border-indigo-200 pb-2">Caixa Físico (Em Mãos)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-[9px] font-bold text-indigo-700 uppercase">Com Tiago</label>
+                                        <input type="number" id="saldo-fisico-t" placeholder="0.00" class="input-audit border-indigo-200 text-sm text-indigo-900 p-2 mt-1">
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-bold text-indigo-700 uppercase">Com Jô</label>
+                                        <input type="number" id="saldo-fisico-jo" placeholder="0.00" class="input-audit border-indigo-200 text-sm text-indigo-900 p-2 mt-1">
+                                    </div>
+                                </div>
                             </div>
-                            <input type="number" id="saldo-fisico-jo" placeholder="0.00" class="input-audit border-indigo-200 text-sm text-indigo-900 w-28 p-2">
+
+                            <!-- VALORES PENDENTES -->
+                            <div class="bg-orange-50 p-4 border border-orange-100 rounded-xl shadow-sm">
+                                <h3 class="text-[10px] font-black text-orange-800 uppercase tracking-widest mb-3 border-b border-orange-200 pb-2">A Receber (Pendentes)</h3>
+                                <div>
+                                    <label class="text-[9px] font-bold text-orange-700 uppercase flex justify-between">Cartão (Não Caiu) <span class="text-orange-500 text-[8px] mt-0.5">Ex: Ontem</span></label>
+                                    <input type="number" id="cartao-pendente" placeholder="0.00" class="input-audit border-orange-200 text-sm text-orange-900 p-2 mt-1">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- ENTRADAS -->
@@ -701,7 +719,9 @@
                 "SALDO JO": GLOBAL_PIX_J_FINAL,
                 "SALDO TIAGO": GLOBAL_PIX_T_FINAL,
                 "saldo_caixa": GLOBAL_SALDO_CAIXA,
+                "SALDO FISICO TIAGO": Number(document.getElementById('saldo-fisico-t').value) || 0,
                 "SALDO FISICO JO": Number(document.getElementById('saldo-fisico-jo').value) || 0,
+                "CARTAO PENDENTE": Number(document.getElementById('cartao-pendente').value) || 0,
                 "ÁGUA": Number(document.getElementById('v-agua').value) || 0
             };
 
@@ -767,8 +787,10 @@
                 await addDoc(historicoRef, regDiario);
                 
                 if (especie > 0) {
-                    const saldoFisicoAtual = Number(document.getElementById('saldo-fisico-jo').value) || 0;
-                    document.getElementById('saldo-fisico-jo').value = saldoFisicoAtual + especie;
+                    const fisT = Number(document.getElementById('saldo-fisico-t').value) || 0;
+                    const fisJ = Number(document.getElementById('saldo-fisico-jo').value) || 0;
+                    document.getElementById('saldo-fisico-t').value = fisT + (especie / 2);
+                    document.getElementById('saldo-fisico-jo').value = fisJ + (especie / 2);
                 }
 
                 document.getElementById('f-pix').value = '';
@@ -803,7 +825,9 @@
                         const setVal = (id, val) => { if(document.activeElement.id !== id) document.getElementById(id).value = val; };
 
                         setVal('qtd-semanas-mes', s["SEMANAS NO MES"] || 4);
+                        setVal('saldo-fisico-t', s["SALDO FISICO TIAGO"] || '');
                         setVal('saldo-fisico-jo', s["SALDO FISICO JO"] || '');
+                        setVal('cartao-pendente', s["CARTAO PENDENTE"] || '');
                         setVal('f-pix', s["FATURAMENTO PIX"] || '');
                         setVal('f-cartao', s["FATURAMENTO CARTAO"] || '');
                         setVal('f-especie', s["FATURAMENTO ESPECIE"] || '');
