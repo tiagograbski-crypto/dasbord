@@ -746,7 +746,7 @@
             } catch (error) { console.error("Auth Erro:", error); }
         };
 
-        // NOVO: MONITORAMENTO DE CONEXÃO VIA REALTIME DATABASE
+        // NOVO: MONITORAMENTO DE CONEXÃO VIA REALTIME DATABASE (Controla a UI de Status)
         const monitorarConexao = () => {
             const connectedRef = ref(rtdb, ".info/connected");
             onValue(connectedRef, (snap) => {
@@ -891,11 +891,14 @@
             if (user) {
                 userLogado = user;
                 
-                // INICIA O MOTOR DE NOTIFICAÇÕES ASSIM QUE A CONEXÃO FOR SEGURA
+                // INICIA O MOTOR DE NOTIFICAÇÕES
                 configurarNotificacoes();
 
+                // INICIA O MONITOR DE STATUS DE REDE SOMENTE APÓS AUTENTICAÇÃO (auth != null)
+                monitorarConexao();
+
                 onSnapshot(docRef, (snap) => {
-                    const st = document.getElementById('status-conexao');
+                    // Removida a manipulação do DOM de status daqui para não conflitar com o Realtime Database
                     if (snap.exists()) {
                         const s = snap.data();
                         const setVal = (id, val) => { if(document.activeElement.id !== id) document.getElementById(id).value = val; };
@@ -929,12 +932,15 @@
                     atualizarBarraMae(); 
                 }, (err) => {
                     console.error("Erro sincronização Firestore: ", err);
+                    const st = document.getElementById('status-conexao');
+                    st.innerHTML = `<span class="relative flex h-2.5 w-2.5"><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span> ERRO SYNC`;
+                    st.className = "bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg text-xs font-bold text-red-500 uppercase tracking-widest flex items-center gap-3 w-full sm:w-auto justify-center transition-all";
                 });
             }
         });
 
+        // Inicia a Autenticação. O monitoramento de rede e Firestore agora aguardam esse processo.
         initAuth();
-        monitorarConexao(); // INICIA O MONITOR DE STATUS
     </script>
     
     <!-- LÓGICA DE VALIDAÇÃO DE SENHA (LOGIN) -->
