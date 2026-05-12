@@ -14,6 +14,7 @@
         .input-audit:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .extrato-row { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; border-bottom: 1px dotted #cbd5e1; }
         .extrato-row:last-child { border-bottom: none; }
+        .extrato-header { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 12px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
         .tag-cnpj { background-color: #e0f2fe; color: #0369a1; font-size: 9px; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #bae6fd;}
         .tag-cpf { background-color: #fdf4ff; color: #a21caf; font-size: 9px; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #f5d0fe;}
         .tag-misto { font-size: 9px; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #cbd5e1;}
@@ -28,7 +29,7 @@
         </div>
         <div class="text-center md:text-left z-10">
             <h1 class="text-3xl font-black tracking-tighter uppercase">GL Pro Governance</h1>
-            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Sistema Operacional de Transparência v10.0</p>
+            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Sistema Operacional de Transparência v10.5</p>
         </div>
         <div class="flex items-center gap-6 mt-6 md:mt-0 z-10 flex-col sm:flex-row">
             <!-- Indicador Firebase -->
@@ -41,7 +42,7 @@
             </div>
             
             <button onclick="window.salvarNoFirebase()" id="btn-salvar" class="bg-blue-600 px-8 py-3 rounded-xl text-xs font-black hover:bg-blue-500 transition-all uppercase shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-                💾 Salvar Histórico
+                💾 Salvar Estado
             </button>
         </div>
     </header>
@@ -62,7 +63,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 <div class="lg:col-span-5 card p-8 h-fit border-t-8 border-t-slate-800">
-                    <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest">Apuração de Caixa (Hoje)</h2>
+                    <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest flex justify-between items-center">
+                        Apuração de Caixa (Hoje)
+                    </h2>
                     <div class="space-y-6">
                         <div>
                             <label class="text-xs font-bold text-slate-500 uppercase flex justify-between">Faturamento Bruto <span class="text-green-600">ENTRADAS</span></label>
@@ -87,6 +90,12 @@
                             <div class="flex justify-between items-center text-xs font-mono"><span class="text-pink-700 font-bold">Reserva Jô & Anto</span><span id="prov-j-dia" class="font-bold">- R$ 0,00</span></div>
                             <div class="flex justify-between items-center text-sm font-mono font-black border-t border-amber-200 pt-2"><span class="text-amber-900">Total a Reter no CNPJ</span><span id="v-provisao" class="text-amber-900">- R$ 0,00</span></div>
                         </div>
+
+                        <!-- NOVO: BOTÃO DE FECHAMENTO HISTÓRICO -->
+                        <button onclick="window.fecharCaixaDia()" id="btn-fechar-caixa" class="w-full bg-slate-800 text-white font-black py-4 rounded-xl uppercase text-xs shadow-lg mt-2 hover:bg-slate-700 transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            Confirmar & Salvar Caixa de Hoje
+                        </button>
                     </div>
                 </div>
                 
@@ -125,7 +134,6 @@
             </div>
         </section>
 
-
         <!-- ========================================== -->
         <!-- ABA 2: AUDITORIA E RATEIO (MENSAL/SEMANAL) -->
         <!-- ========================================== -->
@@ -135,50 +143,101 @@
                 <div class="lg:col-span-3 card p-8 h-fit border-t-8 border-t-slate-800">
                     <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest">Base de Custos</h2>
                     <div class="space-y-4">
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Aluguel Fixo</label><input type="number" id="v-alu" value="6250" class="input-audit text-lg font-bold text-slate-800 bg-slate-50"></div>
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Luz (Celesc)</label><input type="number" id="v-luz" placeholder="0.00" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Água</label><input type="number" id="v-agua" placeholder="0.00" class="input-audit"></div>
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Internet</label><input type="number" id="v-internet" placeholder="0.00" class="input-audit"></div>
-                        <button onclick="processarGeral()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-lg mt-6 hover:bg-blue-700">Auditar Rateio</button>
+                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Aluguel Fixo (Total)</label><input type="number" id="v-alu" value="6250" class="input-audit text-lg font-bold text-slate-800 bg-slate-50" oninput="processarGeral()"></div>
+                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Luz Celesc (Total)</label><input type="number" id="v-luz" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
+                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Água (Total)</label><input type="number" id="v-agua" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
+                        <div><label class="text-[10px] font-bold uppercase text-slate-500">Internet (Total)</label><input type="number" id="v-internet" placeholder="0.00" class="input-audit" oninput="processarGeral()"></div>
+                        <button onclick="processarGeral()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-lg mt-6 hover:bg-blue-700 transition-all active:scale-95">Auditar Rateio Manual</button>
                     </div>
                 </div>
                 
                 <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- RELATÓRIO TIAGO -->
                     <div class="card border-t-8 border-blue-600 flex flex-col overflow-hidden">
-                        <div class="p-6 bg-blue-50/30 border-b border-blue-100"><h3 class="text-blue-800 font-black text-sm uppercase tracking-widest text-center">Auditoria CPF: Tiago</h3></div>
-                        <div class="p-6 space-y-6 flex-grow">
-                            <div>
-                                <p class="text-[10px] font-black uppercase mb-3 border-b pb-2 flex justify-between text-slate-600"><span>1. Cota Empresa (50%)</span><span class="tag-cnpj">CNPJ</span></p>
-                                <div id="extrato-tiago" class="font-mono text-slate-600"></div>
+                        <div class="p-6 bg-blue-50/30 border-b border-blue-100 flex justify-between items-center">
+                            <h3 class="text-blue-800 font-black text-sm uppercase tracking-widest">Auditoria: Tiago</h3>
+                            <span class="tag-cnpj">RESP: 50% EMPRESA + 1/3 CASA</span>
+                        </div>
+                        <div class="p-6 space-y-6 flex-grow bg-slate-50/50">
+                            
+                            <!-- BLOCO 1: EMPRESA -->
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                <div class="extrato-header text-blue-700 border-b border-slate-100 pb-2">
+                                    <span class="flex items-center gap-2">🏢 Módulo Empresarial</span>
+                                    <span id="sub-emp-t">R$ 0,00</span>
+                                </div>
+                                <div id="ext-empresa-t" class="font-mono text-slate-600 mt-2"></div>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <div class="flex justify-between items-center font-bold text-sm text-slate-800 uppercase tracking-widest"><span class="text-xs">Subtotal Mensal:</span><span id="sub-tiago" class="text-lg">R$ 0,00</span></div>
+
+                            <!-- BLOCO 2: CASA -->
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                <div class="extrato-header text-amber-600 border-b border-slate-100 pb-2">
+                                    <span class="flex items-center gap-2">🏠 Módulo Residencial</span>
+                                    <span id="sub-casa-t">R$ 0,00</span>
+                                </div>
+                                <div id="ext-casa-t" class="font-mono text-slate-600 mt-2"></div>
+                            </div>
+
+                            <!-- BLOCO 3: PASSIVOS -->
+                            <div class="bg-white p-4 rounded-lg border border-red-100 shadow-sm">
+                                <div class="extrato-header text-red-600 border-b border-red-50 pb-2">
+                                    <span class="flex items-center gap-2">⚠️ Passivos & Acordos</span>
+                                    <span id="sub-passivo-t">R$ 0,00</span>
+                                </div>
+                                <div id="ext-passivo-t" class="font-mono text-slate-600 mt-2"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center font-black text-sm text-slate-800 uppercase tracking-widest px-2 pt-2 border-t-2 border-slate-200">
+                                <span class="text-xs">Custo Fixo Total (Mês):</span><span id="sub-tiago" class="text-xl">R$ 0,00</span>
                             </div>
                         </div>
                         <div class="bg-blue-600 p-6 text-center text-white">
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Retenção Faturada (Todo Sábado)</p>
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Reter do Caixa Todo Sábado</p>
                             <p id="final-t" class="text-4xl font-black mt-2">R$ 0,00</p>
                         </div>
                     </div>
 
                     <!-- RELATÓRIO JÔ + ANTO -->
                     <div class="card border-t-8 border-pink-500 flex flex-col overflow-hidden">
-                        <div class="p-6 bg-pink-50/30 border-b border-pink-100"><h3 class="text-pink-800 font-black text-sm uppercase tracking-widest text-center">Auditoria Familiar (Jô + Anto)</h3></div>
-                        <div class="p-6 space-y-6 flex-grow">
-                            <div>
-                                <p class="text-[10px] font-black uppercase mb-3 border-b pb-2 flex justify-between text-slate-600"><span>1. Cota Jô (Empresa + 1/3)</span><span class="tag-misto bg-slate-100 text-slate-600 border-slate-300">CNPJ + CPF</span></p>
-                                <div id="extrato-jo" class="font-mono text-slate-600"></div>
-                                <div class="flex justify-between border-t border-slate-200 mt-2 pt-2 font-bold text-xs text-slate-800"><span class="text-[10px] uppercase">Subtotal Jô:</span><span id="sub-jo">R$ 0,00</span></div>
+                        <div class="p-6 bg-pink-50/30 border-b border-pink-100 flex justify-between items-center">
+                            <h3 class="text-pink-800 font-black text-sm uppercase tracking-widest">Auditoria: Jô + Anto</h3>
+                            <span class="tag-misto bg-slate-100 text-slate-600 border-slate-300">FAMÍLIA UNIFICADA</span>
+                        </div>
+                        <div class="p-6 space-y-6 flex-grow bg-slate-50/50">
+                            
+                            <!-- BLOCO 1: EMPRESA -->
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                <div class="extrato-header text-pink-700 border-b border-slate-100 pb-2">
+                                    <span class="flex items-center gap-2">🏢 Módulo Empresarial (Jô)</span>
+                                    <span id="sub-emp-j">R$ 0,00</span>
+                                </div>
+                                <div id="ext-empresa-j" class="font-mono text-slate-600 mt-2"></div>
                             </div>
-                            <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
-                                <p class="text-[10px] font-black uppercase mb-2 border-b border-pink-200 pb-2 flex justify-between text-pink-700"><span>2. Cota Antonella (1/3)</span><span class="tag-cpf">CPF EXTRA</span></p>
-                                <div id="extrato-anto" class="font-mono text-pink-600"></div>
-                                <div class="flex justify-between border-t border-pink-200 mt-2 pt-2 font-bold text-xs text-pink-800"><span class="text-[10px] uppercase">Subtotal Antonella:</span><span id="sub-anto">R$ 0,00</span></div>
+
+                            <!-- BLOCO 2: CASA -->
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                <div class="extrato-header text-amber-600 border-b border-slate-100 pb-2">
+                                    <span class="flex items-center gap-2">🏠 Módulo Residencial (Jô + Anto)</span>
+                                    <span id="sub-casa-j">R$ 0,00</span>
+                                </div>
+                                <div id="ext-casa-j" class="font-mono text-slate-600 mt-2"></div>
+                            </div>
+
+                            <!-- BLOCO 3: PASSIVOS -->
+                            <div class="bg-white p-4 rounded-lg border border-red-100 shadow-sm">
+                                <div class="extrato-header text-red-600 border-b border-red-50 pb-2">
+                                    <span class="flex items-center gap-2">⚠️ Passivos & Acordos</span>
+                                    <span id="sub-passivo-j">R$ 0,00</span>
+                                </div>
+                                <div id="ext-passivo-j" class="font-mono text-slate-600 mt-2"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center font-black text-sm text-slate-800 uppercase tracking-widest px-2 pt-2 border-t-2 border-slate-200">
+                                <span class="text-xs">Custo Fixo Total (Mês):</span><span id="sub-jo-anto" class="text-xl">R$ 0,00</span>
                             </div>
                         </div>
                         <div class="bg-pink-600 p-6 text-center text-white">
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Retenção Faturada (Família / Sábado)</p>
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Reter do Caixa Todo Sábado</p>
                             <p id="final-j" class="text-4xl font-black mt-2">R$ 0,00</p>
                             <p id="final-j-detalhe" class="text-[9px] mt-2 uppercase font-bold tracking-widest opacity-75"></p>
                         </div>
@@ -186,7 +245,6 @@
                 </div>
             </div>
         </section>
-
 
         <!-- ========================================== -->
         <!-- ABA 3: GESTÃO DE PASSIVOS (DÍVIDAS)        -->
@@ -227,7 +285,7 @@
                     </div>
                 </div>
 
-                <!-- ALUGUEL ANTIGO (ATUALIZADO COM VALOR TOTAL) -->
+                <!-- ALUGUEL ANTIGO -->
                 <div class="card p-8 border-t-8 border-slate-800 relative overflow-hidden">
                     <span class="tag-cnpj absolute top-4 right-4 bg-slate-100 text-slate-600 border-slate-300">100% CNPJ Solidário</span>
                     <h2 class="text-sm font-black text-slate-800 uppercase mb-2">Acordo: Aluguel Última Sala</h2>
@@ -236,7 +294,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Dívida Total (Saldo Devedor)</label>
-                            <input type="number" id="v-divida-antiga-total" placeholder="0.00" class="input-audit text-lg bg-slate-50 text-slate-700 mt-1">
+                            <input type="number" id="v-divida-antiga-total" placeholder="0.00" class="input-audit text-lg bg-slate-50 text-slate-700 mt-1" oninput="processarGeral()">
                         </div>
                         
                         <div>
@@ -260,7 +318,7 @@
 
     </main>
 
-    <!-- SCRIPTS DA INTERFACE (MANTIDOS DO SEU FRONT-END ORIGINAL) -->
+    <!-- SCRIPTS DA INTERFACE -->
     <script>
         let GLOBAL_PROV_T_DIA = 0;
         let GLOBAL_PROV_J_DIA = 0;
@@ -271,10 +329,10 @@
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('tab-' + tab).classList.remove('hidden');
             document.getElementById('btn-' + tab).classList.add('tab-active');
-            processarGeral(); // Recalcula tudo ao trocar de aba por segurança
+            processarGeral(); 
         }
 
-        function formata(valor) { return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}); }
+        function formata(valor) { return Number(valor || 0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}); }
         const buildItem = (nome, val) => `<div class="extrato-row"><span>${nome}</span><span class="font-bold">${formata(val)}</span></div>`;
 
         function atualizarBarraMae() {
@@ -282,7 +340,7 @@
             const pct = (p/6) * 100;
             document.getElementById('prog-bar').style.width = pct + '%';
             document.getElementById('prog-txt').innerText = Math.round(pct) + '%';
-            processarGeral(); // Se zerar a dívida (6), tira do rateio.
+            processarGeral(); 
         }
 
         function processarGeral() {
@@ -292,68 +350,90 @@
             const net = parseFloat(document.getElementById('v-internet').value) || 0;
             const aluAntigo = parseFloat(document.getElementById('v-aluguel-antigo').value) || 0;
             const p_mae = parseInt(document.getElementById('p-mae').value) || 0;
-            const con = 150; 
+            const con = 150; // Contabilidade (Fixo Empresa)
             
-            // Lógica Base
-            let res_alu_1 = (alu * 0.5) / 3; let res_luz_1 = (luz * 0.3) / 3; let res_agua_1 = (agua * 0.3) / 3; let res_net_1 = (net * 0.5) / 3;
+            // Lógica Base: Empresa vs Casa
             let emp_alu_1 = (alu * 0.5) / 2; let emp_luz_1 = (luz * 0.7) / 2; let emp_agua_1 = (agua * 0.7) / 2; let emp_net_1 = (net * 0.5) / 2;
+            let res_alu_1 = (alu * 0.5) / 3; let res_luz_1 = (luz * 0.3) / 3; let res_agua_1 = (agua * 0.3) / 3; let res_net_1 = (net * 0.5) / 3;
 
-            // Dívida da mãe só entra no rateio se não estiver paga (p_mae < 6)
+            // Passivos
             let div_mae_t = p_mae < 6 ? 225 : 0; 
             let div_mae_jo = p_mae < 6 ? 225 : 0; 
             let div_mae_anto = p_mae < 6 ? 50 : 0;
-
-            let div_alu_antigo_socio = aluAntigo / 2;
+            let div_alu_antigo_socio = aluAntigo / 2; // 50% CNPJ Tiago, 50% CNPJ Jô
             
-            // Preview Aba 3
+            // Preview Aba 3 (Passivos)
             document.getElementById('prev-antigo-t').innerText = formata(div_alu_antigo_socio);
             document.getElementById('prev-antigo-j').innerText = formata(div_alu_antigo_socio);
 
-            // Montagem Extratos (Aba 2)
-            let extrato_socio = 
-                buildItem('Aluguel Emp. (50%)', emp_alu_1) + buildItem('Luz Emp. (50% de 70%)', emp_luz_1) + buildItem('Água Emp. (50% de 70%)', emp_agua_1) + buildItem('Net Emp. (50%)', emp_net_1) + buildItem('Contabilidade', con) +
-                buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (1/3 de 30%)', res_luz_1) + buildItem('Água Casa (1/3 de 30%)', res_agua_1) + buildItem('Net Casa (1/3)', res_net_1) +
-                buildItem('Dívida Mãe (Sua parte)', div_mae_t) + buildItem('Acordo Sala Antiga', div_alu_antigo_socio);
+            // ==========================================
+            // MONTAGEM BLOCOS: TIAGO
+            // ==========================================
+            let sub_emp_t = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
+            document.getElementById('ext-empresa-t').innerHTML = 
+                buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
+            document.getElementById('sub-emp-t').innerText = formata(sub_emp_t);
 
-            document.getElementById('extrato-tiago').innerHTML = extrato_socio;
-            document.getElementById('extrato-jo').innerHTML = extrato_socio;
+            let sub_casa_t = res_alu_1 + res_luz_1 + res_agua_1 + res_net_1;
+            document.getElementById('ext-casa-t').innerHTML = 
+                buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (10%)', res_luz_1) + buildItem('Água Casa (10%)', res_agua_1) + buildItem('Net Casa (16.6%)', res_net_1);
+            document.getElementById('sub-casa-t').innerText = formata(sub_casa_t);
 
-            let extrato_anto = 
-                buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (1/3 de 30%)', res_luz_1) + buildItem('Água Casa (1/3 de 30%)', res_agua_1) + buildItem('Net Casa (1/3)', res_net_1) +
-                buildItem('Dívida Mãe (1/3 Cota)', div_mae_anto);
+            let sub_passivo_t = div_mae_t + div_alu_antigo_socio;
+            document.getElementById('ext-passivo-t').innerHTML = 
+                buildItem('Acordo Luz Mãe', div_mae_t) + buildItem('Acordo Sala Antiga', div_alu_antigo_socio);
+            document.getElementById('sub-passivo-t').innerText = formata(sub_passivo_t);
 
-            document.getElementById('extrato-anto').innerHTML = extrato_anto;
+            // ==========================================
+            // MONTAGEM BLOCOS: JÔ + ANTO
+            // ==========================================
+            let sub_emp_j = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1; // Jô não paga contabilidade? Na regra antiga tava no bolo. Vou colocar.
+            // Correção: Na sua regra antiga "con" entrava para Tiago e Jô. 
+            sub_emp_j = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
+            document.getElementById('ext-empresa-j').innerHTML = 
+                buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
+            document.getElementById('sub-emp-j').innerText = formata(sub_emp_j);
 
-            // Totais
-            let total_mensal_socio = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con + res_alu_1 + res_luz_1 + res_agua_1 + res_net_1 + div_mae_t + div_alu_antigo_socio;
-            let total_mensal_anto = res_alu_1 + res_luz_1 + res_agua_1 + res_net_1 + div_mae_anto;
+            // Casa: Junta Jô (1/3) + Anto (1/3)
+            let sub_casa_j_anto = (res_alu_1*2) + (res_luz_1*2) + (res_agua_1*2) + (res_net_1*2);
+            document.getElementById('ext-casa-j').innerHTML = 
+                buildItem('Aluguel Casa (2/3)', res_alu_1*2) + buildItem('Luz Casa (20%)', res_luz_1*2) + buildItem('Água Casa (20%)', res_agua_1*2) + buildItem('Net Casa (33.3%)', res_net_1*2);
+            document.getElementById('sub-casa-j').innerText = formata(sub_casa_j_anto);
 
-            document.getElementById('sub-tiago').innerText = formata(total_mensal_socio);
-            document.getElementById('sub-jo').innerText = formata(total_mensal_socio); 
-            document.getElementById('sub-anto').innerText = formata(total_mensal_anto);
+            // Passivos: Junta Jô + Anto
+            let sub_passivo_j_anto = div_mae_jo + div_mae_anto + div_alu_antigo_socio;
+            document.getElementById('ext-passivo-j').innerHTML = 
+                buildItem('Acordo Luz Mãe (Jô+Anto)', div_mae_jo + div_mae_anto) + buildItem('Acordo Sala Antiga (Jô)', div_alu_antigo_socio);
+            document.getElementById('sub-passivo-j').innerText = formata(sub_passivo_j_anto);
 
-            // Sábados
-            let sabado_t = total_mensal_socio / 4;
-            let sabado_jo_anto = (total_mensal_socio + total_mensal_anto) / 4;
+            // ==========================================
+            // TOTAIS E PROVISÕES
+            // ==========================================
+            let total_mensal_t = sub_emp_t + sub_casa_t + sub_passivo_t;
+            let total_mensal_j_anto = sub_emp_j + sub_casa_j_anto + sub_passivo_j_anto;
+
+            document.getElementById('sub-tiago').innerText = formata(total_mensal_t);
+            document.getElementById('sub-jo-anto').innerText = formata(total_mensal_j_anto);
+
+            // Sábados (Retenção Semanal - Divide por 4 semanas)
+            let sabado_t = total_mensal_t / 4;
+            let sabado_jo_anto = total_mensal_j_anto / 4;
             
             document.getElementById('final-t').innerText = formata(sabado_t);
             document.getElementById('final-j').innerText = formata(sabado_jo_anto);
-            document.getElementById('final-j-detalhe').innerText = `Sendo: ${formata(total_mensal_socio/4)} Jô + ${formata(total_mensal_anto/4)} Anto`;
-
-            // Provisões
-            GLOBAL_PROV_T_DIA = total_mensal_socio / 26;
-            GLOBAL_PROV_J_DIA = (total_mensal_socio + total_mensal_anto) / 26;
+            
+            // Provisões Diárias (Divide por 26 dias úteis)
+            GLOBAL_PROV_T_DIA = total_mensal_t / 26;
+            GLOBAL_PROV_J_DIA = total_mensal_j_anto / 26;
             GLOBAL_PROV_TOTAL_DIA = GLOBAL_PROV_T_DIA + GLOBAL_PROV_J_DIA;
 
             document.getElementById('prov-t-dia').innerText = `- ${formata(GLOBAL_PROV_T_DIA)}`;
             document.getElementById('prov-j-dia').innerText = `- ${formata(GLOBAL_PROV_J_DIA)}`;
             document.getElementById('v-provisao').innerText = `- ${formata(GLOBAL_PROV_TOTAL_DIA)}`;
             
-            // Se estiver na aba 1, força atualização com os valores novos da provisão
             processarDiarioAuto();
         }
 
-        // Nova função que calcula enquanto digita
         function processarDiarioAuto() {
             const bruto = parseFloat(document.getElementById('f-bruto').value) || 0;
             const ads = parseFloat(document.getElementById('f-ads').value) || 0;
@@ -365,7 +445,6 @@
             const boxSocios = document.getElementById('box-socios');
 
             if (bruto === 0) {
-                // Estado vazio
                 document.getElementById('res-diario').classList.remove('opacity-100');
                 document.getElementById('res-diario').classList.add('opacity-50');
                 boxTermo.className = "card p-8 text-center border-4 border-dashed border-slate-200";
@@ -381,7 +460,7 @@
             document.getElementById('res-diario').classList.remove('opacity-50');
             document.getElementById('res-diario').classList.add('opacity-100');
 
-            const custos_dia = ads + 150 + GLOBAL_PROV_TOTAL_DIA;
+            const custos_dia = ads + 150 + GLOBAL_PROV_TOTAL_DIA; // 150 é a taxa colômbia fixa
             const liquido = bruto - custos_dia;
 
             if (liquido < 0) {
@@ -403,11 +482,11 @@
                 avisoTermo.className = "text-[10px] uppercase font-bold mt-4 px-4 py-2 inline-block rounded bg-green-200 text-green-900";
                 
                 boxSocios.classList.remove('hidden'); 
-                const pix_cada = liquido / 2;
+                const pix_cada = liquido / 2; // Regra de retirada 50/50 na sobra líquida
                 
                 document.getElementById('pix-t').innerText = formata(pix_cada);
-                document.getElementById('t-uso').innerText = formata(pix_cada * 0.7);
-                document.getElementById('t-reserva').innerText = formata(pix_cada * 0.3);
+                document.getElementById('t-uso').innerText = formata(pix_cada * 0.7); // 70% Uso Livre
+                document.getElementById('t-reserva').innerText = formata(pix_cada * 0.3); // 30% Fundo
 
                 document.getElementById('pix-j').innerText = formata(pix_cada);
                 document.getElementById('j-uso').innerText = formata(pix_cada * 0.7);
@@ -416,10 +495,10 @@
         }
     </script>
 
-    <!-- SCRIPTS DO FIREBASE (CONEXÃO COM BANCO DE DADOS EM TEMPO REAL) -->
+    <!-- SCRIPTS DO FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCxnT-eCXN82lEPK5Holo5c6E5etPYkOZA",
@@ -434,14 +513,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        // Vamos salvar tudo no documento 'v10' na coleção 'auditoria'
+        // Referência do documento de Estado Geral
         const docRef = doc(db, "auditoria", "v10");
+        // Referência da coleção para salvar Histórico de Caixas Diários
+        const historicoRef = collection(db, "historico_caixa");
 
-        // 1. Função para SALVAR no Firebase (Substitui o antigo salvarGeral)
+        // SALVA O ESTADO GERAL DAS CONTAS (Aba 2 e 3)
         window.salvarNoFirebase = async () => {
             const btn = document.getElementById('btn-salvar');
-            const textOrig = btn.innerText;
-            btn.innerText = "Salvando...";
+            const textOrig = "💾 Salvar Estado";
+            btn.innerText = "⏳ Salvando...";
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
             
             const dadosParaSalvar = {
                 f_bruto: Number(document.getElementById('f-bruto').value) || 0,
@@ -452,34 +534,91 @@
                 net: Number(document.getElementById('v-internet').value) || 0,
                 mae: Number(document.getElementById('p-mae').value) || 0,
                 alu_antigo: Number(document.getElementById('v-aluguel-antigo').value) || 0,
-                div_antiga_total: Number(document.getElementById('v-divida-antiga-total').value) || 0
+                div_antiga_total: Number(document.getElementById('v-divida-antiga-total').value) || 0,
+                ultima_atualizacao: new Date().toLocaleString('pt-BR')
             };
 
             try {
                 await setDoc(docRef, dadosParaSalvar);
                 btn.innerText = "✅ SALVO NA NUVEM!";
+                btn.classList.remove('bg-blue-600', 'opacity-70', 'cursor-not-allowed');
                 btn.classList.add('bg-green-500');
-                setTimeout(() => { btn.innerText = textOrig; btn.classList.remove('bg-green-500'); }, 2000);
+                setTimeout(() => { btn.innerText = textOrig; btn.classList.remove('bg-green-500'); btn.classList.add('bg-blue-600'); }, 2000);
             } catch (error) {
                 console.error("Erro ao salvar:", error);
-                btn.innerText = "❌ ERRO AO SALVAR";
+                btn.innerText = "❌ ERRO DE CONEXÃO";
+                btn.classList.remove('bg-blue-600', 'opacity-70', 'cursor-not-allowed');
                 btn.classList.add('bg-red-500');
-                setTimeout(() => { btn.innerText = textOrig; btn.classList.remove('bg-red-500'); }, 3000);
+                setTimeout(() => { btn.innerText = textOrig; btn.classList.remove('bg-red-500'); btn.classList.add('bg-blue-600'); }, 3000);
             }
         };
 
-        // 2. Função para CARREGAR em tempo real do Firebase (Substitui o window.onload do localStorage)
+        // NOVO: SALVA O FECHAMENTO DO CAIXA COM DATA NO HISTÓRICO
+        window.fecharCaixaDia = async () => {
+            const bruto = Number(document.getElementById('f-bruto').value);
+            if(bruto <= 0) {
+                alert("Insira um faturamento válido para fechar o caixa do dia.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-fechar-caixa');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Salvando Histórico na Nuvem...";
+            btn.classList.replace('bg-slate-800', 'bg-blue-600');
+
+            const ads = Number(document.getElementById('f-ads').value) || 0;
+            const provisaoDia = window.GLOBAL_PROV_TOTAL_DIA; // Pega da variável global
+            const liquido = bruto - (ads + 150 + provisaoDia);
+            
+            const registroDiario = {
+                data_registro: new Date().toISOString(),
+                data_visual: new Date().toLocaleDateString('pt-BR'),
+                faturamento_bruto: bruto,
+                gastos_ads: ads,
+                taxa_colombia: 150,
+                provisao_retida_cnpj: provisaoDia,
+                lucro_liquido_gerado: liquido,
+                pix_socio_tiago: liquido / 2,
+                pix_socio_jo: liquido / 2
+            };
+
+            try {
+                // Adiciona um novo documento na coleção "historico_caixa"
+                await addDoc(historicoRef, registroDiario);
+                
+                // Limpa os inputs da tela para o próximo dia
+                document.getElementById('f-bruto').value = '';
+                document.getElementById('f-ads').value = '';
+                
+                // Salva o estado vazio no v10
+                await window.salvarNoFirebase();
+
+                btn.innerHTML = "✅ CAIXA FECHADO COM SUCESSO!";
+                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                
+                setTimeout(() => { 
+                    btn.innerHTML = originalText; 
+                    btn.classList.replace('bg-green-600', 'bg-slate-800');
+                }, 3000);
+
+            } catch (error) {
+                console.error("Erro ao fechar caixa:", error);
+                alert("Houve um erro ao tentar salvar o histórico. Verifique a conexão.");
+                btn.innerHTML = originalText;
+                btn.classList.replace('bg-blue-600', 'bg-slate-800');
+            }
+        };
+
+        // Ouvinte em tempo real do Firebase (Estado Geral)
         onSnapshot(docRef, (docSnap) => {
             const statusTexto = document.getElementById('status-conexao');
-            const statusPing = document.getElementById('status-ping');
-            const statusDot = document.getElementById('status-dot');
 
             if (docSnap.exists()) {
                 const s = docSnap.data();
                 
-                // Preenche os campos com os dados da nuvem
-                document.getElementById('f-bruto').value = s.f_bruto || '';
-                document.getElementById('f-ads').value = s.f_ads || '';
+                if(document.activeElement.id !== 'f-bruto') document.getElementById('f-bruto').value = s.f_bruto || '';
+                if(document.activeElement.id !== 'f-ads') document.getElementById('f-ads').value = s.f_ads || '';
+                
                 document.getElementById('v-alu').value = s.alu || 6250;
                 document.getElementById('v-luz').value = s.luz || '';
                 document.getElementById('v-agua').value = s.agua || '';
@@ -488,20 +627,18 @@
                 document.getElementById('v-aluguel-antigo').value = s.alu_antigo || '';
                 document.getElementById('v-divida-antiga-total').value = s.div_antiga_total || '';
 
-                // Atualiza o visual indicando que está conectado
                 statusTexto.innerHTML = `<span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span> Sincronizado (Nuvem)`;
                 statusTexto.classList.replace('text-yellow-400', 'text-emerald-400');
             } else {
-                statusTexto.innerHTML = "Banco Inicializado (Vazio)";
+                statusTexto.innerHTML = "Banco Vazio";
                 statusTexto.classList.replace('text-yellow-400', 'text-slate-400');
             }
 
-            // Após preencher, força o recálculo de tudo na tela
             atualizarBarraMae(); 
         }, (erro) => {
             console.error("Erro ao ouvir o Firebase:", erro);
             const statusTexto = document.getElementById('status-conexao');
-            statusTexto.innerHTML = "❌ Erro de Conexão";
+            statusTexto.innerHTML = "❌ Sem Conexão";
             statusTexto.classList.replace('text-yellow-400', 'text-red-500');
         });
 
