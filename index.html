@@ -142,8 +142,85 @@
                                     <input type="number" id="saldo-fisico-jo" placeholder="0.00" class="input-audit text-indigo-900 border-indigo-200">
                                 </div>
                                 <div class="sm:col-span-2 bg-orange-50/50 p-3 rounded-lg border border-orange-100 mt-2 sm:mt-0">
-                                    <label class="text-[9px] font-bold text-orange-700 uppercase flex justify-between">Cartão a Receber <span class="text-orange-500 font-normal">Transação aprovada, não creditada</span></label>
-                                    <input type="number" id="cartao-pendente" placeholder="Ex: Venda de ontem" class="input-audit text-orange-900 border-orange-200 mt-1">
+                                    <label class="text-[9px] font-bold text-orange-700 uppercase flex justify-between">Cartão a Receber <span class="text-orange-500 font-normal">Aprovado, não creditado</span></label>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <input type="number" id="cartao-pendente" placeholder="Ex: Venda de ontem" class="input-audit text-orange-900 border-orange-200 w-full">
+                                        <button onclick="window.baixarCartaoPendente()" id="btn-baixar-cartao" class="bg-orange-600 hover:bg-orange-500 text-white font-black px-4 py-2.5 rounded-lg border border-orange-700 text-[10px] uppercase whitespace-nowrap transition-all shadow-sm active:scale-95">
+                                            📥 Baixar p/ Caixa
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 1.5: CONTAS A PAGAR (FIADOS) -->
+                        <div class="card p-5 sm:p-6 border-t-4 border-t-yellow-500">
+                            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                                <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                                    ⚠️ Contas a Pagar (Fiados)
+                                </h2>
+                                <span class="text-[8px] text-slate-400 uppercase font-bold">Clique em Sincronizar após anotar</span>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- FIADO 1 -->
+                                <div class="bg-yellow-50/40 p-3 rounded-lg border border-yellow-200 shadow-sm relative">
+                                    <span class="absolute top-2 right-2 text-[8px] font-black text-yellow-600 uppercase bg-yellow-100 px-2 py-0.5 rounded">#1</span>
+                                    <div class="grid grid-cols-2 gap-3 mb-3 pr-6">
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Descrição</label>
+                                            <input type="text" id="fiado-1-desc" placeholder="Ex: Ração Dog" class="input-audit text-left border-yellow-300 text-yellow-900 w-full text-xs p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Valor (R$)</label>
+                                            <input type="number" id="fiado-1-valor" placeholder="0.00" class="input-audit border-yellow-300 text-yellow-900 w-full text-xs p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Vencimento</label>
+                                            <input type="date" id="fiado-1-data" class="input-audit border-yellow-300 text-yellow-900 w-full text-[10px] p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Responsável</label>
+                                            <select id="fiado-1-tipo" class="input-audit border-yellow-300 text-yellow-900 w-full text-[10px] p-2 bg-white text-center">
+                                                <option value="empresa">Empresa</option>
+                                                <option value="tiago">Tiago</option>
+                                                <option value="jo">Jô/Anto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button onclick="window.baixarFiado(1)" id="btn-baixar-fiado-1" class="w-full bg-yellow-500 hover:bg-yellow-400 text-white font-black px-4 py-2 rounded border border-yellow-600 text-[10px] uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2">
+                                        💸 Pagar Hoje (Dar Baixa no DRE)
+                                    </button>
+                                </div>
+
+                                <!-- FIADO 2 -->
+                                <div class="bg-yellow-50/40 p-3 rounded-lg border border-yellow-200 shadow-sm relative">
+                                    <span class="absolute top-2 right-2 text-[8px] font-black text-yellow-600 uppercase bg-yellow-100 px-2 py-0.5 rounded">#2</span>
+                                    <div class="grid grid-cols-2 gap-3 mb-3 pr-6">
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Descrição</label>
+                                            <input type="text" id="fiado-2-desc" placeholder="Ex: Pendência" class="input-audit text-left border-yellow-300 text-yellow-900 w-full text-xs p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Valor (R$)</label>
+                                            <input type="number" id="fiado-2-valor" placeholder="0.00" class="input-audit border-yellow-300 text-yellow-900 w-full text-xs p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Vencimento</label>
+                                            <input type="date" id="fiado-2-data" class="input-audit border-yellow-300 text-yellow-900 w-full text-[10px] p-2">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-yellow-800 uppercase block mb-1">Responsável</label>
+                                            <select id="fiado-2-tipo" class="input-audit border-yellow-300 text-yellow-900 w-full text-[10px] p-2 bg-white text-center">
+                                                <option value="empresa">Empresa</option>
+                                                <option value="tiago">Tiago</option>
+                                                <option value="jo">Jô/Anto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button onclick="window.baixarFiado(2)" id="btn-baixar-fiado-2" class="w-full bg-yellow-500 hover:bg-yellow-400 text-white font-black px-4 py-2 rounded border border-yellow-600 text-[10px] uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2">
+                                        💸 Pagar Hoje (Dar Baixa no DRE)
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -183,16 +260,50 @@
                                 4. Sócios & Acertos
                             </h2>
                             
-                            <!-- Quitação de Atraso -->
+                            <!-- Quitação de Atraso SEPARADA -->
                             <div class="bg-red-50 p-4 border border-red-100 rounded-lg mb-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <label class="text-[10px] font-bold text-red-800 uppercase block">Pagar Sábados Atrasados</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="qtd-semanas-atraso" value="0" min="0" max="5" class="input-audit border-red-300 w-16 p-1 text-center text-red-900 bg-white" oninput="processarDiarioAuto()">
-                                        <span class="text-[9px] font-bold text-red-600 uppercase">Semanas</span>
+                                <div class="mb-3">
+                                    <label class="text-[10px] font-bold text-red-800 uppercase block">Quitação Individual de Sábados (Aluguel)</label>
+                                    <p class="text-[9px] text-red-500 leading-tight mt-1">Informe a quantidade de semanas que cada um está pagando hoje.</p>
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    <!-- Empresa -->
+                                    <div class="flex justify-between items-center bg-white p-2 rounded border border-red-200 shadow-sm">
+                                        <div>
+                                            <span class="block text-[9px] font-bold text-slate-700 uppercase">Empresa (50%)</span>
+                                            <span id="lbl-data-emp" class="text-[8px] text-slate-400 font-mono">Últ. Pagto: --/--/----</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" id="qtd-semanas-emp" value="0" min="0" max="5" class="input-audit border-red-300 w-16 p-1.5 text-center text-red-900 bg-red-50" oninput="processarDiarioAuto()">
+                                            <span class="text-[9px] font-bold text-red-600 uppercase w-6">Sem.</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Tiago -->
+                                    <div class="flex justify-between items-center bg-blue-50/50 p-2 rounded border border-blue-200 shadow-sm">
+                                        <div>
+                                            <span class="block text-[9px] font-bold text-blue-700 uppercase">Casa Tiago (1/3)</span>
+                                            <span id="lbl-data-t" class="text-[8px] text-blue-400 font-mono">Últ. Pagto: --/--/----</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" id="qtd-semanas-t" value="0" min="0" max="5" class="input-audit border-blue-300 w-16 p-1.5 text-center text-blue-900 bg-white" oninput="processarDiarioAuto()">
+                                            <span class="text-[9px] font-bold text-blue-600 uppercase w-6">Sem.</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Jô -->
+                                    <div class="flex justify-between items-center bg-pink-50/50 p-2 rounded border border-pink-200 shadow-sm">
+                                        <div>
+                                            <span class="block text-[9px] font-bold text-pink-700 uppercase">Casa Jô (2/3)</span>
+                                            <span id="lbl-data-j" class="text-[8px] text-pink-400 font-mono">Últ. Pagto: --/--/----</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" id="qtd-semanas-j" value="0" min="0" max="5" class="input-audit border-pink-300 w-16 p-1.5 text-center text-pink-900 bg-white" oninput="processarDiarioAuto()">
+                                            <span class="text-[9px] font-bold text-pink-600 uppercase w-6">Sem.</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <p class="text-[9px] text-red-500 leading-tight">O sistema aplicará automaticamente as deduções da empresa e das casas conforme a Meta Semanal.</p>
                             </div>
 
                             <!-- Retiradas Pessoais -->
@@ -339,7 +450,9 @@
                             <div><label class="text-[9px] font-bold uppercase text-slate-500 mt-2">Luz Celesc (Total)</label><input type="number" id="v-luz" placeholder="0.00" class="input-audit text-sm" oninput="processarGeral()"></div>
                             <div><label class="text-[9px] font-bold uppercase text-slate-500">Água (Total)</label><input type="number" id="v-agua" placeholder="0.00" class="input-audit text-sm" oninput="processarGeral()"></div>
                             <div><label class="text-[9px] font-bold uppercase text-slate-500">Internet (Total)</label><input type="number" id="v-internet" placeholder="0.00" class="input-audit text-sm" oninput="processarGeral()"></div>
-                            <div><label class="text-[9px] font-bold uppercase text-slate-500">Contabilidade Fixo</label><input type="number" id="v-contabil" value="0" class="input-audit text-sm" oninput="processarGeral()"></div>
+                            <div><label class="text-[9px] font-bold uppercase text-slate-500">Lavanderia (Empresa)</label><input type="number" id="v-lavanderia" placeholder="0.00" class="input-audit text-sm" oninput="processarGeral()"></div>
+                            <div><label class="text-[9px] font-bold uppercase text-slate-500">Contabilidade (Total)</label><input type="number" id="v-contabil" value="0" class="input-audit text-sm" oninput="processarGeral()"></div>
+                            <div><label class="text-[9px] font-bold uppercase text-slate-500 text-blue-600">IPTU (Total)</label><input type="number" id="v-iptu" placeholder="0.00" class="input-audit border-blue-200 text-sm" oninput="processarGeral()"></div>
                             
                             <button onclick="processarGeral()" class="w-full bg-slate-100 text-slate-600 font-bold py-3 rounded-lg uppercase text-[10px] mt-4 hover:bg-slate-200 transition-all border border-slate-200 active:scale-95">Recalcular Metas</button>
                         </div>
@@ -421,7 +534,10 @@
                         
                         <div class="space-y-5">
                             <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
-                                <label class="text-[9px] font-bold uppercase tracking-widest text-slate-600">Parcelas Quitadas</label>
+                                <div>
+                                    <label class="text-[9px] font-bold uppercase tracking-widest text-slate-600 block">Parcelas Quitadas</label>
+                                    <span class="text-[8px] text-slate-400 uppercase">Aumente e clique em Sincronizar</span>
+                                </div>
                                 <div class="flex items-center gap-2">
                                     <input type="number" id="p-mae" value="0" min="0" max="6" class="w-16 p-1.5 text-center text-lg font-black border border-indigo-300 rounded text-indigo-900 bg-white" oninput="atualizarBarraMae()">
                                     <span class="text-[10px] font-bold text-slate-400 uppercase">/ 6</span>
@@ -514,14 +630,21 @@
             const luz = parseFloat(document.getElementById('v-luz').value) || 0;
             const agua = parseFloat(document.getElementById('v-agua').value) || 0;
             const net = parseFloat(document.getElementById('v-internet').value) || 0;
+            const lavanderia = parseFloat(document.getElementById('v-lavanderia').value) || 0;
             const con = parseFloat(document.getElementById('v-contabil').value) || 0; 
+            const iptu = parseFloat(document.getElementById('v-iptu').value) || 0; // NOVO CAMPO IPTU
             
             const p_mae = parseInt(document.getElementById('p-mae').value) || 0;
             const aluAntigo = parseFloat(document.getElementById('v-aluguel-antigo').value) || 0;
             
             // Fatiamento Base
             let emp_alu_1 = (alu * 0.5) / 2; let emp_luz_1 = (luz * 0.7) / 2; let emp_agua_1 = (agua * 0.7) / 2; let emp_net_1 = (net * 0.5) / 2;
+            let emp_lav_1 = lavanderia / 2; // 100% Empresa, dividido 50/50
+            let emp_con_1 = con / 2; // Correção Bug Contabilidade: Dividido 50/50
+            let emp_iptu_1 = (iptu * 0.5) / 2; // IPTU Empresa (50% da Empresa, dividido por 2)
+
             let res_alu_1 = (alu * 0.5) / 3; let res_luz_1 = (luz * 0.3) / 3; let res_agua_1 = (agua * 0.3) / 3; let res_net_1 = (net * 0.5) / 3;
+            let res_iptu_1 = (iptu * 0.5) / 3; // IPTU Casa (50% da Casa, dividido por 3)
 
             let div_mae_t = p_mae < 6 ? 225 : 0; 
             let div_mae_jo = p_mae < 6 ? 225 : 0; 
@@ -532,11 +655,11 @@
             document.getElementById('prev-antigo-j').innerText = formata(div_alu_antigo_socio);
 
             // Bloco Tiago
-            let sub_emp_t = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
-            document.getElementById('ext-empresa-t').innerHTML = buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
+            let sub_emp_t = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + emp_lav_1 + emp_con_1 + emp_iptu_1;
+            document.getElementById('ext-empresa-t').innerHTML = buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Lavanderia (50%)', emp_lav_1) + buildItem('Contábil (50%)', emp_con_1) + buildItem('IPTU Emp. (25%)', emp_iptu_1);
             
-            let sub_casa_t = res_alu_1 + res_luz_1 + res_agua_1 + res_net_1;
-            document.getElementById('ext-casa-t').innerHTML = buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (10%)', res_luz_1) + buildItem('Água Casa (10%)', res_agua_1) + buildItem('Net Casa (16.6%)', res_net_1);
+            let sub_casa_t = res_alu_1 + res_luz_1 + res_agua_1 + res_net_1 + res_iptu_1;
+            document.getElementById('ext-casa-t').innerHTML = buildItem('Aluguel Casa (1/3)', res_alu_1) + buildItem('Luz Casa (10%)', res_luz_1) + buildItem('Água Casa (10%)', res_agua_1) + buildItem('Net Casa (16.6%)', res_net_1) + buildItem('IPTU Casa (1/3)', res_iptu_1);
             
             let sub_passivo_t = div_mae_t + div_alu_antigo_socio;
             document.getElementById('ext-passivo-t').innerHTML = buildItem('Acordo Luz Mãe', div_mae_t) + buildItem('Acordo CBM Antigo', div_alu_antigo_socio);
@@ -544,11 +667,11 @@
             let total_mensal_t = sub_emp_t + sub_casa_t + sub_passivo_t;
 
             // Bloco Jô/Anto
-            let sub_emp_j = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + con;
-            document.getElementById('ext-empresa-j').innerHTML = buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Contabilidade', con);
+            let sub_emp_j = emp_alu_1 + emp_luz_1 + emp_agua_1 + emp_net_1 + emp_lav_1 + emp_con_1 + emp_iptu_1;
+            document.getElementById('ext-empresa-j').innerHTML = buildItem('Aluguel Emp. (25%)', emp_alu_1) + buildItem('Luz Emp. (35%)', emp_luz_1) + buildItem('Água Emp. (35%)', emp_agua_1) + buildItem('Net Emp. (25%)', emp_net_1) + buildItem('Lavanderia (50%)', emp_lav_1) + buildItem('Contábil (50%)', emp_con_1) + buildItem('IPTU Emp. (25%)', emp_iptu_1);
             
-            let sub_casa_j_anto = (res_alu_1*2) + (res_luz_1*2) + (res_agua_1*2) + (res_net_1*2);
-            document.getElementById('ext-casa-j').innerHTML = buildItem('Aluguel Casa (2/3)', res_alu_1*2) + buildItem('Luz Casa (20%)', res_luz_1*2) + buildItem('Água Casa (20%)', res_agua_1*2) + buildItem('Net Casa (33.3%)', res_net_1*2);
+            let sub_casa_j_anto = (res_alu_1*2) + (res_luz_1*2) + (res_agua_1*2) + (res_net_1*2) + (res_iptu_1*2);
+            document.getElementById('ext-casa-j').innerHTML = buildItem('Aluguel Casa (2/3)', res_alu_1*2) + buildItem('Luz Casa (20%)', res_luz_1*2) + buildItem('Água Casa (20%)', res_agua_1*2) + buildItem('Net Casa (33.3%)', res_net_1*2) + buildItem('IPTU Casa (2/3)', res_iptu_1*2);
             
             let sub_passivo_j_anto = div_mae_jo + div_mae_anto + div_alu_antigo_socio;
             document.getElementById('ext-passivo-j').innerHTML = buildItem('Acordo Luz Mãe (Jô+Anto)', div_mae_jo + div_mae_anto) + buildItem('Acordo CBM Antigo (Jô)', div_alu_antigo_socio);
@@ -593,11 +716,14 @@
             const especie = parseFloat(document.getElementById('f-especie').value) || 0;
             const bruto = pix + cartao + especie;
 
-            // Atrasos (Qtd Semanas informadas)
-            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
-            const atrasoEmpresa = GLOBAL_SEM_EMP * qtdSemanas;
-            const atrasoCasaTiago = GLOBAL_SEM_CASA_T * qtdSemanas;
-            const atrasoCasaJo = GLOBAL_SEM_CASA_J * qtdSemanas;
+            // Atrasos SEPARADOS (Qtd Semanas informadas por cada um)
+            const qtdSemanasEmp = parseInt(document.getElementById('qtd-semanas-emp').value) || 0;
+            const qtdSemanasT = parseInt(document.getElementById('qtd-semanas-t').value) || 0;
+            const qtdSemanasJ = parseInt(document.getElementById('qtd-semanas-j').value) || 0;
+            
+            const atrasoEmpresa = GLOBAL_SEM_EMP * qtdSemanasEmp;
+            const atrasoCasaTiago = GLOBAL_SEM_CASA_T * qtdSemanasT;
+            const atrasoCasaJo = GLOBAL_SEM_CASA_J * qtdSemanasJ;
 
             // Custos e Retiradas Pessoais Hoje
             const ads = parseFloat(document.getElementById('f-ads').value) || 0;
@@ -784,7 +910,9 @@
             const fundoTiago = GLOBAL_PIX_T_FINAL > 0 ? (GLOBAL_PIX_T_FINAL * 0.3) : 0;
             const fundoJo = GLOBAL_PIX_J_FINAL > 0 ? (GLOBAL_PIX_J_FINAL * 0.3) : 0;
             
-            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
+            const qtdSemanasEmp = parseInt(document.getElementById('qtd-semanas-emp').value) || 0;
+            const qtdSemanasT = parseInt(document.getElementById('qtd-semanas-t').value) || 0;
+            const qtdSemanasJ = parseInt(document.getElementById('qtd-semanas-j').value) || 0;
 
             // MAPA EXATO DO BANCO DE DADOS ATUAL
             const dadosDB = {
@@ -804,19 +932,31 @@
                 "GASTO ADS": Number(document.getElementById('f-ads').value) || 0,
                 "GASTOS ANTONELLA": Number(document.getElementById('f-anto').value) || 0, 
                 "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0,
-                "SEMANAS ATRASO PAGAS HOJE": qtdSemanas,
-                "ATRASO EMPRESA PAGO": GLOBAL_SEM_EMP * qtdSemanas,
-                "ATRASO CASA TIAGO PAGO": GLOBAL_SEM_CASA_T * qtdSemanas,
-                "ATRASO CASA JO PAGO": GLOBAL_SEM_CASA_J * qtdSemanas,
+                "SEMANAS ATRASO EMPRESA HOJE": qtdSemanasEmp,
+                "SEMANAS ATRASO TIAGO HOJE": qtdSemanasT,
+                "SEMANAS ATRASO JO HOJE": qtdSemanasJ,
+                "ATRASO EMPRESA PAGO": GLOBAL_SEM_EMP * qtdSemanasEmp,
+                "ATRASO CASA TIAGO PAGO": GLOBAL_SEM_CASA_T * qtdSemanasT,
+                "ATRASO CASA JO PAGO": GLOBAL_SEM_CASA_J * qtdSemanasJ,
                 "GASTOS EXTRAS EMPRESA": Number(document.getElementById('f-extras').value) || 0,
                 "LUZ": Number(document.getElementById('v-luz').value) || 0,
                 "NET": Number(document.getElementById('v-internet').value) || 0,
+                "LAVANDERIA": Number(document.getElementById('v-lavanderia').value) || 0,
+                "IPTU": Number(document.getElementById('v-iptu').value) || 0,
                 "SALDO JO": GLOBAL_PIX_J_FINAL,
                 "SALDO TIAGO": GLOBAL_PIX_T_FINAL,
                 "saldo_caixa": GLOBAL_SALDO_CAIXA,
                 "SALDO FISICO TIAGO": Number(document.getElementById('saldo-fisico-t').value) || 0,
                 "SALDO FISICO JO": Number(document.getElementById('saldo-fisico-jo').value) || 0,
                 "CARTAO PENDENTE": Number(document.getElementById('cartao-pendente').value) || 0,
+                "FIADO 1 DESC": document.getElementById('fiado-1-desc').value || "",
+                "FIADO 1 VALOR": Number(document.getElementById('fiado-1-valor').value) || 0,
+                "FIADO 1 DATA": document.getElementById('fiado-1-data').value || "",
+                "FIADO 1 TIPO": document.getElementById('fiado-1-tipo').value || "empresa",
+                "FIADO 2 DESC": document.getElementById('fiado-2-desc').value || "",
+                "FIADO 2 VALOR": Number(document.getElementById('fiado-2-valor').value) || 0,
+                "FIADO 2 DATA": document.getElementById('fiado-2-data').value || "",
+                "FIADO 2 TIPO": document.getElementById('fiado-2-tipo').value || "empresa",
                 "ÁGUA": Number(document.getElementById('v-agua').value) || 0
             };
 
@@ -826,7 +966,7 @@
             if(vCbm) dadosDB["VENCIMENTO ACORDO"] = Timestamp.fromDate(new Date(vCbm + 'T12:00:00'));
 
             // REGRA DE OURO: Feedback atrelado EXCLUSIVAMENTE ao retorno oficial da promessa (Promise) do Firebase
-            setDoc(docRef, dadosDB)
+            setDoc(docRef, dadosDB, { merge: true }) // Adicionado merge para não sobrepor as datas de pagamento sem querer
                 .then(() => {
                     // Servidor confirmou a gravação
                     btn.innerText = "✅ GRAVADO COM SUCESSO";
@@ -868,19 +1008,21 @@
             }
 
             btn.innerHTML = "⏳ Gravando DRE...";
-            const qtdSemanas = parseInt(document.getElementById('qtd-semanas-atraso').value) || 0;
+            const qtdSemanasEmp = parseInt(document.getElementById('qtd-semanas-emp').value) || 0;
+            const qtdSemanasT = parseInt(document.getElementById('qtd-semanas-t').value) || 0;
+            const qtdSemanasJ = parseInt(document.getElementById('qtd-semanas-j').value) || 0;
 
             const regDiario = {
                 data_fechamento: Timestamp.now(),
                 total_bruto: bruto,
                 lucro_liquido_empresa: GLOBAL_SALDO_CAIXA,
-                quitacao_atraso_empresa: GLOBAL_SEM_EMP * qtdSemanas,
+                quitacao_atraso_empresa: GLOBAL_SEM_EMP * qtdSemanasEmp,
                 pix_final_tiago: GLOBAL_PIX_T_FINAL,
                 pix_final_jo: GLOBAL_PIX_J_FINAL,
                 saques_antonella_jo: Number(document.getElementById('f-anto').value) || 0,
                 saques_tiago: Number(document.getElementById('f-saque-t').value) || 0,
-                atraso_casa_tiago: GLOBAL_SEM_CASA_T * qtdSemanas,
-                atraso_casa_jo: GLOBAL_SEM_CASA_J * qtdSemanas
+                atraso_casa_tiago: GLOBAL_SEM_CASA_T * qtdSemanasT,
+                atraso_casa_jo: GLOBAL_SEM_CASA_J * qtdSemanasJ
             };
 
             try {
@@ -894,9 +1036,19 @@
                     document.getElementById('saldo-fisico-jo').value = fisJ + (especie / 2);
                 }
 
+                // GRAVAÇÃO DA DATA DO ÚLTIMO PAGAMENTO NO FIREBASE
+                const datasUpdate = {};
+                if(qtdSemanasEmp > 0) datasUpdate["DATA ULT PAGTO EMPRESA"] = Timestamp.now();
+                if(qtdSemanasT > 0) datasUpdate["DATA ULT PAGTO TIAGO"] = Timestamp.now();
+                if(qtdSemanasJ > 0) datasUpdate["DATA ULT PAGTO JO"] = Timestamp.now();
+                
+                if(Object.keys(datasUpdate).length > 0) {
+                    await setDoc(docRef, datasUpdate, { merge: true });
+                }
+
                 // Limpa Campos de Lançamento
-                ['f-pix', 'f-cartao', 'f-especie', 'f-ads', 'f-anto', 'f-saque-t', 'qtd-semanas-atraso', 'f-extras'].forEach(id => {
-                    document.getElementById(id).value = (id === 'qtd-semanas-atraso') ? '0' : '';
+                ['f-pix', 'f-cartao', 'f-especie', 'f-ads', 'f-anto', 'f-saque-t', 'qtd-semanas-emp', 'qtd-semanas-t', 'qtd-semanas-j', 'f-extras'].forEach(id => {
+                    document.getElementById(id).value = (id.startsWith('qtd-semanas')) ? '0' : '';
                 });
                 
                 await window.salvarNoFirebase(); 
@@ -911,18 +1063,115 @@
             }
         };
 
+        // NOVA FUNÇÃO: DAR BAIXA NO CARTÃO PENDENTE
+        window.baixarCartaoPendente = async () => {
+            if (!userLogado) return;
+            const btn = document.getElementById('btn-baixar-cartao');
+            const cartaoPendente = Number(document.getElementById('cartao-pendente').value) || 0;
+            
+            if (cartaoPendente <= 0) {
+                alert("Não há valor pendente no cartão para dar baixa.");
+                return;
+            }
+
+            if(confirm(`Deseja transferir R$ ${cartaoPendente} para o Faturamento de Cartão de HOJE? Essa ação colocará o dinheiro na conta da Empresa para divisão.`)) {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "⏳ BAIXANDO...";
+                btn.disabled = true;
+
+                const cartaoHoje = Number(document.getElementById('f-cartao').value) || 0;
+                
+                // Transfere o valor do pendente para o Faturamento de Hoje
+                document.getElementById('f-cartao').value = cartaoHoje + cartaoPendente;
+                document.getElementById('cartao-pendente').value = ''; // Zera o pendente
+                
+                processarDiarioAuto();
+                
+                // Grava automaticamente no banco para não perder
+                await window.salvarNoFirebase();
+                
+                btn.innerHTML = "✅ CONCLUÍDO";
+                btn.classList.replace('bg-orange-600', 'bg-emerald-600');
+                btn.classList.replace('border-orange-700', 'border-emerald-700');
+                btn.classList.replace('hover:bg-orange-500', 'hover:bg-emerald-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-emerald-600', 'bg-orange-600');
+                    btn.classList.replace('border-emerald-700', 'border-orange-700');
+                    btn.classList.replace('hover:bg-emerald-500', 'hover:bg-orange-500');
+                    btn.disabled = false;
+                }, 3000);
+            }
+        };
+
+        // NOVA FUNÇÃO: DAR BAIXA EM FIADO/PENDÊNCIA
+        window.baixarFiado = async (slot) => {
+            if (!userLogado) {
+                alert("Aguarde a autenticação antes de prosseguir.");
+                return;
+            }
+            
+            const valor = Number(document.getElementById(`fiado-${slot}-valor`).value) || 0;
+            const desc = document.getElementById(`fiado-${slot}-desc`).value || 'Conta Pendente';
+            const tipo = document.getElementById(`fiado-${slot}-tipo`).value;
+
+            if (valor <= 0) {
+                alert("O valor precisa ser maior que zero para dar baixa.");
+                return;
+            }
+
+            if(confirm(`Tem certeza que deseja pagar R$ ${valor} (${desc}) hoje?\n\nIsso enviará o custo automaticamente para as despesas de HOJE na conta de: ${tipo.toUpperCase()}`)) {
+                const btn = document.getElementById(`btn-baixar-fiado-${slot}`);
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "⏳ BAIXANDO...";
+                btn.disabled = true;
+
+                // Transfere o valor para o local correto de saída de caixa (DRE)
+                if (tipo === 'empresa') {
+                    const atual = Number(document.getElementById('f-extras').value) || 0;
+                    document.getElementById('f-extras').value = atual + valor;
+                } else if (tipo === 'tiago') {
+                    const atual = Number(document.getElementById('f-saque-t').value) || 0;
+                    document.getElementById('f-saque-t').value = atual + valor;
+                } else if (tipo === 'jo') {
+                    const atual = Number(document.getElementById('f-anto').value) || 0;
+                    document.getElementById('f-anto').value = atual + valor;
+                }
+
+                // Zera os campos do fiado para liberar o slot
+                document.getElementById(`fiado-${slot}-desc`).value = '';
+                document.getElementById(`fiado-${slot}-valor`).value = '';
+                document.getElementById(`fiado-${slot}-data`).value = '';
+                
+                processarDiarioAuto();
+                
+                // Salva o novo estado automaticamente
+                await window.salvarNoFirebase();
+                
+                btn.innerHTML = "✅ BAIXADO E PAGO";
+                btn.classList.replace('bg-yellow-500', 'bg-emerald-600');
+                btn.classList.replace('border-yellow-600', 'border-emerald-700');
+                btn.classList.replace('hover:bg-yellow-400', 'hover:bg-emerald-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-emerald-600', 'bg-yellow-500');
+                    btn.classList.replace('border-emerald-700', 'border-yellow-600');
+                    btn.classList.replace('hover:bg-emerald-500', 'hover:bg-yellow-400');
+                    btn.disabled = false;
+                }, 3000);
+            }
+        };
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 userLogado = user;
                 
-                // INICIA O MOTOR DE NOTIFICAÇÕES
                 configurarNotificacoes();
-
-                // INICIA O MONITOR DE STATUS DE REDE SOMENTE APÓS AUTENTICAÇÃO (auth != null)
                 monitorarConexao();
 
                 onSnapshot(docRef, (snap) => {
-                    // Removida a manipulação do DOM de status daqui para não conflitar com o Realtime Database
                     if (snap.exists()) {
                         const s = snap.data();
                         const setVal = (id, val) => { if(document.activeElement.id !== id) document.getElementById(id).value = val; };
@@ -938,13 +1187,27 @@
                         setVal('f-anto', s["GASTOS ANTONELLA"] || '');
                         setVal('f-saque-t', s["SAQUES TIAGO"] || '');
                         setVal('f-extras', s["GASTOS EXTRAS EMPRESA"] || '');
-                        setVal('qtd-semanas-atraso', s["SEMANAS ATRASO PAGAS HOJE"] || '0');
+                        setVal('qtd-semanas-emp', s["SEMANAS ATRASO EMPRESA HOJE"] || '0');
+                        setVal('qtd-semanas-t', s["SEMANAS ATRASO TIAGO HOJE"] || '0');
+                        setVal('qtd-semanas-j', s["SEMANAS ATRASO JO HOJE"] || '0');
                         
+                        setVal('fiado-1-desc', s["FIADO 1 DESC"] || '');
+                        setVal('fiado-1-valor', s["FIADO 1 VALOR"] || '');
+                        setVal('fiado-1-data', s["FIADO 1 DATA"] || '');
+                        setVal('fiado-1-tipo', s["FIADO 1 TIPO"] || 'empresa');
+                        
+                        setVal('fiado-2-desc', s["FIADO 2 DESC"] || '');
+                        setVal('fiado-2-valor', s["FIADO 2 VALOR"] || '');
+                        setVal('fiado-2-data', s["FIADO 2 DATA"] || '');
+                        setVal('fiado-2-tipo', s["FIADO 2 TIPO"] || 'empresa');
+
                         setVal('v-alu', s["ALUGUEL"] || 6250);
                         setVal('v-luz', s["LUZ"] || '');
                         setVal('v-agua', s["ÁGUA"] || '');
                         setVal('v-internet', s["NET"] || '');
+                        setVal('v-lavanderia', s["LAVANDERIA"] || '');
                         setVal('v-contabil', s["CONTABIL"] || 0);
+                        setVal('v-iptu', s["IPTU"] || '');
                         
                         setVal('p-mae', s["DIVIDA LUZ MAE PAGA"] || 0);
                         setVal('cbm-total', s["ACORDO CBM TOTAL"] || 52800);
@@ -952,6 +1215,15 @@
 
                         if (s["VENCIMENTO ALUGUEL"]) setVal('venc-alu', s["VENCIMENTO ALUGUEL"].toDate().toISOString().split('T')[0]);
                         if (s["VENCIMENTO ACORDO"]) setVal('venc-cbm', s["VENCIMENTO ACORDO"].toDate().toISOString().split('T')[0]);
+
+                        // ATUALIZA AS DATAS DOS ÚLTIMOS PAGAMENTOS NA TELA
+                        const formatarData = (ts) => {
+                            if(!ts) return "--/--/----";
+                            return ts.toDate().toLocaleDateString('pt-BR');
+                        };
+                        document.getElementById('lbl-data-emp').innerText = "Últ. Pagto: " + formatarData(s["DATA ULT PAGTO EMPRESA"]);
+                        document.getElementById('lbl-data-t').innerText = "Últ. Pagto: " + formatarData(s["DATA ULT PAGTO TIAGO"]);
+                        document.getElementById('lbl-data-j').innerText = "Últ. Pagto: " + formatarData(s["DATA ULT PAGTO JO"]);
                     }
                     atualizarBarraMae(); 
                 }, (err) => {
