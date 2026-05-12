@@ -29,7 +29,7 @@
         </div>
         <div class="text-center md:text-left z-10">
             <h1 class="text-3xl font-black tracking-tighter uppercase">GL Pro Governance</h1>
-            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Compliance de Dados v11.5 (Auditoria)</p>
+            <p class="text-slate-400 text-xs font-mono mt-2 tracking-widest uppercase">Compliance de Dados v13.0 (Acerto de Atrasos Mistos)</p>
         </div>
         <div class="flex items-center gap-6 mt-6 md:mt-0 z-10 flex-col sm:flex-row">
             <div id="status-conexao" class="text-xs font-bold text-yellow-400 uppercase tracking-widest flex items-center gap-2">
@@ -55,19 +55,29 @@
     <main>
         
         <!-- ========================================== -->
-        <!-- ABA 1: CAIXA DIÁRIO (NOVA LÓGICA ROBUSTA)  -->
+        <!-- ABA 1: CAIXA DIÁRIO                        -->
         <!-- ========================================== -->
         <section id="tab-diario" class="space-y-8 animate-in fade-in">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 <div class="lg:col-span-5 card p-8 h-fit border-t-8 border-t-slate-800">
                     <h2 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 tracking-widest flex justify-between items-center">
-                        Lançamentos do Dia
+                        Lançamentos do Dia / Acertos
                     </h2>
                     <div class="space-y-6">
+
+                        <!-- RASTREADOR FÍSICO -->
+                        <div class="bg-indigo-50 p-4 border border-indigo-100 rounded-xl flex justify-between items-center shadow-sm">
+                            <div>
+                                <h3 class="text-[10px] font-black text-indigo-800 uppercase tracking-widest">Caixa Físico em Mãos</h3>
+                                <p class="text-[9px] text-indigo-500 uppercase mt-1">Acumulado guardado com a Jô</p>
+                            </div>
+                            <input type="number" id="saldo-fisico-jo" placeholder="0.00" class="input-audit border-indigo-200 text-sm text-indigo-900 w-28 p-2">
+                        </div>
+
                         <!-- ENTRADAS -->
                         <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase flex justify-between mb-2">Composição de Entradas <span class="text-green-600 font-black">FATURAMENTO</span></label>
+                            <label class="text-xs font-bold text-slate-500 uppercase flex justify-between mb-2">Composição de Entradas <span class="text-green-600 font-black">CAIXA ABERTO</span></label>
                             <div class="grid grid-cols-3 gap-3 bg-green-50 p-4 rounded-xl border border-green-100">
                                 <div><label class="text-[9px] font-black uppercase text-green-700">PIX</label><input type="number" id="f-pix" placeholder="0.00" class="input-audit text-sm text-green-800 border-green-200 p-2" oninput="processarDiarioAuto()"></div>
                                 <div><label class="text-[9px] font-black uppercase text-green-700">Cartão</label><input type="number" id="f-cartao" placeholder="0.00" class="input-audit text-sm text-green-800 border-green-200 p-2" oninput="processarDiarioAuto()"></div>
@@ -75,12 +85,20 @@
                             </div>
                         </div>
                         
-                        <!-- SAÍDAS DA EMPRESA (SOMENTE EMPRESA) -->
+                        <!-- SAÍDAS DA EMPRESA (COM CONTAS EM ATRASO) -->
                         <div class="space-y-4 pt-4 border-t border-slate-100">
                             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Custos da Empresa (SAÍDAS)</h3>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div><label class="text-[9px] font-bold text-blue-600 uppercase">Gasto Ads</label><input type="number" id="f-ads" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
-                                <div><label class="text-[9px] font-bold text-slate-500 uppercase">Gastos Extras Empresa</label><input type="number" id="f-extras" placeholder="0.00" class="input-audit border-slate-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
+                            
+                            <!-- NOVO: PAGAMENTOS ATRASADOS EMPRESA -->
+                            <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                                <label class="text-[10px] font-black text-red-700 uppercase">⚠️ Atrasos da EMPRESA (Ex: Aluguel Salão)</label>
+                                <p class="text-[9px] text-red-500 uppercase mb-2">Desconta do bolo total (50/50). Não inclua casa aqui.</p>
+                                <input type="number" id="f-atraso" placeholder="0.00" class="input-audit border-red-300 bg-white text-sm p-2 text-red-900" oninput="processarDiarioAuto()">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 mt-2">
+                                <div><label class="text-[9px] font-bold text-blue-600 uppercase">Gasto Ads (Hoje)</label><input type="number" id="f-ads" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
+                                <div><label class="text-[9px] font-bold text-slate-500 uppercase">Extras Empresa</label><input type="number" id="f-extras" placeholder="0.00" class="input-audit border-slate-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
                             </div>
                             <div class="bg-red-50 p-3 border border-red-100 rounded-xl flex justify-between items-center mt-2">
                                 <span class="text-[10px] text-red-600 font-black uppercase">Taxa Colômbia (Fixo)</span>
@@ -88,13 +106,27 @@
                             </div>
                         </div>
 
-                        <!-- RETIRADAS PESSOAIS (NÃO AFETAM A EMPRESA, SÓ O REPASSE) -->
+                        <!-- RETIRADAS PESSOAIS E ATRASOS DE CASA -->
                         <div class="space-y-4 pt-4 border-t border-slate-100 bg-pink-50/50 p-4 rounded-xl border border-pink-100">
-                            <h3 class="text-xs font-bold text-pink-700 uppercase tracking-widest">Vales e Retiradas (Pessoais)</h3>
-                            <p class="text-[9px] text-slate-500 uppercase">Estes valores descontam direto do PIX final do respectivo sócio.</p>
+                            <h3 class="text-xs font-bold text-pink-700 uppercase tracking-widest">Retiradas Pessoais & Atrasos de Casa</h3>
+                            <p class="text-[9px] text-slate-500 uppercase">Descontam direto do PIX final do respectivo sócio.</p>
+                            
                             <div class="grid grid-cols-2 gap-3 mt-2">
-                                <div><label class="text-[9px] font-bold text-blue-800 uppercase">Saques Tiago</label><input type="number" id="f-saque-t" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
-                                <div><label class="text-[9px] font-bold text-pink-800 uppercase">Gastos Antonella/Jô</label><input type="number" id="f-anto" placeholder="0.00" class="input-audit border-pink-200 text-sm p-2" oninput="processarDiarioAuto()"></div>
+                                <div class="bg-white p-2 rounded border border-blue-100 shadow-sm">
+                                    <label class="text-[9px] font-black text-blue-800 uppercase block mb-1">Pagamento Atraso (Casa Tiago)</label>
+                                    <input type="number" id="f-atraso-casa-t" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2 w-full" oninput="processarDiarioAuto()">
+                                    
+                                    <label class="text-[9px] font-bold text-blue-800 uppercase block mt-2 mb-1">Vales/Saques Tiago</label>
+                                    <input type="number" id="f-saque-t" placeholder="0.00" class="input-audit border-blue-200 text-sm p-2 w-full" oninput="processarDiarioAuto()">
+                                </div>
+                                
+                                <div class="bg-white p-2 rounded border border-pink-100 shadow-sm">
+                                    <label class="text-[9px] font-black text-pink-800 uppercase block mb-1">Pagamento Atraso (Casa Anto/Jô)</label>
+                                    <input type="number" id="f-atraso-casa-j" placeholder="0.00" class="input-audit border-pink-200 text-sm p-2 w-full" oninput="processarDiarioAuto()">
+                                    
+                                    <label class="text-[9px] font-bold text-pink-800 uppercase block mt-2 mb-1">Vales/Gastos Anto/Jô</label>
+                                    <input type="number" id="f-anto" placeholder="0.00" class="input-audit border-pink-200 text-sm p-2 w-full" oninput="processarDiarioAuto()">
+                                </div>
                             </div>
                         </div>
 
@@ -105,7 +137,7 @@
                     </div>
                 </div>
                 
-                <!-- EXTRATO SUPER DETALHADO (VISÃO CONSELHO DE ADMINISTRAÇÃO) -->
+                <!-- EXTRATO SUPER DETALHADO -->
                 <div id="res-diario" class="lg:col-span-7 transition-opacity duration-300">
                     <div id="box-vazio" class="card p-8 text-center border-4 border-dashed border-slate-200 flex flex-col justify-center items-center h-full">
                         <p class="text-xs font-black uppercase mb-2 tracking-widest text-slate-400">Aguardando Lançamentos...</p>
@@ -118,37 +150,38 @@
                         </div>
                         
                         <div class="p-6 space-y-2 font-mono text-sm">
-                            <!-- PASSO 1: Faturamento -->
                             <div class="flex justify-between items-center text-slate-300">
-                                <span>1. Faturamento Bruto (Total Entradas)</span>
+                                <span>1. Caixa Base (Soma Entradas)</span>
                                 <span id="ext-bruto" class="font-bold text-green-400 text-base">R$ 0,00</span>
                             </div>
                             
-                            <!-- PASSO 2: Custos Empresa -->
                             <div class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800">
-                                <span>2. Custos da Operação (Ads + Extras + Colômbia)</span>
+                                <span>2. Custos Diários (Ads + Extras + Colômbia)</span>
                                 <span id="ext-custos" class="font-bold text-red-400">- R$ 0,00</span>
                             </div>
 
-                            <!-- PASSO 3: Retenção CNPJ -->
-                            <div class="flex justify-between items-center text-slate-400 pt-2">
-                                <span>3. Retenção para o Cofre (Provisões Contábeis)</span>
+                            <div id="linha-ext-atraso" class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800">
+                                <span>3. Quitação de Atrasos (Aluguel, etc)</span>
+                                <span id="ext-atraso" class="font-bold text-red-500">- R$ 0,00</span>
+                            </div>
+
+                            <div class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800">
+                                <span>4. Retenção Cofre (Provisão Diária Futura)</span>
                                 <span id="ext-provisao" class="font-bold text-amber-400">- R$ 0,00</span>
                             </div>
 
-                            <!-- RESULTADO DA EMPRESA -->
                             <div class="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-slate-700 mt-4 mb-6">
                                 <span class="font-black text-white">(=) CAIXA LÍQUIDO A DIVIDIR (Empresa)</span>
                                 <span id="ext-liquido" class="font-black text-xl text-blue-400">R$ 0,00</span>
                             </div>
 
-                            <!-- RATEIO SÓCIOS -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                                 <!-- CARD TIAGO -->
                                 <div class="bg-slate-800 p-4 rounded-xl border-t-4 border-blue-500 relative">
                                     <h4 class="text-blue-400 font-black text-xs uppercase tracking-widest text-center mb-3">Sócio: Tiago (50%)</h4>
-                                    <div class="flex justify-between text-slate-300 mb-1"><span>Cota Base do Lucro:</span><span id="ext-base-t">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Saques Pessoais:</span><span id="ext-saque-t">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-slate-300 mb-1"><span>Cota do Lucro:</span><span id="ext-base-t">R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Atraso Casa:</span><span id="ext-atraso-casa-t">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Saques Físicos:</span><span id="ext-saque-t">- R$ 0,00</span></div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-xs font-bold text-white uppercase">PIX FINAL:</span>
                                         <span id="ext-pix-t" class="text-2xl font-black text-green-400">R$ 0,00</span>
@@ -162,8 +195,9 @@
                                 <!-- CARD JÔ -->
                                 <div class="bg-slate-800 p-4 rounded-xl border-t-4 border-pink-500 relative">
                                     <h4 class="text-pink-400 font-black text-xs uppercase tracking-widest text-center mb-3">Sócia: Jô (50%)</h4>
-                                    <div class="flex justify-between text-slate-300 mb-1"><span>Cota Base do Lucro:</span><span id="ext-base-j">R$ 0,00</span></div>
-                                    <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Gastos Antonella:</span><span id="ext-saque-j">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-slate-300 mb-1"><span>Cota do Lucro:</span><span id="ext-base-j">R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-1"><span>(-) Atraso Casa:</span><span id="ext-atraso-casa-j">- R$ 0,00</span></div>
+                                    <div class="flex justify-between text-red-300 mb-3 border-b border-slate-700 pb-2"><span>(-) Gastos Jô/Anto:</span><span id="ext-saque-j">- R$ 0,00</span></div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-xs font-bold text-white uppercase">PIX FINAL:</span>
                                         <span id="ext-pix-j" class="text-2xl font-black text-green-400">R$ 0,00</span>
@@ -462,11 +496,15 @@
             // Custos da Empresa
             const ads = parseFloat(document.getElementById('f-ads').value) || 0;
             const extras = parseFloat(document.getElementById('f-extras').value) || 0;
-            const custosEmpresa = ads + extras + 150; // 150 da Colômbia
+            const atrasos = parseFloat(document.getElementById('f-atraso').value) || 0; // Atrasos EXCLUSIVOS DA EMPRESA
+            const custosEmpresa = ads + extras + 150; // 150 da Colômbia (Sem atrasos)
             
-            // Retiradas Pessoais (Não entram no balanço da empresa, só no rateio final)
+            // Retiradas Pessoais e Atrasos Pessoais (Não entram no balanço da empresa, só no rateio final)
             const saqueTiago = parseFloat(document.getElementById('f-saque-t').value) || 0;
+            const atrasoCasaTiago = parseFloat(document.getElementById('f-atraso-casa-t').value) || 0;
+
             const saqueAnto = parseFloat(document.getElementById('f-anto').value) || 0;
+            const atrasoCasaJo = parseFloat(document.getElementById('f-atraso-casa-j').value) || 0;
             
             const divVazio = document.getElementById('box-vazio');
             const divExtrato = document.getElementById('box-extrato');
@@ -483,12 +521,13 @@
             divVazio.classList.add('hidden');
             divExtrato.classList.remove('hidden');
 
-            // LÓGICA DO CAIXA: O que sobrou para a Empresa dividir
-            GLOBAL_SALDO_CAIXA = bruto - custosEmpresa - GLOBAL_PROV_TOTAL_DIA;
+            // LÓGICA DO CAIXA: O que sobrou para a Empresa dividir depois de pagar o normal e o atrasado
+            GLOBAL_SALDO_CAIXA = bruto - custosEmpresa - atrasos - GLOBAL_PROV_TOTAL_DIA;
 
             // Atualiza os Textos do Extrato
             document.getElementById('ext-bruto').innerText = formata(bruto);
             document.getElementById('ext-custos').innerText = `- ${formata(custosEmpresa)}`;
+            document.getElementById('ext-atraso').innerText = `- ${formata(atrasos)}`;
             document.getElementById('ext-provisao').innerText = `- ${formata(GLOBAL_PROV_TOTAL_DIA)}`;
             document.getElementById('ext-liquido').innerText = formata(GLOBAL_SALDO_CAIXA);
             
@@ -503,16 +542,18 @@
             
             // Lógica Tiago
             document.getElementById('ext-base-t').innerText = formata(cotaSocio);
+            document.getElementById('ext-atraso-casa-t').innerText = `- ${formata(atrasoCasaTiago)}`;
             document.getElementById('ext-saque-t').innerText = `- ${formata(saqueTiago)}`;
-            GLOBAL_PIX_T_FINAL = cotaSocio - saqueTiago;
+            GLOBAL_PIX_T_FINAL = cotaSocio - saqueTiago - atrasoCasaTiago;
             document.getElementById('ext-pix-t').innerText = formata(GLOBAL_PIX_T_FINAL);
             document.getElementById('ext-livre-t').innerText = formata(GLOBAL_PIX_T_FINAL * 0.7);
             document.getElementById('ext-risco-t').innerText = formata(GLOBAL_PIX_T_FINAL * 0.3);
 
             // Lógica Jô
             document.getElementById('ext-base-j').innerText = formata(cotaSocio);
+            document.getElementById('ext-atraso-casa-j').innerText = `- ${formata(atrasoCasaJo)}`;
             document.getElementById('ext-saque-j').innerText = `- ${formata(saqueAnto)}`;
-            GLOBAL_PIX_J_FINAL = cotaSocio - saqueAnto;
+            GLOBAL_PIX_J_FINAL = cotaSocio - saqueAnto - atrasoCasaJo;
             document.getElementById('ext-pix-j').innerText = formata(GLOBAL_PIX_J_FINAL);
             document.getElementById('ext-livre-j').innerText = formata(GLOBAL_PIX_J_FINAL * 0.7);
             document.getElementById('ext-risco-j').innerText = formata(GLOBAL_PIX_J_FINAL * 0.3);
@@ -570,7 +611,6 @@
             const cartao = Number(document.getElementById('f-cartao').value) || 0;
             const especie = Number(document.getElementById('f-especie').value) || 0;
             
-            // No DB você tem FUNDO RESERVA. Pela regra 70/30, o fundo é 30% do que o sócio leva para casa.
             const fundoTiago = GLOBAL_PIX_T_FINAL > 0 ? (GLOBAL_PIX_T_FINAL * 0.3) : 0;
             const fundoJo = GLOBAL_PIX_J_FINAL > 0 ? (GLOBAL_PIX_J_FINAL * 0.3) : 0;
 
@@ -589,17 +629,20 @@
                 "FUNDO RESERVA TOTAL": fundoTiago + fundoJo,
                 "GASTO ADS": Number(document.getElementById('f-ads').value) || 0,
                 "GASTOS ANTONELLA": Number(document.getElementById('f-anto').value) || 0, 
-                "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0, // Adicionado para equilibrar
+                "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0,
+                "ATRASO CASA TIAGO": Number(document.getElementById('f-atraso-casa-t').value) || 0,
+                "ATRASO CASA JO": Number(document.getElementById('f-atraso-casa-j').value) || 0,
                 "GASTOS EXTRAS EMPRESA": Number(document.getElementById('f-extras').value) || 0,
                 "LUZ": Number(document.getElementById('v-luz').value) || 0,
                 "NET": Number(document.getElementById('v-internet').value) || 0,
                 "SALDO JO": GLOBAL_PIX_J_FINAL,
                 "SALDO TIAGO": GLOBAL_PIX_T_FINAL,
                 "saldo_caixa": GLOBAL_SALDO_CAIXA,
+                "SALDO FISICO JO": Number(document.getElementById('saldo-fisico-jo').value) || 0,
+                "CONTAS ATRASO HOJE": Number(document.getElementById('f-atraso').value) || 0, // Campo Novo
                 "ÁGUA": Number(document.getElementById('v-agua').value) || 0
             };
 
-            // Conversão de Datas HTML (YYYY-MM-DD) para Timestamp Firebase
             const vAlu = document.getElementById('venc-alu').value;
             if(vAlu) dadosDB["VENCIMENTO ALUGUEL"] = Timestamp.fromDate(new Date(vAlu + 'T12:00:00'));
             
@@ -619,10 +662,14 @@
             }
         };
 
-        // FECHAMENTO DIÁRIO
+        // FECHAMENTO DIÁRIO (INCLUI ATRASOS NO RELATÓRIO)
         window.fecharCaixaDia = async () => {
             if (!userLogado) return;
-            const bruto = (Number(document.getElementById('f-pix').value)||0) + (Number(document.getElementById('f-cartao').value)||0) + (Number(document.getElementById('f-especie').value)||0);
+            
+            const pix = Number(document.getElementById('f-pix').value) || 0;
+            const cartao = Number(document.getElementById('f-cartao').value) || 0;
+            const especie = Number(document.getElementById('f-especie').value) || 0;
+            const bruto = pix + cartao + especie;
             
             const btn = document.getElementById('btn-fechar-caixa');
             const originalText = btn.innerHTML;
@@ -641,22 +688,35 @@
                 data_fechamento: Timestamp.now(),
                 total_bruto: bruto,
                 lucro_liquido_empresa: GLOBAL_SALDO_CAIXA,
+                quitacao_atrasos: Number(document.getElementById('f-atraso').value) || 0, // Registra o que foi pago de atraso
                 pix_final_tiago: GLOBAL_PIX_T_FINAL,
                 pix_final_jo: GLOBAL_PIX_J_FINAL,
                 saques_antonella: Number(document.getElementById('f-anto').value) || 0,
-                saques_tiago: Number(document.getElementById('f-saque-t').value) || 0
+                saques_tiago: Number(document.getElementById('f-saque-t').value) || 0,
+                atraso_casa_tiago: Number(document.getElementById('f-atraso-casa-t').value) || 0,
+                atraso_casa_jo: Number(document.getElementById('f-atraso-casa-j').value) || 0
             };
 
             try {
                 await addDoc(historicoRef, regDiario);
+                
+                if (especie > 0) {
+                    const saldoFisicoAtual = Number(document.getElementById('saldo-fisico-jo').value) || 0;
+                    document.getElementById('saldo-fisico-jo').value = saldoFisicoAtual + especie;
+                }
+
                 document.getElementById('f-pix').value = '';
                 document.getElementById('f-cartao').value = '';
                 document.getElementById('f-especie').value = '';
                 document.getElementById('f-ads').value = '';
                 document.getElementById('f-anto').value = '';
                 document.getElementById('f-saque-t').value = '';
+                document.getElementById('f-atraso-casa-t').value = '';
+                document.getElementById('f-atraso-casa-j').value = '';
                 document.getElementById('f-extras').value = '';
-                await window.salvarNoFirebase(); // Grava status zerado
+                document.getElementById('f-atraso').value = '';
+                
+                await window.salvarNoFirebase(); 
 
                 btn.innerHTML = "✅ CAIXA FECHADO COM SUCESSO!";
                 btn.classList.replace('bg-blue-600', 'bg-green-600');
@@ -679,13 +739,18 @@
                         
                         const setVal = (id, val) => { if(document.activeElement.id !== id) document.getElementById(id).value = val; };
 
+                        setVal('saldo-fisico-jo', s["SALDO FISICO JO"] || '');
+
                         setVal('f-pix', s["FATURAMENTO PIX"] || '');
                         setVal('f-cartao', s["FATURAMENTO CARTAO"] || '');
                         setVal('f-especie', s["FATURAMENTO ESPECIE"] || '');
                         setVal('f-ads', s["GASTO ADS"] || '');
                         setVal('f-anto', s["GASTOS ANTONELLA"] || '');
                         setVal('f-saque-t', s["SAQUES TIAGO"] || '');
+                        setVal('f-atraso-casa-t', s["ATRASO CASA TIAGO"] || '');
+                        setVal('f-atraso-casa-j', s["ATRASO CASA JO"] || '');
                         setVal('f-extras', s["GASTOS EXTRAS EMPRESA"] || '');
+                        setVal('f-atraso', s["CONTAS ATRASO HOJE"] || '');
                         
                         setVal('v-alu', s["ALUGUEL"] || 6250);
                         setVal('v-luz', s["LUZ"] || '');
@@ -697,7 +762,6 @@
                         setVal('cbm-total', s["ACORDO CBM TOTAL"] || 52800);
                         setVal('cbm-pagas', s["ACORDO CBM PAGAS"] || 0);
 
-                        // Trata Datas (Timestamp para YYYY-MM-DD html)
                         if (s["VENCIMENTO ALUGUEL"]) {
                             const d1 = s["VENCIMENTO ALUGUEL"].toDate();
                             setVal('venc-alu', d1.toISOString().split('T')[0]);
