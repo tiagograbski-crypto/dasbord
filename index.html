@@ -90,9 +90,15 @@
                             <label class="text-xs font-black text-red-700 uppercase flex items-center gap-2 mb-1">
                                 ⚠️ Pagamento de Aluguel Atrasado (Hoje)
                             </label>
-                            <p class="text-[9px] text-red-500 uppercase mb-3">Digite o valor TOTAL do aluguel sendo pago com o caixa de hoje. O sistema fará o rateio automático (50% Empresa, 16.6% Tiago, 33.3% Jô/Anto).</p>
+                            <p class="text-[9px] text-red-500 uppercase mb-3">Digite o valor TOTAL do aluguel sendo pago com o caixa de hoje. O sistema fará o rateio automático.</p>
                             
-                            <input type="number" id="f-aluguel-atrasado-master" placeholder="Ex: 1500.00" class="input-audit border-red-300 bg-white text-lg p-3 text-red-900 font-black w-full mb-3" oninput="processarDiarioAuto()">
+                            <!-- HELPER DE REFERÊNCIA -->
+                            <div class="bg-red-100 p-2 rounded mb-3 text-[9px] font-mono text-red-800 border border-red-200">
+                                <strong>💡 Referência (1 Parcela Semanal):</strong> <span id="ref-semana-total" class="font-black">R$ 0,00</span><br>
+                                (Tiago: <span id="ref-semana-t" class="font-bold text-blue-700">R$ 0,00</span> | Jô+Anto: <span id="ref-semana-j" class="font-bold text-pink-700">R$ 0,00</span>)
+                            </div>
+
+                            <input type="number" id="f-aluguel-atrasado-master" placeholder="Ex: 1562.50" class="input-audit border-red-300 bg-white text-lg p-3 text-red-900 font-black w-full mb-3" oninput="processarDiarioAuto()">
                             
                             <div class="grid grid-cols-3 gap-2 text-center bg-red-100 p-2 rounded-lg border border-red-200">
                                 <div>
@@ -253,13 +259,27 @@
 
                         <!-- NOVO: RATEIO SEMANAL DO ALUGUEL -->
                         <div class="mt-6 bg-slate-800 p-4 rounded-xl text-white shadow-inner border-l-4 border-blue-500">
-                            <h3 class="text-[10px] font-black uppercase text-slate-300 tracking-widest border-b border-slate-700 pb-2 mb-3">📅 Rateio Semanal (Só Aluguel)</h3>
-                            <div class="space-y-2 font-mono text-xs">
-                                <div class="flex justify-between"><span class="text-slate-400">Meta/Semana Total:</span> <span id="sem-alu-total" class="font-bold text-white">R$ 0,00</span></div>
-                                <div class="flex justify-between"><span class="text-blue-400">Tiago/Semana:</span> <span id="sem-alu-t" class="font-bold text-white">R$ 0,00</span></div>
-                                <div class="flex justify-between"><span class="text-pink-400">Jô+Anto/Semana:</span> <span id="sem-alu-j" class="font-bold text-white">R$ 0,00</span></div>
+                            <h3 class="text-[10px] font-black uppercase text-slate-300 tracking-widest border-b border-slate-700 pb-2 mb-3">📅 Rateio Exato (Só Aluguel)</h3>
+                            
+                            <div class="space-y-4 font-mono text-[10px]">
+                                <!-- TIAGO -->
+                                <div class="bg-slate-900 p-2 rounded border border-slate-700">
+                                    <div class="flex justify-between font-black text-blue-400 mb-1"><span class="uppercase">Sócio: Tiago</span><span id="det-alu-t-mensal">R$ 0,00/mês</span></div>
+                                    <div class="flex justify-between text-slate-400"><span>Empresa (50%):</span> <span id="det-alu-t-emp">R$ 0,00</span></div>
+                                    <div class="flex justify-between text-slate-400"><span>Casa (1/3):</span> <span id="det-alu-t-casa">R$ 0,00</span></div>
+                                    <div class="flex justify-between border-t border-slate-700 pt-1 mt-1 text-green-400 font-bold"><span>Meta Semanal:</span> <span id="sem-alu-t">R$ 0,00</span></div>
+                                </div>
+
+                                <!-- JÔ -->
+                                <div class="bg-slate-900 p-2 rounded border border-slate-700">
+                                    <div class="flex justify-between font-black text-pink-400 mb-1"><span class="uppercase">Sócia: Jô+Anto</span><span id="det-alu-j-mensal">R$ 0,00/mês</span></div>
+                                    <div class="flex justify-between text-slate-400"><span>Empresa (50%):</span> <span id="det-alu-j-emp">R$ 0,00</span></div>
+                                    <div class="flex justify-between text-slate-400"><span>Casa (2/3):</span> <span id="det-alu-j-casa">R$ 0,00</span></div>
+                                    <div class="flex justify-between border-t border-slate-700 pt-1 mt-1 text-green-400 font-bold"><span>Meta Semanal:</span> <span id="sem-alu-j">R$ 0,00</span></div>
+                                </div>
+                                
+                                <div class="flex justify-between text-slate-300 font-bold border-t border-slate-600 pt-2"><span>Total Semanal (Pagar):</span> <span id="sem-alu-total">R$ 0,00</span></div>
                             </div>
-                            <p class="text-[8px] text-slate-500 mt-3 uppercase tracking-widest leading-tight">Cálculo em 4 semanas. Separação exata: 50% Empresa, 1/3 Casa Tiago, 2/3 Casa Jô.</p>
                         </div>
                     </div>
                 </div>
@@ -451,9 +471,24 @@
             // NOVO: ATUALIZA RATEIO SEMANAL EXCLUSIVO DO ALUGUEL
             let mensal_alu_t = emp_alu_1 + res_alu_1;
             let mensal_alu_j_anto = emp_alu_1 + (res_alu_1 * 2);
-            document.getElementById('sem-alu-total').innerText = formata(alu / 4);
+
+            document.getElementById('det-alu-t-mensal').innerText = formata(mensal_alu_t) + '/mês';
+            document.getElementById('det-alu-t-emp').innerText = formata(emp_alu_1);
+            document.getElementById('det-alu-t-casa').innerText = formata(res_alu_1);
             document.getElementById('sem-alu-t').innerText = formata(mensal_alu_t / 4);
+
+            document.getElementById('det-alu-j-mensal').innerText = formata(mensal_alu_j_anto) + '/mês';
+            document.getElementById('det-alu-j-emp').innerText = formata(emp_alu_1);
+            document.getElementById('det-alu-j-casa').innerText = formata(res_alu_1 * 2);
             document.getElementById('sem-alu-j').innerText = formata(mensal_alu_j_anto / 4);
+
+            document.getElementById('sem-alu-total').innerText = formata(alu / 4);
+
+            if(document.getElementById('ref-semana-total')) {
+                document.getElementById('ref-semana-total').innerText = formata(alu / 4);
+                document.getElementById('ref-semana-t').innerText = formata(mensal_alu_t / 4);
+                document.getElementById('ref-semana-j').innerText = formata(mensal_alu_j_anto / 4);
+            }
 
             document.getElementById('prev-antigo-t').innerText = formata(div_alu_antigo_socio);
             document.getElementById('prev-antigo-j').innerText = formata(div_alu_antigo_socio);
@@ -526,9 +561,15 @@
 
             // CÁLCULO DE ALUGUEL ATRASADO (AUTO-DIVISÃO)
             const aluguelAtrasadoTotal = parseFloat(document.getElementById('f-aluguel-atrasado-master').value) || 0;
-            const atrasoEmpresa = aluguelAtrasadoTotal * 0.5;
-            const atrasoCasaTiago = (aluguelAtrasadoTotal * 0.5) / 3;
-            const atrasoCasaJo = (aluguelAtrasadoTotal * 0.5) * (2 / 3);
+            
+            // As proporções baseadas em: 50% Empresa, 1/3 (16.66%) Casa Tiago, 2/3 (33.33%) Casa Jô
+            const proporcaoEmpresa = 0.5;
+            const proporcaoCasaTiago = 0.5 * (1/3);
+            const proporcaoCasaJo = 0.5 * (2/3);
+
+            const atrasoEmpresa = aluguelAtrasadoTotal * proporcaoEmpresa;
+            const atrasoCasaTiago = aluguelAtrasadoTotal * proporcaoCasaTiago;
+            const atrasoCasaJo = aluguelAtrasadoTotal * proporcaoCasaJo;
 
             // Atualiza labels visuais do rateio de aluguel
             document.getElementById('lbl-atraso-emp').innerText = formata(atrasoEmpresa);
