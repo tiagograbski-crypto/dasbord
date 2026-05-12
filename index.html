@@ -669,8 +669,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // IMPORTAÇÕES DO FIREBASE CLOUD MESSAGING (FCM)
+        // IMPORTAÇÕES DO FIREBASE CLOUD MESSAGING E REALTIME DATABASE
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyCxnT-eCXN82lEPK5Holo5c6E5etPYkOZA",
@@ -683,6 +684,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const rtdb = getDatabase(app); // INICIALIZA O REALTIME DATABASE
         
         // INICIALIZA O MESSAGING
         const messaging = getMessaging(app);
@@ -742,6 +744,23 @@
                     await signInAnonymously(auth);
                 }
             } catch (error) { console.error("Auth Erro:", error); }
+        };
+
+        // NOVO: MONITORAMENTO DE CONEXÃO VIA REALTIME DATABASE
+        const monitorarConexao = () => {
+            const connectedRef = ref(rtdb, ".info/connected");
+            onValue(connectedRef, (snap) => {
+                const st = document.getElementById('status-conexao');
+                if (snap.val() === true) {
+                    // Online: Verde (Emerald) e bolinha piscando
+                    st.innerHTML = `<span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span> ONLINE`;
+                    st.className = "bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-3 w-full sm:w-auto justify-center transition-all";
+                } else {
+                    // Offline: Vermelho e bolinha estática
+                    st.innerHTML = `<span class="relative flex h-2.5 w-2.5"><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span> OFFLINE`;
+                    st.className = "bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg text-xs font-bold text-red-500 uppercase tracking-widest flex items-center gap-3 w-full sm:w-auto justify-center transition-all";
+                }
+            });
         };
 
         window.salvarNoFirebase = async () => {
@@ -906,21 +925,16 @@
 
                         if (s["VENCIMENTO ALUGUEL"]) setVal('venc-alu', s["VENCIMENTO ALUGUEL"].toDate().toISOString().split('T')[0]);
                         if (s["VENCIMENTO ACORDO"]) setVal('venc-cbm', s["VENCIMENTO ACORDO"].toDate().toISOString().split('T')[0]);
-
-                        st.innerHTML = `<span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span> Sincronizado`;
-                        st.classList.replace('text-yellow-400', 'text-emerald-400');
-                    } else {
-                        st.innerHTML = "Banco Inicial";
-                        st.classList.replace('text-yellow-400', 'text-slate-400');
                     }
                     atualizarBarraMae(); 
                 }, (err) => {
-                    document.getElementById('status-conexao').innerHTML = "❌ Sem Rede";
-                    document.getElementById('status-conexao').classList.replace('text-yellow-400', 'text-red-500');
+                    console.error("Erro sincronização Firestore: ", err);
                 });
             }
         });
+
         initAuth();
+        monitorarConexao(); // INICIA O MONITOR DE STATUS
     </script>
     
     <!-- LÓGICA DE VALIDAÇÃO DE SENHA (LOGIN) -->
