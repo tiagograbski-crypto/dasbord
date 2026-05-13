@@ -56,14 +56,16 @@
     <!-- CONTEÚDO PRINCIPAL (OCULTO ATÉ O LOGIN) -->
     <div id="dashboard-content" style="display: none;">
         
-        <!-- CAMPOS OCULTOS PARA APORTES (NÃO APAGAR) -->
-        <input type="hidden" id="f-aporte-t" value="0">
-        <input type="hidden" id="f-aporte-j" value="0">
-
         <!-- HEADER DA GOVERNANÇA -->
         <header class="bg-slate-900 p-6 sm:p-8 rounded-t-2xl shadow-xl flex flex-col md:flex-row justify-between items-center text-white relative overflow-hidden border-b-4 border-blue-600">
             <div class="absolute -right-10 -top-10 opacity-5 pointer-events-none">
                 <svg width="250" height="250" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="text-center md:text-left z-10 w-full md:w-auto">
+                <h1 class="text-2xl sm:text-3xl font-black tracking-tight uppercase flex items-center justify-center md:justify-start gap-3">
+                    GL Pro Governance
+                </h1>
+                <p class="text-blue-300 text-xs font-mono mt-1 tracking-widest uppercase">Sistema Integrado - Estável v16.1</p>
             </div>
             <div class="text-center md:text-left z-10 w-full md:w-auto">
                 <h1 class="text-2xl sm:text-3xl font-black tracking-tight uppercase flex items-center justify-center md:justify-start gap-3">
@@ -164,7 +166,7 @@
 
                                 <!-- NOVO: USO DO CAIXA FÍSICO (PAGAMENTOS DA EMPRESA) -->
                                 <div class="sm:col-span-2 bg-slate-50 p-3 rounded-lg border border-slate-200 mt-2">
-                                    <label class="text-[9px] font-bold text-slate-700 uppercase flex justify-between mb-2">💸 Uso do Dinheiro Físico (Pagto de Empresa)</label>
+                                    <label class="text-[9px] font-bold text-slate-700 uppercase flex justify-between mb-2">💸 Uso do Dinheiro Físico (Baixa de Tesouraria)</label>
                                     <div class="flex flex-col sm:flex-row items-center gap-2">
                                         <input type="number" min="0" step="0.01" id="uso-fisico-valor" placeholder="R$ 0.00" class="input-audit border-slate-300 w-full sm:w-1/4">
                                         
@@ -176,12 +178,15 @@
                                         <select id="uso-fisico-destino" class="input-audit text-[9px] p-2 border-slate-300 w-full sm:w-1/4 text-center bg-white text-slate-700 font-bold">
                                             <option value="ads">Pagar Ads</option>
                                             <option value="extras">Pagar Extras</option>
+                                            <option value="vale">Pegar Vale (Próprio)</option>
                                         </select>
                                         
                                         <button onclick="window.registrarUsoFisico()" id="btn-uso-fisico" class="w-full sm:w-1/4 bg-slate-800 hover:bg-slate-700 text-white font-black px-4 py-2 rounded-lg border border-slate-900 text-[10px] uppercase transition-all active:scale-95 shadow-sm">
                                             Lançar
                                         </button>
                                     </div>
+                                    <p class="text-[8px] text-slate-500 mt-2 text-center uppercase tracking-widest">Pagar a empresa abate o lucro global. Pegar Vale abate o seu PIX Final.</p>
+                                </div>
                                     <p class="text-[8px] text-slate-500 mt-2 text-center uppercase tracking-widest">O valor será deduzido da tesouraria e registrado como aporte financeiro no DRE de hoje.</p>
                                 </div>
                             </div>
@@ -423,10 +428,7 @@
                                         </h4>
                                         <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px]">Cota Base:</span><span id="ext-base-t" class="dre-value !text-[10px]">R$ 0,00</span></div>
                                         <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px] text-red-400">(-) Depósito Fundo (Casa):</span><span id="ext-atraso-casa-t" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
-                                        <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px] text-red-400">(-) Vales Físicos:</span><span id="ext-saque-t" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
-                                        
-                                        <!-- NOVO: APORTE TIAGO -->
-                                        <div id="linha-aporte-t" class="dre-row !border-slate-800 !py-0.5 pb-2 mb-2 hidden"><span class="dre-label !text-[10px] text-green-400">(+) Aporte Físico (Reembolso):</span><span id="ext-aporte-t" class="dre-value !text-[10px] text-green-400">+ R$ 0,00</span></div>
+                                        <div class="dre-row !border-slate-800 !py-0.5 pb-2 mb-2"><span class="dre-label !text-[10px] text-red-400">(-) Vales Físicos:</span><span id="ext-saque-t" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
                                         
                                         <div class="flex justify-between items-center mt-1 border-t border-slate-800 pt-2">
                                             <span id="lbl-pix-t" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">PIX A RECEBER:</span>
@@ -446,10 +448,7 @@
                                         </h4>
                                         <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px]">Cota Base:</span><span id="ext-base-j" class="dre-value !text-[10px]">R$ 0,00</span></div>
                                         <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px] text-red-400">(-) Depósito Fundo (Casa):</span><span id="ext-atraso-casa-j" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
-                                        <div class="dre-row !border-none !py-0.5"><span class="dre-label !text-[10px] text-red-400">(-) Vales Anto/Jô:</span><span id="ext-saque-j" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
-                                        
-                                        <!-- NOVO: APORTE JÔ -->
-                                        <div id="linha-aporte-j" class="dre-row !border-slate-800 !py-0.5 pb-2 mb-2 hidden"><span class="dre-label !text-[10px] text-green-400">(+) Aporte Físico (Reembolso):</span><span id="ext-aporte-j" class="dre-value !text-[10px] text-green-400">+ R$ 0,00</span></div>
+                                        <div class="dre-row !border-slate-800 !py-0.5 pb-2 mb-2"><span class="dre-label !text-[10px] text-red-400">(-) Vales Anto/Jô:</span><span id="ext-saque-j" class="dre-value !text-[10px] text-red-400">- R$ 0,00</span></div>
                                         
                                         <div class="flex justify-between items-center mt-1 border-t border-slate-800 pt-2">
                                             <span id="lbl-pix-j" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">PIX A RECEBER:</span>
@@ -783,15 +782,11 @@
             
             const saqueTiago = parseFloat(document.getElementById('f-saque-t').value) || 0;
             const saqueAnto = parseFloat(document.getElementById('f-anto').value) || 0;
-            
-            // Aportes de Dinheiro Físico
-            const aporteT = parseFloat(document.getElementById('f-aporte-t').value) || 0;
-            const aporteJ = parseFloat(document.getElementById('f-aporte-j').value) || 0;
 
             const divVazio = document.getElementById('box-vazio');
             const divExtrato = document.getElementById('box-extrato');
 
-            if (bruto <= 0 && aporteT <= 0 && aporteJ <= 0) {
+            if (bruto <= 0) {
                 divVazio.classList.remove('opacity-0', 'pointer-events-none');
                 divExtrato.classList.remove('opacity-100', 'scale-100');
                 divExtrato.classList.add('opacity-0', 'scale-95');
@@ -816,45 +811,30 @@
             if (GLOBAL_SALDO_CAIXA < 0) document.getElementById('ext-liquido').classList.replace('text-blue-400', 'text-red-500');
             else document.getElementById('ext-liquido').classList.replace('text-red-500', 'text-blue-400');
 
-            // Distribuição e Rateios Pessoais com Aportes Físicos
+            // Distribuição e Rateios Pessoais
             const cotaSocio = GLOBAL_SALDO_CAIXA / 2;
             
-            // Aporte Visualização Tiago
-            if (aporteT > 0) {
-                document.getElementById('linha-aporte-t').classList.remove('hidden');
-                document.getElementById('ext-aporte-t').innerText = `+ ${formata(aporteT)}`;
-            } else {
-                document.getElementById('linha-aporte-t').classList.add('hidden');
-            }
-
             document.getElementById('ext-base-t').innerText = formata(cotaSocio);
             document.getElementById('ext-atraso-casa-t').innerText = `- ${formata(atrasoCasaTiago)}`;
             document.getElementById('ext-saque-t').innerText = `- ${formata(saqueTiago)}`;
             
-            // A matemática exata: A cota desconta o que ele tirou, desconta o que ele deve, e SOMO o que ele já ajudou a pagar no dinheiro físico.
-            GLOBAL_PIX_T_FINAL = cotaSocio - saqueTiago - atrasoCasaTiago + aporteT;
+            // PIX Final do Tiago (Sem o bug do Aporte falso)
+            GLOBAL_PIX_T_FINAL = cotaSocio - saqueTiago - atrasoCasaTiago;
             document.getElementById('ext-pix-t').innerText = formata(GLOBAL_PIX_T_FINAL);
             document.getElementById('ext-livre-t').innerText = formata(GLOBAL_PIX_T_FINAL * 0.7);
             document.getElementById('ext-risco-t').innerText = formata(GLOBAL_PIX_T_FINAL * 0.3);
-
-            // Aporte Visualização Jô
-            if (aporteJ > 0) {
-                document.getElementById('linha-aporte-j').classList.remove('hidden');
-                document.getElementById('ext-aporte-j').innerText = `+ ${formata(aporteJ)}`;
-            } else {
-                document.getElementById('linha-aporte-j').classList.add('hidden');
-            }
 
             document.getElementById('ext-base-j').innerText = formata(cotaSocio);
             document.getElementById('ext-atraso-casa-j').innerText = `- ${formata(atrasoCasaJo)}`;
             document.getElementById('ext-saque-j').innerText = `- ${formata(saqueAnto)}`;
             
-            GLOBAL_PIX_J_FINAL = cotaSocio - saqueAnto - atrasoCasaJo + aporteJ;
+            // PIX Final da Jô (Sem o bug do Aporte falso)
+            GLOBAL_PIX_J_FINAL = cotaSocio - saqueAnto - atrasoCasaJo;
             document.getElementById('ext-pix-j').innerText = formata(GLOBAL_PIX_J_FINAL);
             document.getElementById('ext-livre-j').innerText = formata(GLOBAL_PIX_J_FINAL * 0.7);
             document.getElementById('ext-risco-j').innerText = formata(GLOBAL_PIX_J_FINAL * 0.3);
 
-            // AUDITORIA UX/ESTRESSE: Se o sócio pegou mais vales do que o lucro, ele deve ao caixa.
+            // AUDITORIA UX: Textos dinâmicos se ficar negativo
             const lblPixT = document.getElementById('lbl-pix-t');
             if(GLOBAL_PIX_T_FINAL < 0) {
                 document.getElementById('ext-pix-t').classList.replace('text-green-400', 'text-red-500');
@@ -1003,8 +983,6 @@
                 "GASTO ADS": Number(document.getElementById('f-ads').value) || 0,
                 "GASTOS ANTONELLA": Number(document.getElementById('f-anto').value) || 0, 
                 "SAQUES TIAGO": Number(document.getElementById('f-saque-t').value) || 0,
-                "APORTE TIAGO HOJE": parseFloat(document.getElementById('f-aporte-t').value) || 0,
-                "APORTE JO HOJE": parseFloat(document.getElementById('f-aporte-j').value) || 0,
                 "GASTOS EXTRAS EMPRESA": Number(document.getElementById('f-extras').value) || 0,
                 "LUZ": Number(document.getElementById('v-luz').value) || 0,
                 "NET": Number(document.getElementById('v-internet').value) || 0,
@@ -1073,7 +1051,7 @@
             const saldoAtual = parseFloat(document.getElementById(inputSaldo).value) || 0;
 
             if (valor > saldoAtual) {
-                if(!confirm(`O valor de R$ ${valor} é MAIOR que o saldo em mãos do(a) ${nomeOrigem} (R$ ${saldoAtual.toFixed(2)}). Lançar mesmo assim?`)) {
+                if(!confirm(`O valor de R$ ${valor.toFixed(2)} é MAIOR que o saldo em mãos do(a) ${nomeOrigem} (R$ ${saldoAtual.toFixed(2)}). Lançar mesmo assim?`)) {
                     return;
                 }
             }
@@ -1086,19 +1064,23 @@
             // 1. Deduz do físico
             document.getElementById(inputSaldo).value = (saldoAtual - valor).toFixed(2);
 
-            // 2. Lança como Despesa da Empresa no DRE de hoje
+            // 2. Destina o valor (Sem Aporte Falso)
             if(destino === 'ads') {
                 const valAds = parseFloat(document.getElementById('f-ads').value) || 0;
                 document.getElementById('f-ads').value = (valAds + valor).toFixed(2);
-            } else {
+            } else if (destino === 'extras') {
                 const valExt = parseFloat(document.getElementById('f-extras').value) || 0;
                 document.getElementById('f-extras').value = (valExt + valor).toFixed(2);
+            } else if (destino === 'vale') {
+                // Tira da Tesouraria e joga no Bolso Pessoal da pessoa
+                if (origem === 't') {
+                    const valSaque = parseFloat(document.getElementById('f-saque-t').value) || 0;
+                    document.getElementById('f-saque-t').value = (valSaque + valor).toFixed(2);
+                } else {
+                    const valSaque = parseFloat(document.getElementById('f-anto').value) || 0;
+                    document.getElementById('f-anto').value = (valSaque + valor).toFixed(2);
+                }
             }
-
-            // 3. Registra o Aporte para a pessoa receber de volta no PIX
-            const inputAporte = origem === 't' ? 'f-aporte-t' : 'f-aporte-j';
-            const valAporte = parseFloat(document.getElementById(inputAporte).value) || 0;
-            document.getElementById(inputAporte).value = (valAporte + valor).toFixed(2);
 
             document.getElementById('uso-fisico-valor').value = '';
 
@@ -1120,15 +1102,11 @@
             if (!userLogado) return;
             const bruto = (Number(document.getElementById('f-pix').value)||0) + (Number(document.getElementById('f-cartao').value)||0) + (Number(document.getElementById('f-especie').value)||0);
             
-            // Permite fechar se não houver faturamento mas houverem aportes (para o caso de pagar conta sem cliente no dia)
-            const aporteT = parseFloat(document.getElementById('f-aporte-t').value) || 0;
-            const aporteJ = parseFloat(document.getElementById('f-aporte-j').value) || 0;
-            
             const btn = document.getElementById('btn-fechar-caixa');
             const originalText = btn.innerHTML;
 
-            if(bruto <= 0 && aporteT <= 0 && aporteJ <= 0) {
-                btn.innerHTML = "❌ INFORME FATURAMENTO OU APORTES";
+            if(bruto <= 0) {
+                btn.innerHTML = "❌ INFORME O FATURAMENTO";
                 btn.classList.replace('bg-blue-600', 'bg-red-600');
                 setTimeout(() => { btn.innerHTML = originalText; btn.classList.replace('bg-red-600', 'bg-blue-600'); }, 3000);
                 return;
@@ -1152,9 +1130,7 @@
                 saques_antonella_jo: Number(document.getElementById('f-anto').value) || 0,
                 saques_tiago: Number(document.getElementById('f-saque-t').value) || 0,
                 atraso_casa_tiago: pgtoT,
-                atraso_casa_jo: pgtoJ,
-                aporte_tiago_dia: aporteT,
-                aporte_jo_dia: aporteJ
+                atraso_casa_jo: pgtoJ
             };
 
             try {
@@ -1181,8 +1157,8 @@
                 await setDoc(docRef, datasUpdate, { merge: true });
 
                 // Limpa Campos de Lançamento
-                ['f-pix', 'f-cartao', 'f-especie', 'f-ads', 'f-anto', 'f-saque-t', 'f-fundo-emp', 'f-fundo-t', 'f-fundo-j', 'f-extras', 'f-aporte-t', 'f-aporte-j'].forEach(id => {
-                    document.getElementById(id).value = (id.startsWith('f-aporte')) ? '0' : '';
+                ['f-pix', 'f-cartao', 'f-especie', 'f-ads', 'f-anto', 'f-saque-t', 'f-fundo-emp', 'f-fundo-t', 'f-fundo-j', 'f-extras'].forEach(id => {
+                    document.getElementById(id).value = '';
                 });
                 
                 await window.salvarNoFirebase(); 
